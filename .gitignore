@@ -1,0 +1,9 @@
+node_modules
+dist
+*.local
+.DS_Store
+.vite
+coverage
+
+# Document source personnel, non publié
+Programme_Sportif_Ari_Final.pdf
