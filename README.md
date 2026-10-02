@@ -53,9 +53,18 @@ L'app met en avant ce qui sert tous les jours et range le reste :
   Cardio, Alimentation, Récupération, Paramètres et thème sont regroupés dans « Plus ».
 - **Aujourd'hui** : une seule action principale (démarrer ou reprendre la séance du jour), la semaine en
   une bande de 7 jours, la pesée du matin, et au plus un message important à la fois.
-- **Mode séance** : seule la série en cours est dépliée ; les séries faites et à venir tiennent sur une ligne ;
-  consignes, illustration et réglages (machine, tempo, technique, vrais haltères) sont repliés ; barre
-  Précédent / Suivant fixe en bas, minuteur de repos juste au-dessus.
+- **Mode séance**, pensé pour la salle (rien ne doit obliger à quitter l'écran) :
+  - **miniature animée** de chaque exercice toujours visible ; un toucher ouvre **« Le geste »** par-dessus la
+    séance (grande illustration, consigne clé, 3 points techniques, 2 erreurs, alternatives) ;
+  - **« Machine occupée ? »** : un seul bouton qui propose les alternatives (même séries et reps, historique de
+    charges séparé) ou **« Faire plus tard »** (l'exercice passe en fin de séance). Remplacement possible tant
+    qu'aucune série de l'exercice n'est validée ; on peut revenir à l'exercice prévu ;
+  - seule la série en cours est dépliée ; les autres tiennent sur une ligne ; la charge et les reps saisies se
+    reportent sur les séries suivantes ;
+  - **vibration courte** à chaque validation ; quand la dernière série d'un exercice est validée, l'app
+    **passe seule à l'exercice suivant** pendant le repos (désactivable dans Paramètres) ;
+  - réglages (machine, tempo, technique propre, vrais haltères) repliés ; barre Précédent / Suivant fixe en bas,
+    minuteur de repos juste au-dessus.
 - **Suivi** : la moyenne 7 jours et une barre de progression vers l'objectif en tête ; alertes sur une ligne
   (détail dépliable) ; 4 onglets (Jour, Mesures, Courbes, Carnet). Mensurations, photos et protocole sont
   repliés ; les courbes montrent le poids puis une seule courbe secondaire au choix.
@@ -153,6 +162,14 @@ Dans `src/data/homeExercises.ts`, ajouter un objet `Exercise` avec `location: 'h
 que la salle (muscles, matériel, `technique`, `mistakes`, `easier`, `harder`, `illustration`, `videoQuery`).
 `kind` vaut `mobilite` ou `cardio` pour les exercices sans RIR ni progression. Le référencer ensuite dans
 une séance par son `id`, puis lancer `npm run fetch-images`.
+
+### Modifier les alternatives de salle (machine occupée)
+
+- La liste « exercice du programme → alternatives » est dans `src/data/alternatives.ts`, de la plus proche à
+  la moins proche. Une alternative doit travailler la même zone (vérifié par les tests).
+- Les exercices de remplacement ont leur propre fiche dans `src/data/gymAlternatives.ts` (même format que
+  `exercises.ts`) ; un exercice du programme peut aussi servir d'alternative (ex. leg curl assis ↔ allongé).
+- Après ajout d'une fiche avec illustration : `npm run fetch-images`.
 
 ### Ajouter une variante de matériel
 

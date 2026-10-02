@@ -80,3 +80,15 @@ export function exerciseSetCount(ie: ItemExercise, item: SessionItem, itemCount:
   if (ie.sets === undefined) return itemCount
   return ie.sets > item.sets ? ie.sets : Math.min(ie.sets, itemCount)
 }
+
+/**
+ * « Faire plus tard » : déplace le bloc à la position `pos` en fin d'ordre.
+ * Renvoie null s'il est déjà le dernier (rien à faire).
+ */
+export function postponeInOrder(order: number[], pos: number): number[] | null {
+  if (pos < 0 || pos >= order.length - 1) return null
+  const list = [...order]
+  const [moved] = list.splice(pos, 1)
+  list.push(moved!)
+  return list
+}

@@ -14,6 +14,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { exercises } from '../src/data/exercises.ts'
 import { sessions } from '../src/data/sessions.ts'
+import { alternatives } from '../src/data/alternatives.ts'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const REPO_RAW = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main'
@@ -78,11 +79,16 @@ async function main(): Promise<void> {
   }
 
   // ── docs/images-a-verifier.md ──
-  const usedIn = (exerciseId: string): string =>
-    sessions
+  const nameOf = (id: string) => exercises.find((e) => e.id === id)?.name ?? id
+  const usedIn = (exerciseId: string): string => {
+    const inSessions = sessions
       .filter((s) => s.items.some((i) => i.exercises.some((x) => x.exerciseId === exerciseId)))
       .map((s) => s.name)
-      .join(', ')
+    const altOf = Object.entries(alternatives)
+      .filter(([, list]) => list.includes(exerciseId))
+      .map(([id]) => nameOf(id))
+    return [...inSessions, ...(altOf.length ? [`alternative à : ${altOf.join(', ')}`] : [])].join(' · ')
+  }
 
   const badge = { exact: '✅ exact', approximatif: '⚠️ approximatif', aucune: '❌ aucune' } as const
   const row = (x: (typeof entries)[number]) => {

@@ -6,7 +6,7 @@ import { RESUME_LOAD_FACTOR } from '@/data/contingencies'
 import type { Tempo } from '@/data/home'
 import type { HomeEquipment, Location, SessionId, SessionItem, Target } from '@/data/types'
 import { homeSuggestion, pickVariant, variantOf, variantTarget } from '@/lib/home'
-import { effectiveTarget, exerciseSetCount, itemSetCount } from '@/lib/plan'
+import { effectiveTarget, exerciseSetCount, itemSetCount, postponeInOrder } from '@/lib/plan'
 import { roundHalf, suggestNext, type Suggestion, type SuggestionAction } from '@/lib/progression'
 import type { SetLog, WorkoutLog } from '@/lib/models'
 import { persistedRef, uid } from '@/lib/storage'
@@ -16,6 +16,8 @@ import { useWorkoutsStore } from './workouts'
 
 export interface ActiveExercise {
   exerciseId: string
+  /** Exercice prévu par le programme quand on a pris une alternative (machine occupée). */
+  plannedId?: string
   machine: string
   techniqueOk: boolean
   /** Cible du programme (avant variante). */
@@ -59,6 +61,8 @@ export interface ActiveSession {
   defaultRir: number
   /** 0 = échauffement, 1..n = exercices, n+1 = bilan. */
   step: number
+  /** Ordre de passage des blocs (index dans la séance) ; modifié par « faire plus tard ». */
+  order?: number[]
   items: ActiveItem[]
   notes: string
   rest: RestState
@@ -84,6 +88,13 @@ export const useActiveStore = defineStore('active', () => {
   const tracking = useTrackingStore()
 
   const session = computed(() => (active.value ? sessionsById[active.value.sessionId] : null))
+  const order = computed(() => active.value?.order ?? active.value?.items.map((_, i) => i) ?? [])
+  /** Index (dans la séance) du bloc affiché à l'étape courante, ou -1 (échauffement / bilan). */
+  const currentItemIdx = computed(() => {
+    const a = active.value
+    if (!a || a.step < 1 || a.step > a.items.length) return -1
+    return order.value[a.step - 1] ?? a.step - 1
+  })
 
   function adjustLoad(load: number | null, exerciseId: string, resume: boolean): number | null {
     if (load === null || !resume) return load
@@ -184,7 +195,47 @@ export const useActiveStore = defineStore('active', () => {
 
     active.value = {
       sessionId, location: s.location, date: settingsStore.today, startedAt: Date.now(), programWeek: week.week,
-      deload, resume, defaultRir, step: 0, items, notes: '', rest: idle(),
+      deload, resume, defaultRir, step: 0, order: items.map((_, i) => i), items, notes: '', rest: idle(),
+    }
+  }
+
+  /**
+   * Machine occupée : remplace l'exercice par une alternative pour cette séance.
+   * Possible tant qu'aucune série de cet exercice n'est validée (historique propre à chaque exercice).
+   */
+  function swapExercise(itemIdx: number, exIdx: number, newId: string): boolean {
+    const a = active.value
+    const ex = a?.items[itemIdx]?.exercises[exIdx]
+    if (!a || !ex || !exercisesById[newId] || ex.sets.some((s) => s.done)) return false
+    const planned = ex.plannedId ?? ex.exerciseId
+    ex.plannedId = newId === planned ? undefined : planned
+    ex.exerciseId = newId
+    ex.machine = workouts.lastPerformance(newId)?.machine ?? ''
+    ex.techniqueOk = true
+    replan(itemIdx, exIdx)
+    return true
+  }
+
+  /** Faire ce bloc plus tard : il passe en fin de séance. Renvoie false s'il est déjà le dernier. */
+  function postpone(): boolean {
+    const a = active.value
+    if (!a || a.step < 1 || a.step > a.items.length) return false
+    const next = postponeInOrder(order.value, a.step - 1)
+    if (!next) return false
+    a.order = next
+    return true
+  }
+
+  /** Saisie d'une série : la charge et les reps se reportent sur les séries suivantes non validées. */
+  function updateSet(itemIdx: number, exIdx: number, setIdx: number, patch: Partial<Pick<SetLog, 'load' | 'reps' | 'rir'>>): void {
+    const ex = active.value?.items[itemIdx]?.exercises[exIdx]
+    const set = ex?.sets[setIdx]
+    if (!ex || !set) return
+    Object.assign(set, patch)
+    for (const next of ex.sets.slice(setIdx + 1)) {
+      if (next.done) continue
+      if (patch.load !== undefined) next.load = patch.load
+      if (patch.reps !== undefined) next.reps = patch.reps
     }
   }
 
@@ -223,13 +274,14 @@ export const useActiveStore = defineStore('active', () => {
     replan(itemIdx, exIdx)
   }
 
-  function toggleDone(itemIdx: number, exIdx: number, setIdx: number): void {
+  /** Valide / dévalide une série. Renvoie true si tout le bloc est alors terminé. */
+  function toggleDone(itemIdx: number, exIdx: number, setIdx: number): boolean {
     const a = active.value
     const item = a?.items[itemIdx]
     const set = item?.exercises[exIdx]?.sets[setIdx]
-    if (!a || !item || !set) return
+    if (!a || !item || !set) return false
     set.done = !set.done
-    if (!set.done) return
+    if (!set.done) return false
     // Report de la charge sur les séries suivantes non faites, pour une saisie plus rapide.
     for (const next of item.exercises[exIdx]!.sets.slice(setIdx + 1)) {
       if (!next.done) next.load = set.load
@@ -242,6 +294,7 @@ export const useActiveStore = defineStore('active', () => {
       const unit = sessionItem.format === 'circuit' ? 'tour' : 'série'
       startRest(defaultRest(sessionItem), isLast ? 'Repos avant l’exercice suivant' : `Repos — ${unit} ${setIdx + 2} ensuite`)
     }
+    return item.exercises.every((e) => e.sets.every((s) => s.done))
   }
 
   function addSet(itemIdx: number): void {
@@ -313,6 +366,7 @@ export const useActiveStore = defineStore('active', () => {
           return {
             exerciseId: e.exerciseId, itemId: it.itemId, machine: e.machine.trim(), techniqueOk: e.techniqueOk,
             sets: e.sets.map((s) => ({ ...s })),
+            ...(e.plannedId ? { plannedId: e.plannedId } : {}),
             ...(home
               ? { equipment: e.equipment ?? undefined, dumbbells: e.dumbbells || undefined, tempo: e.tempo, level: e.level.trim() || undefined }
               : {}),
@@ -331,8 +385,8 @@ export const useActiveStore = defineStore('active', () => {
   }
 
   return {
-    active, session, doneSets, totalSets, usesKg,
-    start, changeMachine, changeVariant, setDumbbells, toggleDone, addSet, removeSet,
+    active, session, order, currentItemIdx, doneSets, totalSets, usesKg,
+    start, changeMachine, changeVariant, setDumbbells, swapExercise, postpone, updateSet, toggleDone, addSet, removeSet,
     startRest, addRest, pauseRest, resumeRest, stopRest, goTo, finish, abandon,
   }
 })

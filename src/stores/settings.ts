@@ -19,6 +19,8 @@ export interface Settings {
   sound: boolean
   /** Matériel disponible à la maison (choix de la variante des exercices maison). */
   homeEquipment: HomeEquipment[]
+  /** Mode séance : passer seul à l’exercice suivant quand toutes ses séries sont validées. */
+  autoAdvance: boolean
 }
 
 export const defaultSettings = (): Settings => ({
@@ -29,6 +31,7 @@ export const defaultSettings = (): Settings => ({
   resumeUntil: null,
   sound: true,
   homeEquipment: [...DEFAULT_HOME_EQUIPMENT],
+  autoAdvance: true,
 })
 
 export const useSettingsStore = defineStore('settings', () => {

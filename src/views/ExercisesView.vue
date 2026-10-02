@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { exercises } from '@/data/exercises'
+import { gymAlternatives } from '@/data/gymAlternatives'
 import type { Exercise } from '@/data/types'
 import PageHeader from '@/components/PageHeader.vue'
 
-const gym = exercises.filter((e) => e.location !== 'home')
+const altIds = new Set(gymAlternatives.map((e) => e.id))
+const gym = exercises.filter((e) => e.location !== 'home' && !altIds.has(e.id))
 const groups: { id: string; title: string; list: Exercise[] }[] = [
   { id: 'haut', title: 'Salle · haut du corps', list: gym.filter((e) => e.region === 'haut') },
   { id: 'bas', title: 'Salle · bas du corps', list: gym.filter((e) => e.region === 'bas') },
   { id: 'tronc', title: 'Salle · tronc', list: gym.filter((e) => e.region === 'tronc') },
+  { id: 'alternatives', title: 'Salle · alternatives (machine occupée)', list: gymAlternatives },
   { id: 'maison-renfo', title: 'Maison · renforcement', list: exercises.filter((e) => e.location === 'home' && e.variants) },
   {
     id: 'maison-mobilite',

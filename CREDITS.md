@@ -19,6 +19,12 @@
   curl (`Close-Grip_EZ-Bar_Curl_with_Band`, `Dumbbell_Bicep_Curl`), extension triceps
   (`Speed_Band_Overhead_Triceps`, `Standing_Dumbbell_Triceps_Extension`, `Bench_Dips`), marche
   (`Walking_Treadmill`, `Trail_Running_Walking`), face pull (`Face_Pull`).
+- Alternatives de salle (machine occupée), même source : chest press (`Leverage_Chest_Press`), développé
+  couché barre, décliné, écartés poulie et haltères, tractions assistées (`Band_Assisted_Pull-Up`), tirage un
+  bras, rowing poulie basse, oiseau machine et haltères, développé épaules haltères et Smith, élévations
+  poulie, extension triceps couché, curl haltères et machine, dips machine, hack squat, goblet squat, split
+  squat Smith, sissy squat, mollets à la presse, SDT roumain haltères et Smith, hip thrust barre, adduction
+  poulie, crunch machine, crunch inversé. Le détail est dans `docs/images-a-verifier.md`.
 - Sans image dans la base (icône de substitution + lien vers une recherche YouTube) : 90/90 hanches,
   bird dog, Y-T-W au sol, curl serviette.
 - Aucune image n'a été copiée d'une autre source ni générée.

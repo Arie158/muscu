@@ -7,6 +7,8 @@ import { formatShort } from '@/lib/dates'
 import { useWorkoutsStore } from '@/stores/workouts'
 import PageHeader from '@/components/PageHeader.vue'
 import ExerciseIllustration from '@/components/ExerciseIllustration.vue'
+import ExerciseThumb from '@/components/ExerciseThumb.vue'
+import { alternativeOf, alternativesFor } from '@/lib/alternatives'
 import { bandSafety, equipmentLabels, EQUIPMENT_PREFERENCE, homeProgressionSteps } from '@/data/home'
 import { formatTarget } from '@/lib/format'
 import { pickVariant } from '@/lib/home'
@@ -16,6 +18,8 @@ import AppIcon from '@/components/AppIcon.vue'
 const props = defineProps<{ id: string }>()
 const exercise = computed(() => exercisesById[props.id])
 const isHome = computed(() => exercise.value?.location === 'home')
+const alts = computed(() => alternativesFor(props.id))
+const altOf = computed(() => alternativeOf(props.id))
 const variantList = computed(() =>
   EQUIPMENT_PREFERENCE.flatMap((k) => {
     const v = exercise.value?.variants?.[k]
@@ -91,6 +95,27 @@ const setsSummary = (sets: { load: number | null; reps: number | null; rir: numb
           repos {{ u.item.restLabel }}</template>
         </li>
       </ul>
+    </section>
+
+    <section v-if="alts.length" class="card" aria-labelledby="alts-title">
+      <h2 id="alts-title">Si la machine est occupée</h2>
+      <ul class="list-plain alt-list">
+        <li v-for="a in alts" :key="a.id">
+          <RouterLink :to="`/exercices/${a.id}`" class="alt">
+            <ExerciseThumb :exercise="a" size="sm" :animate="false" :interactive="false" />
+            <span>{{ a.name }}</span>
+          </RouterLink>
+        </li>
+      </ul>
+      <p class="small muted">En séance : bouton « Machine occupée ? ». Chaque alternative garde son propre historique de charges.</p>
+    </section>
+    <section v-if="altOf.length" class="card">
+      <h2>Alternative à</h2>
+      <p>
+        <template v-for="(p, i) in altOf" :key="p.id">
+          <RouterLink :to="`/exercices/${p.id}`">{{ p.name }}</RouterLink><template v-if="i < altOf.length - 1">, </template>
+        </template>
+      </p>
     </section>
 
     <section class="card">
@@ -209,6 +234,10 @@ const setsSummary = (sets: { load: number | null; reps: number | null; rir: numb
 .variant[open] > summary::after { content: 'Masquer'; }
 .variant-title { font-weight: 700; font-size: 1.05rem; }
 .variant-body { margin-top: 0.75rem; }
+.alt-list { display: flex; flex-direction: column; gap: 0.35rem; }
+.alt-list > li + li { margin-top: 0; }
+.alt { display: flex; align-items: center; gap: 0.75rem; min-height: 44px; font-weight: 600; text-decoration: none; color: var(--text); }
+.alt:hover span { color: var(--accent); text-decoration: underline; }
 .ladder { padding-left: 0; list-style: none; }
 .ladder li { display: flex; gap: 0.5rem; align-items: baseline; }
 .illus-toggle summary { cursor: pointer; min-height: 40px; display: flex; align-items: center; color: var(--accent); font-weight: 600; }

@@ -26,6 +26,8 @@ export interface ExerciseLog {
   tempo?: Tempo
   /** Exercices maison : niveau de charge libre (« 2 bouteilles », « élastique rouge »…). */
   level?: string
+  /** Exercice prévu par le programme, si une alternative a été faite à la place (machine occupée). */
+  plannedId?: string
 }
 
 export interface WorkoutLog {

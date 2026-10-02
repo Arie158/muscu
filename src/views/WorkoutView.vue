@@ -32,7 +32,8 @@ if (!store.active && requested.value) store.start(requested.value.id)
 const session = computed(() => store.session)
 const step = computed(() => a.value?.step ?? 0)
 const itemCount = computed(() => a.value?.items.length ?? 0)
-const itemIdx = computed(() => step.value - 1)
+/** Index dans la séance du bloc affiché (l'ordre peut changer avec « faire plus tard »). */
+const itemIdx = computed(() => store.currentItemIdx)
 const item = computed(() => a.value?.items[itemIdx.value])
 const sessionItem = computed(() => session.value?.items[itemIdx.value])
 const isSummary = computed(() => step.value === itemCount.value + 1)
@@ -43,6 +44,25 @@ const heading = ref<HTMLElement | null>(null)
 
 /** Ligne (série / tour) dépliée par l'utilisateur ; null = la ligne en cours. */
 const expanded = ref<number | null>(null)
+
+// ── Notification discrète (remplacement, report, exercice terminé) ──
+const toast = ref('')
+let toastTimer: number | undefined
+function notify(message: string) {
+  toast.value = message
+  window.clearTimeout(toastTimer)
+  toastTimer = window.setTimeout(() => (toast.value = ''), 2600)
+}
+function buzz(ms: number | number[]) {
+  if ('vibrate' in navigator) navigator.vibrate(ms)
+}
+/** Titre du bloc : pour un exercice seul, son nom réel (alternative comprise). */
+const itemTitle = computed(() => {
+  const si = sessionItem.value
+  const it = item.value
+  if (!si || !it) return ''
+  return si.format === 'simple' ? (exercisesById[it.exercises[0]!.exerciseId]?.name ?? si.label) : si.label
+})
 
 watch(step, async () => {
   expanded.value = null
@@ -104,8 +124,28 @@ const volume = computed(() => {
 })
 
 function toggle(j: number, k: number) {
-  store.toggleDone(itemIdx.value, j, k)
+  const wasDone = !!item.value?.exercises[j]?.sets[k]?.done
+  const itemFinished = store.toggleDone(itemIdx.value, j, k)
+  if (!wasDone) buzz(40)
   if (rowDone(k)) expanded.value = null
+  if (itemFinished && settings.settings.autoAdvance) {
+    // Enchaînement : on passe à l'exercice suivant pendant le repos (le minuteur continue en bas).
+    const from = step.value
+    notify(from === itemCount.value ? 'Dernier exercice terminé ✓' : 'Exercice terminé ✓')
+    window.setTimeout(() => {
+      if (step.value === from) store.goTo(from + 1)
+    }, 1100)
+  }
+}
+function setValue(j: number, k: number, field: 'load' | 'reps', value: number | null) {
+  store.updateSet(itemIdx.value, j, k, { [field]: value })
+}
+function postpone() {
+  if (store.postpone()) {
+    expanded.value = null
+    window.scrollTo({ top: 0 })
+    notify('Déplacé en fin de séance')
+  }
 }
 function onCountdown(ex: ActiveExercise, j: number, k: number, seconds: number) {
   const set = ex.sets[k]
@@ -188,8 +228,8 @@ function finish() {
         <details class="plan">
           <summary>Voir les {{ session.items.length }} blocs de la séance</summary>
           <ol class="small">
-            <li v-for="(it, i) in session.items" :key="it.id">
-              <button type="button" class="link-btn" @click="store.goTo(i + 1)">{{ it.label }}</button>
+            <li v-for="(i, pos) in store.order" :key="i">
+              <button type="button" class="link-btn" @click="store.goTo(pos + 1)">{{ session.items[i]?.label }}</button>
             </li>
           </ol>
         </details>
@@ -201,7 +241,7 @@ function finish() {
           <p class="eyebrow">
             {{ step }} / {{ itemCount }}<template v-if="sessionItem.format !== 'simple'"> · {{ { superset: 'Superset', circuit: 'Circuit', activite: 'Activité' }[sessionItem.format] }}</template>
           </p>
-          <h1 ref="heading" tabindex="-1" class="item-title">{{ sessionItem.label }}</h1>
+          <h1 ref="heading" tabindex="-1" class="item-title">{{ itemTitle }}</h1>
           <p class="muted small num">
             {{ volume }}<template v-if="sessionItem.rest.max > 0"> · repos {{ sessionItem.restLabel }}</template>
           </p>
@@ -215,11 +255,15 @@ function finish() {
         <div class="exercises">
           <WorkoutExercise
             v-for="(ex, j) in item.exercises"
-            :key="ex.exerciseId"
+            :key="j"
             :ex="ex"
             :item-idx="itemIdx"
             :ex-idx="j"
             :show-name="multi || sessionItem.format !== 'simple'"
+            :cue="sessionItem.cue"
+            :can-postpone="step < itemCount && !itemDone(itemIdx)"
+            @notify="notify"
+            @postpone="postpone"
           />
         </div>
 
@@ -249,11 +293,11 @@ function finish() {
                 <div class="inputs" :class="{ two: store.usesKg(ex) }">
                   <div v-if="store.usesKg(ex)" class="field">
                     <span class="small muted">{{ exercisesById[ex.exerciseId]?.loadType === 'assistance' ? 'Assistance kg' : 'Kg' }}</span>
-                    <NumberStepper v-model="set!.load" :label="`Charge ${rowLabel.toLowerCase()} ${k}`" unit="kg" :step="loadStep(ex.exerciseId)" />
+                    <NumberStepper :model-value="set!.load" @update:model-value="(v: number | null) => setValue(j, k - 1, 'load', v)" :label="`Charge ${rowLabel.toLowerCase()} ${k}`" unit="kg" :step="loadStep(ex.exerciseId)" />
                   </div>
                   <div class="field">
                     <span class="small muted">{{ valueLabel(ex) }}</span>
-                    <NumberStepper v-model="set!.reps" :label="`${valueLabel(ex)} ${rowLabel.toLowerCase()} ${k}`" :step="valueStep(ex)" />
+                    <NumberStepper :model-value="set!.reps" @update:model-value="(v: number | null) => setValue(j, k - 1, 'reps', v)" :label="`${valueLabel(ex)} ${rowLabel.toLowerCase()} ${k}`" :step="valueStep(ex)" />
                   </div>
                 </div>
                 <SetCountdown
@@ -308,11 +352,11 @@ function finish() {
       <section v-else-if="isSummary" class="stack">
         <h1 ref="heading" tabindex="-1">Bilan</h1>
         <ul class="list-plain summary">
-          <li v-for="(it, i) in a.items" :key="it.itemId">
-            <button type="button" class="summary-item" @click="store.goTo(i + 1)">
+          <li v-for="(i, pos) in store.order" :key="a.items[i]!.itemId">
+            <button type="button" class="summary-item" @click="store.goTo(pos + 1)">
               <span>{{ session.items[i]?.label }}</span>
               <span class="badge" :class="itemDone(i) ? 'ok' : 'warn'">
-                {{ it.exercises.reduce((n, e) => n + e.sets.filter((s) => s.done).length, 0) }} / {{ it.exercises.reduce((n, e) => n + e.sets.length, 0) }}
+                {{ a.items[i]!.exercises.reduce((n, e) => n + e.sets.filter((s) => s.done).length, 0) }} / {{ a.items[i]!.exercises.reduce((n, e) => n + e.sets.length, 0) }}
               </span>
             </button>
           </li>
@@ -338,6 +382,7 @@ function finish() {
       </nav>
 
       <RestTimer />
+      <p class="toast" :class="{ show: !!toast }" role="status" aria-live="polite">{{ toast }}</p>
     </template>
 
     <section v-else class="stack">
@@ -440,6 +485,26 @@ header p { margin: 0; }
   border-top: 1px solid var(--border);
 }
 .workout-bar .grow { flex: 1; }
+.toast {
+  position: fixed;
+  left: 50%;
+  top: 4.25rem;
+  z-index: 40;
+  max-width: calc(100% - 2rem);
+  margin: 0;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--bg);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+  transform: translate(-50%, -8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
 @media (max-width: 360px) {
   .inputs.two { grid-template-columns: 1fr; }
 }

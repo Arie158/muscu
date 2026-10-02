@@ -102,6 +102,7 @@ async function onReset() {
         <button type="button" :aria-pressed="store.settings.theme === 'light'" @click="store.settings.theme = 'light'">Clair</button>
       </div>
       <label class="check"><input v-model="store.settings.sound" type="checkbox" /> Bip sonore à la fin du repos (en plus de la vibration)</label>
+      <label class="check"><input v-model="store.settings.autoAdvance" type="checkbox" /> Passer seul à l’exercice suivant quand toutes ses séries sont validées</label>
     </section>
 
     <section class="card stack-sm">

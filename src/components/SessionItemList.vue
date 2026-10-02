@@ -8,6 +8,7 @@ import { formatTarget } from '@/lib/format'
 import { pickVariant, variantOf, variantTarget } from '@/lib/home'
 import { effectiveTarget, exerciseSetCount, itemSetCount } from '@/lib/plan'
 import { useSettingsStore } from '@/stores/settings'
+import ExerciseThumb from './ExerciseThumb.vue'
 
 const props = defineProps<{ session: Session }>()
 const settings = useSettingsStore()
@@ -27,7 +28,7 @@ function line(item: SessionItem, ie: ItemExercise) {
   if (item.format === 'activite') volume = target
   else if (item.format === 'circuit') volume = n === count(item) ? target : item.sets > 1 ? `${target} · ${n} tours` : `${target} × ${n}`
   else volume = `${n} × ${target}`
-  return { name: exercise?.name ?? ie.exerciseId, variant: variant?.label, volume }
+  return { exercise, name: exercise?.name ?? ie.exerciseId, variant: variant?.label, illustration: variant?.illustration, volume }
 }
 
 const groupTitle = (item: SessionItem) => {
@@ -45,9 +46,14 @@ const groupTitle = (item: SessionItem) => {
         <p v-if="item.exercises.length > 1 || item.format === 'activite'" class="group">{{ groupTitle(item) }}</p>
         <ul class="list-plain lines">
           <li v-for="ie in item.exercises" :key="ie.exerciseId" class="line">
-            <RouterLink :to="`/exercices/${ie.exerciseId}`" class="name">{{ line(item, ie).name }}</RouterLink>
-            <span class="vol num">{{ line(item, ie).volume }}</span>
-            <span v-if="line(item, ie).variant" class="variant small muted">{{ line(item, ie).variant }}</span>
+            <RouterLink :to="`/exercices/${ie.exerciseId}`" class="ex">
+              <ExerciseThumb v-if="line(item, ie).exercise" :exercise="line(item, ie).exercise!" :illustration="line(item, ie).illustration" size="sm" :animate="false" :interactive="false" />
+              <span class="name">
+                {{ line(item, ie).name }}
+                <span v-if="line(item, ie).variant" class="variant small muted">{{ line(item, ie).variant }}</span>
+              </span>
+              <span class="vol num">{{ line(item, ie).volume }}</span>
+            </RouterLink>
           </li>
         </ul>
         <p class="meta small muted">
@@ -67,10 +73,10 @@ const groupTitle = (item: SessionItem) => {
 .group { font-weight: 700; margin: 0 0 0.3rem; }
 .lines { display: flex; flex-direction: column; gap: 0.25rem; }
 .lines > li + li { margin-top: 0; }
-.line { display: grid; grid-template-columns: 1fr auto; gap: 0 0.75rem; align-items: baseline; }
-.name { font-weight: 600; text-decoration: none; color: var(--text); }
-.name:hover, .name:focus-visible { color: var(--accent); text-decoration: underline; }
+.ex { display: grid; grid-template-columns: auto 1fr auto; gap: 0.65rem; align-items: center; min-height: 44px; text-decoration: none; color: var(--text); }
+.ex:hover .name, .ex:focus-visible .name { color: var(--accent); text-decoration: underline; }
+.name { font-weight: 600; min-width: 0; }
 .vol { font-weight: 700; white-space: nowrap; }
-.variant { grid-column: 1 / -1; }
+.variant { display: block; font-weight: 400; }
 .meta { margin: 0.35rem 0 0; }
 </style>
