@@ -45,26 +45,54 @@ export function useBackup() {
   const workouts = useWorkoutsStore()
   const active = useActiveStore()
 
-  async function exportData(includePhotos: boolean): Promise<void> {
-    const file: BackupFile = {
+  /**
+   * Exporte toutes les données en JSON.
+   * Sur téléphone : feuille de partage du système (Fichiers, Drive, e-mail…), plus fiable que le
+   * téléchargement, notamment sur iPhone quand l'app est installée. Sinon : téléchargement classique.
+   * Renvoie 'annule' si l'utilisateur ferme la feuille de partage (la date de sauvegarde n'est pas mise à jour).
+   */
+  async function exportData(includePhotos: boolean): Promise<'partage' | 'telecharge' | 'annule'> {
+    const today = todayISO()
+    const data: BackupFile = {
       app: BACKUP_APP,
       version: BACKUP_VERSION,
       exportedAt: new Date().toISOString(),
-      settings: settings.settings,
+      settings: { ...settings.settings, lastExportAt: today },
       tracking: tracking.data,
       workouts: workouts.logs,
       references: workouts.references,
       ...(includePhotos ? { photos: await exportPhotos() } : {}),
     }
-    const blob = new Blob([JSON.stringify(file, null, 2)], { type: 'application/json' })
+    const name = `muscu-sauvegarde-${today}.json`
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+    const file = new File([blob], name, { type: 'application/json' })
+
+    const coarse = window.matchMedia('(pointer: coarse)').matches
+    if (coarse && navigator.canShare?.({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: 'Sauvegarde muscu' })
+        markExported(today)
+        return 'partage'
+      } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') return 'annule'
+        // Partage refusé ou indisponible : on retombe sur le téléchargement.
+      }
+    }
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `muscu-sauvegarde-${todayISO()}.json`
+    a.download = name
     document.body.appendChild(a)
     a.click()
     a.remove()
     window.setTimeout(() => URL.revokeObjectURL(url), 1000)
+    markExported(today)
+    return 'telecharge'
+  }
+
+  function markExported(today: string) {
+    settings.settings.lastExportAt = today
+    settings.settings.exportSnoozeUntil = null
   }
 
   async function importData(raw: string): Promise<BackupFile> {

@@ -218,11 +218,17 @@ est en mode hash (`#/suivi`) : aucune 404 au rechargement.
 ## Sauvegarder et transférer ses données
 
 Les données sont stockées **uniquement dans le navigateur** (localStorage ; photos en IndexedDB).
-Elles sont perdues si tu effaces les données du site ou changes de téléphone : exporte régulièrement.
+Elles sont perdues si tu effaces les données du site ou changes de téléphone : sauvegarde régulièrement.
 
-- **Paramètres → Exporter (JSON)** télécharge un fichier `muscu-sauvegarde-AAAA-MM-JJ.json`
-  (option « Inclure les photos »).
-- **Paramètres → Importer** remplace les données de l'appareil par celles du fichier.
+- **Stockage persistant** : au démarrage, l'app demande au navigateur (`navigator.storage.persist()`) de ne
+  pas effacer ses données quand l'espace manque. L'état est affiché dans Paramètres → Sauvegarde. Installer
+  l'app sur l'écran d'accueil augmente les chances que ce soit accordé (surtout sur iPhone).
+- **Paramètres → Sauvegarder maintenant** crée `muscu-sauvegarde-AAAA-MM-JJ.json` (option « Inclure les
+  photos »). Sur téléphone, la feuille de partage s'ouvre (Fichiers, Drive, e-mail…) ; sinon le fichier est
+  téléchargé.
+- **Rappel** : si la dernière sauvegarde date de plus de 15 jours (ou s'il n'y en a jamais eu) et qu'il y a des
+  données à perdre, l'accueil propose « Sauvegarder » ; « Plus tard » masque le rappel 3 jours.
+- **Paramètres → Importer une sauvegarde** remplace les données de l'appareil par celles du fichier.
 
 ## Décisions prises
 

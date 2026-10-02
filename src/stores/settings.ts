@@ -21,6 +21,10 @@ export interface Settings {
   homeEquipment: HomeEquipment[]
   /** Mode séance : passer seul à l’exercice suivant quand toutes ses séries sont validées. */
   autoAdvance: boolean
+  /** Date de la dernière sauvegarde exportée (AAAA-MM-JJ). */
+  lastExportAt: string | null
+  /** Rappel de sauvegarde repoussé jusqu’à cette date incluse. */
+  exportSnoozeUntil: string | null
 }
 
 export const defaultSettings = (): Settings => ({
@@ -32,6 +36,8 @@ export const defaultSettings = (): Settings => ({
   sound: true,
   homeEquipment: [...DEFAULT_HOME_EQUIPMENT],
   autoAdvance: true,
+  lastExportAt: null,
+  exportSnoozeUntil: null,
 })
 
 export const useSettingsStore = defineStore('settings', () => {

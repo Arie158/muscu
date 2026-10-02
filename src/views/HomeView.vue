@@ -13,6 +13,8 @@ import { useTrackingStore } from '@/stores/tracking'
 import { useWorkoutsStore } from '@/stores/workouts'
 import { useActiveStore } from '@/stores/active'
 import { useInsights } from '@/composables/useInsights'
+import { useBackup } from '@/composables/useBackup'
+import { EXPORT_SNOOZE_DAYS, exportReminder } from '@/lib/backup'
 import AppIcon from '@/components/AppIcon.vue'
 
 const settings = useSettingsStore()
@@ -53,12 +55,53 @@ const meta = computed(() => {
 })
 
 // ── Un seul message, le plus important ──
-interface Notice { text: string; to?: string; link?: string; tone: 'info' | 'warn' }
+interface Notice {
+  text: string
+  to?: string
+  link?: string
+  tone: 'info' | 'warn'
+  /** Action directe (ex. sauvegarder) et option « Plus tard ». */
+  action?: { label: string; run: () => void | Promise<unknown> }
+  dismiss?: () => void
+}
+
+// ── Rappel de sauvegarde (données uniquement sur ce téléphone) ──
+const { exportData } = useBackup()
+const reminder = computed(() =>
+  exportReminder({
+    today: today.value,
+    lastExportAt: settings.settings.lastExportAt,
+    snoozeUntil: settings.settings.exportSnoozeUntil,
+    dataCount: workouts.logs.length + Object.keys(tracking.data.dailies).length,
+  }),
+)
+const saving = ref(false)
+async function saveNow() {
+  saving.value = true
+  try {
+    await exportData(false)
+  } finally {
+    saving.value = false
+  }
+}
+function snooze() {
+  settings.settings.exportSnoozeUntil = addDays(today.value, EXPORT_SNOOZE_DAYS - 1)
+}
 const notices = computed<Notice[]>(() => {
   const out: Notice[] = []
   const next = sessionsById[workouts.nextInOrder]
   if (!isHome.value && workouts.logs.length && next.id !== session.value.id && todayStatus.value !== 'fait') {
     out.push({ tone: 'info', text: `Séance manquée ? Dans l’ordre, la prochaine est ${next.name}.`, to: `/seance/${next.id}/go`, link: `Faire ${next.name}` })
+  }
+  if (reminder.value.due) {
+    out.push({
+      tone: 'warn',
+      text: reminder.value.daysSince === null
+        ? 'Tes données ne sont que sur ce téléphone : fais une première sauvegarde.'
+        : `Dernière sauvegarde il y a ${reminder.value.daysSince} jours.`,
+      action: { label: 'Sauvegarder', run: saveNow },
+      dismiss: snooze,
+    })
   }
   if (week.value.isDeload) out.push({ tone: 'warn', text: 'Semaine de décharge : séries réduites automatiquement.' })
   if (settings.resumeActive) out.push({ tone: 'warn', text: 'Mode reprise : charges −10 % et 1 série de moins.' })
@@ -122,6 +165,12 @@ const fmt = (n: number) => round1(n).toLocaleString('fr-FR')
         {{ notices[0]!.text }}
         <RouterLink v-if="notices[0]!.to" :to="notices[0]!.to">{{ notices[0]!.link }}</RouterLink>
       </p>
+      <div v-if="notices[0]!.action" class="notice-actions">
+        <button type="button" class="btn primary" :disabled="saving" @click="notices[0]!.action!.run()">
+          <AppIcon name="download" :size="18" /> {{ saving ? '…' : notices[0]!.action!.label }}
+        </button>
+        <button v-if="notices[0]!.dismiss" type="button" class="link" @click="notices[0]!.dismiss!()">Plus tard</button>
+      </div>
       <p v-if="notices.length > 1" class="small muted">
         + {{ notices.length - 1 }} autre{{ notices.length > 2 ? 's' : '' }} point{{ notices.length > 2 ? 's' : '' }} dans
         <RouterLink to="/suivi">Suivi</RouterLink>
@@ -208,6 +257,7 @@ const fmt = (n: number) => round1(n).toLocaleString('fr-FR')
 .notice.warn { border-color: var(--warn); }
 .notice p { margin: 0; }
 .notice p + p { margin-top: 0.25rem; }
+.notice-actions { display: flex; align-items: center; gap: 1rem; margin-top: 0.6rem; }
 
 .section-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.6rem; }
 .section-head h2 { font-size: 1.05rem; margin: 0; }

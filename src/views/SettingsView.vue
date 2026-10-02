@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { profile } from '@/data/profile'
 import { equipmentLabels, EQUIPMENT_PREFERENCE } from '@/data/home'
 import type { HomeEquipment } from '@/data/types'
 import { useSettingsStore } from '@/stores/settings'
 import { useBackup } from '@/composables/useBackup'
-import { isoWeekday } from '@/lib/dates'
+import { diffDays, isoWeekday } from '@/lib/dates'
+import { useStoragePersistence } from '@/composables/useStoragePersistence'
 import PageHeader from '@/components/PageHeader.vue'
 import AppIcon from '@/components/AppIcon.vue'
 
@@ -22,10 +23,19 @@ const includePhotos = ref(false)
 const message = ref<{ tone: 'ok' | 'danger'; text: string } | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
 
+const persistence = useStoragePersistence()
+onMounted(() => void persistence.refresh())
+const lastExport = computed(() => store.settings.lastExportAt)
+const daysSinceExport = computed(() => (lastExport.value ? diffDays(lastExport.value, store.today) : null))
+
 async function onExport() {
   try {
-    await exportData(includePhotos.value)
-    message.value = { tone: 'ok', text: 'Sauvegarde téléchargée.' }
+    const result = await exportData(includePhotos.value)
+    if (result === 'annule') return
+    message.value = {
+      tone: 'ok',
+      text: result === 'partage' ? 'Sauvegarde partagée.' : 'Sauvegarde téléchargée (dossier Téléchargements).',
+    }
   } catch {
     message.value = { tone: 'danger', text: 'Export impossible.' }
   }
@@ -79,6 +89,34 @@ async function onReset() {
       <p class="small muted">Les modifications sont enregistrées automatiquement.</p>
     </section>
 
+    <section class="card stack-sm" aria-labelledby="backup-title">
+      <h2 id="backup-title">Sauvegarde</h2>
+      <p class="status-line">
+        <AppIcon :name="daysSinceExport !== null && daysSinceExport < 15 ? 'check' : 'alert'" :size="18" />
+        <span v-if="lastExport">Dernière sauvegarde : <strong>{{ daysSinceExport === 0 ? 'aujourd’hui' : `il y a ${daysSinceExport} jour${daysSinceExport! > 1 ? 's' : ''}` }}</strong></span>
+        <span v-else><strong>Aucune sauvegarde pour l’instant</strong></span>
+      </p>
+      <p class="status-line small">
+        <AppIcon :name="persistence.status.value === 'protege' ? 'check' : 'info'" :size="18" />
+        <span v-if="persistence.status.value === 'protege'">Stockage protégé : le navigateur ne l’effacera pas pour faire de la place.</span>
+        <span v-else>
+          Stockage non protégé par le navigateur. Installe l’app sur l’écran d’accueil et sauvegarde régulièrement.
+          <button v-if="persistence.status.value === 'non-protege'" type="button" class="link" @click="persistence.request()">Redemander</button>
+        </span>
+      </p>
+      <p class="small muted">
+        Tes données restent sur ce téléphone. La sauvegarde crée un fichier à ranger dans Fichiers, Drive ou à t’envoyer
+        par e-mail ; « Importer » le recharge (ex. sur un nouveau téléphone).
+      </p>
+      <label class="check"><input v-model="includePhotos" type="checkbox" /> Inclure les photos (fichier plus lourd)</label>
+      <button type="button" class="btn primary block" @click="onExport"><AppIcon name="download" /> Sauvegarder maintenant</button>
+      <label class="btn block">
+        <AppIcon name="upload" /> Importer une sauvegarde
+        <input ref="fileInput" type="file" accept="application/json,.json" class="sr-only" @change="onImport" />
+      </label>
+      <p v-if="message" class="callout" :class="message.tone" role="status">{{ message.text }}</p>
+    </section>
+
     <section class="card stack-sm">
       <fieldset class="equipment">
         <legend><h2>Matériel disponible à la maison</h2></legend>
@@ -105,22 +143,6 @@ async function onReset() {
       <label class="check"><input v-model="store.settings.autoAdvance" type="checkbox" /> Passer seul à l’exercice suivant quand toutes ses séries sont validées</label>
     </section>
 
-    <section class="card stack-sm">
-      <h2>Sauvegarde</h2>
-      <p class="small">
-        Tes données ne quittent jamais cet appareil. Exporte régulièrement un fichier JSON pour les sauvegarder
-        ou les transférer sur un autre téléphone (Importer).
-      </p>
-      <label class="check"><input v-model="includePhotos" type="checkbox" /> Inclure les photos (fichier plus lourd)</label>
-      <div class="row">
-        <button type="button" class="btn primary" @click="onExport"><AppIcon name="download" /> Exporter (JSON)</button>
-        <label class="btn">
-          <AppIcon name="upload" /> Importer
-          <input ref="fileInput" type="file" accept="application/json,.json" class="sr-only" @change="onImport" />
-        </label>
-      </div>
-      <p v-if="message" class="callout" :class="message.tone" role="status">{{ message.text }}</p>
-    </section>
 
     <section class="card stack-sm">
       <h2>Réinitialisation</h2>
@@ -134,6 +156,9 @@ async function onReset() {
 .check { display: flex; align-items: center; gap: 0.6rem; min-height: var(--tap); }
 .warn-text { color: var(--warn); }
 label.btn { cursor: pointer; }
+.status-line { display: flex; gap: 0.5rem; align-items: flex-start; margin: 0; }
+.status-line svg { flex-shrink: 0; margin-top: 3px; color: var(--accent); }
+.link { background: none; border: 0; padding: 0; color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; }
 .equipment { border: 0; padding: 0; margin: 0; }
 .equipment legend { padding: 0; }
 .equipment legend h2 { margin: 0 0 0.25rem; }
