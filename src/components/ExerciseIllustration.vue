@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import type { Exercise, Illustration } from '@/data/types'
 import { usePrefersReducedMotion } from '@/composables/usePrefersReducedMotion'
 import AppIcon from './AppIcon.vue'
+import { exerciseImage } from '@/lib/images'
 
 // `illustration` / `videoQuery` : surcharges propres à une variante de matériel (exercices maison).
 const props = withDefaults(
@@ -17,10 +18,9 @@ const playing = ref(!reduced.value)
 const failed = ref(false)
 let timer: number | undefined
 
-const base = import.meta.env.BASE_URL
 const dbId = computed(() => illus.value.dbId)
 const hasImage = computed(() => !!dbId.value && illus.value.confidence !== 'aucune' && !failed.value)
-const src = (i: number) => `${base}exercises/${dbId.value}/${i}.jpg`
+const src = (i: number) => exerciseImage(dbId.value!, i)
 const videoUrl = computed(
   () => `https://www.youtube.com/results?search_query=${encodeURIComponent(props.videoQuery ?? props.exercise.videoQuery)}`,
 )

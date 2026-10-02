@@ -4,6 +4,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import type { Exercise, Illustration } from '@/data/types'
 import { usePrefersReducedMotion } from '@/composables/usePrefersReducedMotion'
 import AppIcon from './AppIcon.vue'
+import { exerciseImage } from '@/lib/images'
 
 const props = withDefaults(
   defineProps<{ exercise: Exercise; illustration?: Illustration; size?: 'sm' | 'md'; animate?: boolean; label?: string; interactive?: boolean }>(),
@@ -16,7 +17,6 @@ const illus = computed(() => props.illustration ?? props.exercise.illustration)
 const failed = ref(false)
 const hasImage = computed(() => !!illus.value.dbId && illus.value.confidence !== 'aucune' && !failed.value)
 const frame = ref(0)
-const base = import.meta.env.BASE_URL
 let timer: number | undefined
 
 watch(
@@ -48,10 +48,10 @@ const icon = computed(() => ({ haut: 'upper', bas: 'lower', tronc: 'core', globa
         v-for="i in [0, 1]"
         v-show="frame === i"
         :key="i"
-        :src="`${base}exercises/${illus.dbId}/${i}.jpg`"
+        :src="exerciseImage(illus.dbId!, i, 'thumb')"
         alt=""
-        width="850"
-        height="567"
+        width="240"
+        height="160"
         loading="lazy"
         decoding="async"
         @error="failed = true"

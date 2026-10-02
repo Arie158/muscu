@@ -1,15 +1,17 @@
 /**
  * Télécharge les illustrations des exercices depuis yuhonas/free-exercise-db
- * (licence Unlicense / domaine public) dans public/exercises/<dbId>/{0,1}.jpg,
+ * (licence Unlicense / domaine public), les convertit en WebP dans
+ * public/exercises/<dbId>/{0,1}.webp (850 px) et {0,1}-thumb.webp (240 px, miniatures),
  * puis génère docs/images-a-verifier.md.
  *
- * Usage : npm run fetch-images            (ne retélécharge pas les fichiers présents)
- *         npm run fetch-images -- --force (retélécharge tout)
+ * Usage : npm run fetch-images            (ne retraite pas les images déjà converties)
+ *         npm run fetch-images -- --force (retélécharge et reconvertit tout)
  *
  * Le mapping exercice → image vit dans src/data/exercises.ts et src/data/homeExercises.ts
  * (champ `illustration`, et `variants.<matériel>.illustration` pour les variantes maison).
  */
-import { mkdir, writeFile, access } from 'node:fs/promises'
+import { mkdir, writeFile, access, readFile, unlink } from 'node:fs/promises'
+import sharp from 'sharp'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { exercises } from '../src/data/exercises.ts'
@@ -38,11 +40,25 @@ async function exists(path: string): Promise<boolean> {
   }
 }
 
-async function download(url: string, dest: string): Promise<void> {
+async function download(url: string): Promise<Buffer> {
   const res = await fetch(url)
   if (!res.ok) throw new Error(`${res.status} ${res.statusText} — ${url}`)
-  await mkdir(dirname(dest), { recursive: true })
-  await writeFile(dest, Buffer.from(await res.arrayBuffer()))
+  return Buffer.from(await res.arrayBuffer())
+}
+
+/** Tailles produites : pleine taille pour l'illustration, miniature pour les listes et le mode séance. */
+const SIZES = [
+  { suffix: '', width: 850, quality: 72 },
+  { suffix: '-thumb', width: 240, quality: 68 },
+] as const
+
+/** Convertit une image source (JPG) en WebP aux deux tailles. */
+async function toWebp(source: Buffer, destBase: string): Promise<void> {
+  await mkdir(dirname(destBase), { recursive: true })
+  for (const size of SIZES) {
+    const out = await sharp(source).resize({ width: size.width, withoutEnlargement: true }).webp({ quality: size.quality }).toBuffer()
+    await writeFile(`${destBase}${size.suffix}.webp`, out)
+  }
 }
 
 async function main(): Promise<void> {
@@ -71,10 +87,14 @@ async function main(): Promise<void> {
       continue
     }
     for (const img of entry.images.slice(0, 2)) {
-      const dest = join(OUT_DIR, img)
-      if (!force && (await exists(dest))) continue
-      await download(`${REPO_RAW}/exercises/${img}`, dest)
-      console.log(`  ✓ ${img}`)
+      const jpg = join(OUT_DIR, img) // ex. <dbId>/0.jpg
+      const base = jpg.replace(/\.jpg$/i, '')
+      if (!force && (await exists(`${base}.webp`)) && (await exists(`${base}-thumb.webp`))) continue
+      // Un JPG déjà présent (ancienne version) est converti sans retélécharger.
+      const source = !force && (await exists(jpg)) ? await readFile(jpg) : await download(`${REPO_RAW}/exercises/${img}`)
+      await toWebp(source, base)
+      if (await exists(jpg)) await unlink(jpg)
+      console.log(`  ✓ ${img.replace(/\.jpg$/i, '.webp')}`)
     }
   }
 
@@ -94,7 +114,7 @@ async function main(): Promise<void> {
   const row = (x: (typeof entries)[number]) => {
     const { dbId, confidence, note } = x.illustration
     const dbName = dbId ? (byId.get(dbId)?.name ?? '— introuvable —') : '—'
-    const imgs = dbId ? `[0.jpg](../public/exercises/${dbId}/0.jpg) · [1.jpg](../public/exercises/${dbId}/1.jpg)` : '—'
+    const imgs = dbId ? `[0](../public/exercises/${dbId}/0.webp) · [1](../public/exercises/${dbId}/1.webp)` : '—'
     const used = x.label.startsWith('↳') ? '' : usedIn(x.exercise.id)
     return `| ${x.label} | ${used} | ${dbId ? `\`${dbId}\`` : '—'} (${dbName}) | ${imgs} | ${badge[confidence]} | ${note ?? ''} |`
   }

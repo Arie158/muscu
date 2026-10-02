@@ -1,20 +1,23 @@
 <script setup lang="ts">
+// Mode séance : orchestre les étapes (échauffement → blocs → bilan) et la navigation.
+// Le détail est dans components/workout/* (séries, saisie, échauffement, bilan) et
+// WorkoutExercise (miniature, geste, machine occupée, réglages).
 import { computed, nextTick, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { exercisesById } from '@/data/exercises'
-import { COOLDOWN_CARDIO, LOWER_MOBILITY, sessionsById, WARMUP } from '@/data/sessions'
+import { COOLDOWN_CARDIO, LOWER_MOBILITY, sessionsById } from '@/data/sessions'
 import type { SessionId } from '@/data/types'
-import { formatTarget } from '@/lib/format'
 import type { WorkoutLog } from '@/lib/models'
-import { defaultRest, useActiveStore, type ActiveExercise } from '@/stores/active'
+import { blockVolume } from '@/lib/workoutRows'
+import { defaultRest, useActiveStore } from '@/stores/active'
 import { useSettingsStore } from '@/stores/settings'
 import { useWakeLock } from '@/composables/useWakeLock'
 import AppIcon from '@/components/AppIcon.vue'
-import NumberStepper from '@/components/NumberStepper.vue'
-import ChoicePicker from '@/components/ChoicePicker.vue'
 import RestTimer from '@/components/RestTimer.vue'
 import WorkoutExercise from '@/components/WorkoutExercise.vue'
-import SetCountdown from '@/components/SetCountdown.vue'
+import SetList from '@/components/workout/SetList.vue'
+import WarmupStep from '@/components/workout/WarmupStep.vue'
+import SummaryStep from '@/components/workout/SummaryStep.vue'
 
 const props = defineProps<{ id: string }>()
 const router = useRouter()
@@ -37,25 +40,9 @@ const itemIdx = computed(() => store.currentItemIdx)
 const item = computed(() => a.value?.items[itemIdx.value])
 const sessionItem = computed(() => session.value?.items[itemIdx.value])
 const isSummary = computed(() => step.value === itemCount.value + 1)
-const isLower = computed(() => a.value?.sessionId.startsWith('bas'))
-const isHomeSession = computed(() => session.value?.location === 'home')
-const warmup = computed(() => session.value?.warmup ?? WARMUP)
-const heading = ref<HTMLElement | null>(null)
+const multi = computed(() => (item.value?.exercises.length ?? 0) > 1)
+const itemDone = computed(() => item.value?.exercises.every((e) => e.sets.every((s) => s.done)) ?? false)
 
-/** Ligne (série / tour) dépliée par l'utilisateur ; null = la ligne en cours. */
-const expanded = ref<number | null>(null)
-
-// ── Notification discrète (remplacement, report, exercice terminé) ──
-const toast = ref('')
-let toastTimer: number | undefined
-function notify(message: string) {
-  toast.value = message
-  window.clearTimeout(toastTimer)
-  toastTimer = window.setTimeout(() => (toast.value = ''), 2600)
-}
-function buzz(ms: number | number[]) {
-  if ('vibrate' in navigator) navigator.vibrate(ms)
-}
 /** Titre du bloc : pour un exercice seul, son nom réel (alternative comprise). */
 const itemTitle = computed(() => {
   const si = sessionItem.value
@@ -63,95 +50,39 @@ const itemTitle = computed(() => {
   if (!si || !it) return ''
   return si.format === 'simple' ? (exercisesById[it.exercises[0]!.exerciseId]?.name ?? si.label) : si.label
 })
+const volume = computed(() => (item.value && sessionItem.value ? blockVolume(sessionItem.value.format, item.value.exercises) : ''))
+const formatLabel = { simple: '', superset: 'Superset', circuit: 'Circuit', activite: 'Activité' } as const
 
+// À chaque étape : haut de page et focus sur le titre (lecteurs d'écran, clavier).
 watch(step, async () => {
-  expanded.value = null
   window.scrollTo({ top: 0 })
   await nextTick()
-  heading.value?.focus()
+  document.querySelector<HTMLElement>('main h1')?.focus()
 })
 
-const isLight = (exerciseId: string) => {
-  const k = exercisesById[exerciseId]?.kind
-  return k === 'mobilite' || k === 'cardio'
-}
-function loadStep(exerciseId: string): number {
-  const e = exercisesById[exerciseId]
-  return (e?.region === 'haut' && e.kind === 'isolation') || e?.location === 'home' ? 1 : 2.5
-}
-const valueLabel = (ex: ActiveExercise) =>
-  ex.target.kind === 'duree' ? 'Secondes' : ex.target.kind === 'minutes' ? 'Minutes' : 'Reps'
-const valueStep = (ex: ActiveExercise) => (ex.target.kind === 'reps' ? 1 : 5)
-const unitSuffix = (ex: ActiveExercise) => (ex.target.kind === 'duree' ? ' s' : ex.target.kind === 'minutes' ? ' min' : '')
-
-const itemDone = (i: number) => a.value?.items[i]?.exercises.every((e) => e.sets.every((s) => s.done)) ?? false
-/** Nombre de lignes d'un bloc : certains exercices font moins (ou plus) de séries que le bloc. */
-const rows = computed(() => Math.max(1, ...(item.value?.exercises.map((e) => e.sets.length) ?? [1])))
-const rowExercises = (k: number) =>
-  (item.value?.exercises ?? []).map((ex, j) => ({ ex, j, set: ex.sets[k] })).filter((x) => x.set)
-const rowDone = (k: number) => rowExercises(k).every((x) => x.set!.done)
-/** Première ligne pas encore terminée. */
-const currentRow = computed(() => {
-  for (let k = 0; k < rows.value; k++) if (!rowDone(k)) return k
-  return -1
-})
-const isOpen = (k: number) => (expanded.value ?? currentRow.value) === k
-const rowLabel = computed(() => (sessionItem.value?.format === 'circuit' ? 'Tour' : 'Série'))
-const multi = computed(() => (item.value?.exercises.length ?? 0) > 1)
-
-function rowSummary(k: number): string {
-  const list = rowExercises(k)
-  if (list.length > 2) return `${list.filter((x) => x.set!.done).length} / ${list.length} exercices`
-  return list
-    .map(({ ex, set }) => {
-      const load = set!.load !== null && store.usesKg(ex) ? `${set!.load} kg × ` : ''
-      const rir = set!.done && set!.rir !== null ? ` · RIR ${set!.rir}` : ''
-      return `${load}${set!.reps ?? '—'}${unitSuffix(ex)}${rir}`
-    })
-    .join('  +  ')
+// ── Notification discrète ──
+const toast = ref('')
+let toastTimer: number | undefined
+function notify(message: string) {
+  toast.value = message
+  window.clearTimeout(toastTimer)
+  toastTimer = window.setTimeout(() => (toast.value = ''), 2600)
 }
 
-/** Résumé du volume affiché sous le titre. */
-const volume = computed(() => {
-  const it = item.value
-  const si = sessionItem.value
-  if (!it || !si) return ''
-  const first = it.exercises[0]!
-  if (si.format === 'activite') return formatTarget(first.target)
-  if (si.format === 'circuit') return `${rows.value} tour${rows.value > 1 ? 's' : ''} · ${it.exercises.length} exercices`
-  const target = it.exercises.map((e) => formatTarget(e.target, e.perSide)).join(' + ')
-  return `${rows.value} × ${target}`
-})
-
-function toggle(j: number, k: number) {
-  const wasDone = !!item.value?.exercises[j]?.sets[k]?.done
-  const itemFinished = store.toggleDone(itemIdx.value, j, k)
-  if (!wasDone) buzz(40)
-  if (rowDone(k)) expanded.value = null
-  if (itemFinished && settings.settings.autoAdvance) {
-    // Enchaînement : on passe à l'exercice suivant pendant le repos (le minuteur continue en bas).
-    const from = step.value
-    notify(from === itemCount.value ? 'Dernier exercice terminé ✓' : 'Exercice terminé ✓')
-    window.setTimeout(() => {
-      if (step.value === from) store.goTo(from + 1)
-    }, 1100)
-  }
-}
-function setValue(j: number, k: number, field: 'load' | 'reps', value: number | null) {
-  store.updateSet(itemIdx.value, j, k, { [field]: value })
+/** Bloc terminé : on passe à l'exercice suivant pendant le repos (le minuteur continue en bas). */
+function onItemFinished() {
+  if (!settings.settings.autoAdvance) return
+  const from = step.value
+  notify(from === itemCount.value ? 'Dernier exercice terminé ✓' : 'Exercice terminé ✓')
+  window.setTimeout(() => {
+    if (step.value === from) store.goTo(from + 1)
+  }, 1100)
 }
 function postpone() {
   if (store.postpone()) {
-    expanded.value = null
     window.scrollTo({ top: 0 })
     notify('Déplacé en fin de séance')
   }
-}
-function onCountdown(ex: ActiveExercise, j: number, k: number, seconds: number) {
-  const set = ex.sets[k]
-  if (!set) return
-  set.reps = seconds
-  if (!set.done) toggle(j, k)
 }
 
 function switchSession() {
@@ -176,7 +107,7 @@ function finish() {
   <div class="workout" :class="{ 'with-bar': !!item && !saved && !conflict }">
     <!-- Séance enregistrée -->
     <section v-if="saved" class="stack">
-      <h1 ref="heading" tabindex="-1">Séance enregistrée 💪</h1>
+      <h1 tabindex="-1">Séance enregistrée 💪</h1>
       <p>{{ sessionsById[saved.sessionId].name }} — {{ saved.exercises.reduce((n, e) => n + e.sets.filter((s) => s.done).length, 0) }} séries.</p>
       <p v-if="(saved.location ?? 'gym') === 'gym'" class="muted">
         {{ COOLDOWN_CARDIO }}<template v-if="saved.sessionId.startsWith('bas')"> {{ LOWER_MOBILITY }}</template>
@@ -187,7 +118,7 @@ function finish() {
 
     <!-- Autre séance en cours -->
     <section v-else-if="conflict" class="stack">
-      <h1 ref="heading" tabindex="-1">Une séance est déjà en cours</h1>
+      <h1 tabindex="-1">Une séance est déjà en cours</h1>
       <p>« {{ session?.name }} » n’est pas terminée ({{ store.doneSets }} / {{ store.totalSets }} séries).</p>
       <RouterLink :to="`/seance/${a!.sessionId}/go`" class="btn primary lg block">Reprendre {{ session?.name }}</RouterLink>
       <button type="button" class="btn danger block" @click="switchSession">Abandonner et démarrer {{ requested?.name }}</button>
@@ -208,43 +139,14 @@ function finish() {
         </div>
       </header>
 
-      <!-- Échauffement -->
-      <section v-if="step === 0" class="stack">
-        <h1 ref="heading" tabindex="-1">Échauffement</h1>
-        <ul v-if="warmup.length">
-          <li v-for="w in warmup" :key="w">{{ w }}</li>
-        </ul>
-        <p class="intensity">
-          <strong>{{ session.fixedRir ?? (settings.week.rir ? `${settings.week.rir.base} sur les bases` : '') }}</strong>
-          <template v-if="a.deload"> · semaine de décharge{{ isHomeSession ? (session.id === 'maison-2' ? ' (2 tours)' : '') : ' (séries réduites)' }}</template>
-          <template v-if="a.resume"> · mode reprise (−10 %)</template>
-        </p>
-        <ul v-if="session.notes?.length" class="small muted">
-          <li v-for="n in session.notes" :key="n">{{ n }}</li>
-        </ul>
-        <button type="button" class="btn primary lg block" @click="store.goTo(1)">
-          Commencer <AppIcon name="right" />
-        </button>
-        <details class="plan">
-          <summary>Voir les {{ session.items.length }} blocs de la séance</summary>
-          <ol class="small">
-            <li v-for="(i, pos) in store.order" :key="i">
-              <button type="button" class="link-btn" @click="store.goTo(pos + 1)">{{ session.items[i]?.label }}</button>
-            </li>
-          </ol>
-        </details>
-      </section>
+      <WarmupStep v-if="step === 0" :session="session" :active="a" />
 
-      <!-- Exercice -->
+      <!-- Bloc en cours -->
       <section v-else-if="item && sessionItem" class="stack">
         <header>
-          <p class="eyebrow">
-            {{ step }} / {{ itemCount }}<template v-if="sessionItem.format !== 'simple'"> · {{ { superset: 'Superset', circuit: 'Circuit', activite: 'Activité' }[sessionItem.format] }}</template>
-          </p>
-          <h1 ref="heading" tabindex="-1" class="item-title">{{ itemTitle }}</h1>
-          <p class="muted small num">
-            {{ volume }}<template v-if="sessionItem.rest.max > 0"> · repos {{ sessionItem.restLabel }}</template>
-          </p>
+          <p class="eyebrow">{{ step }} / {{ itemCount }}<template v-if="sessionItem.format !== 'simple'"> · {{ formatLabel[sessionItem.format] }}</template></p>
+          <h1 tabindex="-1" class="item-title">{{ itemTitle }}</h1>
+          <p class="muted small num">{{ volume }}<template v-if="sessionItem.rest.max > 0"> · repos {{ sessionItem.restLabel }}</template></p>
           <p class="cue small">{{ sessionItem.cue }}</p>
         </header>
 
@@ -261,86 +163,19 @@ function finish() {
             :ex-idx="j"
             :show-name="multi || sessionItem.format !== 'simple'"
             :cue="sessionItem.cue"
-            :can-postpone="step < itemCount && !itemDone(itemIdx)"
+            :can-postpone="step < itemCount && !itemDone"
             @notify="notify"
             @postpone="postpone"
           />
         </div>
 
-        <ol class="list-plain sets" :aria-label="`${rowLabel}s`">
-          <li v-for="k in rows" :key="k" class="set" :class="{ open: isOpen(k - 1), done: rowDone(k - 1) }">
-            <!-- Ligne repliée : résumé d'une ligne -->
-            <button
-              v-if="!isOpen(k - 1)"
-              type="button"
-              class="set-summary"
-              :aria-label="`${rowLabel} ${k} : ${rowSummary(k - 1)}${rowDone(k - 1) ? ', faite' : ''} — modifier`"
-              @click="expanded = k - 1"
-            >
-              <span class="set-num">{{ rowLabel }} {{ k }}</span>
-              <span class="set-values num">{{ rowSummary(k - 1) }}</span>
-              <AppIcon v-if="rowDone(k - 1)" name="check" class="set-check" />
-            </button>
-
-            <!-- Ligne dépliée : saisie -->
-            <div v-else class="set-edit">
-              <p class="set-num">{{ rowLabel }} {{ k }} / {{ rows }}</p>
-              <div v-for="{ ex, j, set } in rowExercises(k - 1)" :key="ex.exerciseId" class="set-ex" :class="{ done: set!.done }">
-                <p v-if="multi" class="sub">
-                  {{ exercisesById[ex.exerciseId]?.name }}
-                  <span class="muted">· {{ formatTarget(ex.target, ex.perSide) }}</span>
-                </p>
-                <div class="inputs" :class="{ two: store.usesKg(ex) }">
-                  <div v-if="store.usesKg(ex)" class="field">
-                    <span class="small muted">{{ exercisesById[ex.exerciseId]?.loadType === 'assistance' ? 'Assistance kg' : 'Kg' }}</span>
-                    <NumberStepper :model-value="set!.load" @update:model-value="(v: number | null) => setValue(j, k - 1, 'load', v)" :label="`Charge ${rowLabel.toLowerCase()} ${k}`" unit="kg" :step="loadStep(ex.exerciseId)" />
-                  </div>
-                  <div class="field">
-                    <span class="small muted">{{ valueLabel(ex) }}</span>
-                    <NumberStepper :model-value="set!.reps" @update:model-value="(v: number | null) => setValue(j, k - 1, 'reps', v)" :label="`${valueLabel(ex)} ${rowLabel.toLowerCase()} ${k}`" :step="valueStep(ex)" />
-                  </div>
-                </div>
-                <SetCountdown
-                  v-if="ex.target.kind === 'duree' && !set!.done"
-                  :seconds="set!.reps ?? ex.target.min"
-                  :per-side="ex.perSide"
-                  :label="exercisesById[ex.exerciseId]?.name ?? ''"
-                  @finished="(sec: number) => onCountdown(ex, j, k - 1, sec)"
-                />
-                <div v-if="!isLight(ex.exerciseId)" class="rir">
-                  <span class="small muted">RIR</span>
-                  <ChoicePicker v-model="set!.rir" :label="`RIR ${rowLabel.toLowerCase()} ${k}`" :options="[0, 1, 2, 3, 4]" hide-label />
-                </div>
-                <button
-                  v-if="multi"
-                  type="button"
-                  class="btn block small-btn"
-                  :class="{ primary: !set!.done }"
-                  :aria-pressed="set!.done"
-                  @click="toggle(j, k - 1)"
-                >
-                  <AppIcon name="check" /> {{ set!.done ? 'Fait — annuler' : 'Fait' }}
-                </button>
-              </div>
-              <button
-                v-if="!multi"
-                type="button"
-                class="btn lg block"
-                :class="{ primary: !rowDone(k - 1) }"
-                :aria-pressed="rowDone(k - 1)"
-                @click="toggle(0, k - 1)"
-              >
-                <AppIcon name="check" /> {{ rowDone(k - 1) ? 'Faite — annuler' : `Valider la ${rowLabel.toLowerCase()}` }}
-              </button>
-            </div>
-          </li>
-        </ol>
+        <SetList :item="item" :item-idx="itemIdx" :format="sessionItem.format" @finished="onItemFinished" />
 
         <details v-if="sessionItem.format !== 'activite'" class="options">
           <summary>Options</summary>
           <div class="row">
-            <button type="button" class="btn" @click="store.addSet(itemIdx)"><AppIcon name="plus" /> {{ rowLabel }}</button>
-            <button type="button" class="btn" :disabled="rows <= 1" @click="store.removeSet(itemIdx)"><AppIcon name="minus" /> {{ rowLabel }}</button>
+            <button type="button" class="btn" @click="store.addSet(itemIdx)"><AppIcon name="plus" /> {{ sessionItem.format === 'circuit' ? 'Tour' : 'Série' }}</button>
+            <button type="button" class="btn" @click="store.removeSet(itemIdx)"><AppIcon name="minus" /> {{ sessionItem.format === 'circuit' ? 'Tour' : 'Série' }}</button>
             <button v-if="sessionItem.rest.max > 0" type="button" class="btn" @click="store.startRest(defaultRest(sessionItem))">
               <AppIcon name="timer" /> Repos
             </button>
@@ -348,30 +183,7 @@ function finish() {
         </details>
       </section>
 
-      <!-- Bilan -->
-      <section v-else-if="isSummary" class="stack">
-        <h1 ref="heading" tabindex="-1">Bilan</h1>
-        <ul class="list-plain summary">
-          <li v-for="(i, pos) in store.order" :key="a.items[i]!.itemId">
-            <button type="button" class="summary-item" @click="store.goTo(pos + 1)">
-              <span>{{ session.items[i]?.label }}</span>
-              <span class="badge" :class="itemDone(i) ? 'ok' : 'warn'">
-                {{ a.items[i]!.exercises.reduce((n, e) => n + e.sets.filter((s) => s.done).length, 0) }} / {{ a.items[i]!.exercises.reduce((n, e) => n + e.sets.length, 0) }}
-              </span>
-            </button>
-          </li>
-        </ul>
-        <div class="field">
-          <label for="notes">Notes <span class="hint">(sensations, douleur, machine…)</span></label>
-          <textarea id="notes" v-model="a.notes" />
-        </div>
-        <p v-if="!isHomeSession" class="small muted">{{ COOLDOWN_CARDIO }}<template v-if="isLower"> {{ LOWER_MOBILITY }}</template></p>
-        <button type="button" class="btn primary lg block" :disabled="store.doneSets === 0" @click="finish">
-          <AppIcon name="check" /> Enregistrer la séance
-        </button>
-        <p v-if="store.doneSets === 0" class="small muted">Valide au moins une série pour enregistrer.</p>
-        <button type="button" class="btn ghost block danger-text" @click="abandon">Abandonner la séance</button>
-      </section>
+      <SummaryStep v-else-if="isSummary" :session="session" :active="a" @finish="finish" @abandon="abandon" />
 
       <!-- Barre de navigation fixe -->
       <nav v-if="item" class="workout-bar" aria-label="Navigation entre exercices">
@@ -408,70 +220,14 @@ function finish() {
 .title { flex: 1; display: flex; flex-direction: column; line-height: 1.2; }
 .progress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--border); }
 .progress div { height: 100%; background: var(--accent); transform-origin: left; transition: transform 0.3s ease; }
-h1:focus { outline: none; }
+:deep(h1:focus) { outline: none; }
 .item-title { font-size: 1.4rem; margin-bottom: 0.2rem; }
 header p { margin: 0; }
 .cue { margin-top: 0.35rem !important; color: var(--muted); }
-.intensity { margin: 0; }
 .safety { display: flex; gap: 0.4rem; align-items: center; color: var(--warn); margin: 0; }
 .exercises { display: flex; flex-direction: column; gap: 0.9rem; }
 .exercises > * + * { padding-top: 0.9rem; border-top: 1px solid var(--border); }
-
-.sets { display: flex; flex-direction: column; gap: 0.4rem; }
-.sets > li + li { margin-top: 0; }
-.set { border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--border); }
-.set.open { border-color: var(--accent); }
-.set-summary {
-  width: 100%;
-  min-height: 52px;
-  display: grid;
-  grid-template-columns: 4.2rem 1fr auto;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.9rem;
-  background: none;
-  border: 0;
-  color: var(--muted);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-.set.done .set-summary { color: var(--text); }
-.set-num { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0; }
-.set-values { font-weight: 600; }
-.set-check { color: var(--ok); }
-.set-edit { padding: 0.75rem; display: flex; flex-direction: column; gap: 0.6rem; }
-.set-ex { display: flex; flex-direction: column; gap: 0.5rem; }
-.set-ex + .set-ex { padding-top: 0.6rem; border-top: 1px dashed var(--border); }
-.set-ex.done { opacity: 0.7; }
-.sub { font-weight: 700; margin: 0; }
-.inputs { display: grid; grid-template-columns: 1fr; gap: 0.5rem; }
-.inputs.two { grid-template-columns: 1fr 1fr; }
-.rir { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem; align-items: center; }
-.rir :deep(.segmented) { flex-wrap: nowrap; gap: 0.25rem; }
-.rir :deep(.segmented button) { min-width: 0; min-height: 40px; }
-.small-btn { min-height: 44px; }
-.options > summary, .plan > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; color: var(--muted); font-weight: 600; }
-.summary { display: flex; flex-direction: column; gap: 0.4rem; }
-.summary > li + li { margin-top: 0; }
-.summary-item {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
-  min-height: 52px;
-  padding: 0.5rem 0.9rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--text);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-.link-btn { background: none; border: 0; color: var(--accent); font: inherit; text-align: left; cursor: pointer; padding: 0.25rem 0; min-height: 36px; }
-.danger-text { color: var(--danger); }
+.options > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; color: var(--muted); font-weight: 600; }
 .workout-bar {
   position: fixed;
   inset: auto 0 0 0;
@@ -505,7 +261,4 @@ header p { margin: 0; }
   transition: opacity 0.2s, transform 0.2s;
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
-@media (max-width: 360px) {
-  .inputs.two { grid-template-columns: 1fr; }
-}
 </style>

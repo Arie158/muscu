@@ -7,3 +7,5 @@ coverage
 
 # Document source personnel, non publié
 Programme_Sportif_Ari_Final.pdf
+test-results
+playwright-report

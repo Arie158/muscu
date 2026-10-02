@@ -3,6 +3,7 @@ import { exercises } from '@/data/exercises'
 import { gymAlternatives } from '@/data/gymAlternatives'
 import type { Exercise } from '@/data/types'
 import PageHeader from '@/components/PageHeader.vue'
+import { exerciseImage } from '@/lib/images'
 
 const altIds = new Set(gymAlternatives.map((e) => e.id))
 const gym = exercises.filter((e) => e.location !== 'home' && !altIds.has(e.id))
@@ -18,7 +19,6 @@ const groups: { id: string; title: string; list: Exercise[] }[] = [
     list: exercises.filter((e) => e.location === 'home' && !e.variants),
   },
 ]
-const base = import.meta.env.BASE_URL
 </script>
 
 <template>
@@ -31,7 +31,7 @@ const base = import.meta.env.BASE_URL
           <RouterLink :to="`/exercices/${e.id}`" class="card card-link ex">
             <img
               v-if="e.illustration.dbId"
-              :src="`${base}exercises/${e.illustration.dbId}/0.jpg`"
+              :src="exerciseImage(e.illustration.dbId, 0, 'thumb')"
               alt=""
               width="96"
               height="64"

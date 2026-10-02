@@ -22,8 +22,9 @@ npm run dev          # serveur de développement (http://localhost:5173)
 | `npm run build` | Vérification TypeScript (`vue-tsc`) + build de production dans `dist/` |
 | `npm run preview` | Sert le build de production localement |
 | `npm test` | Tests unitaires (Vitest) |
+| `npm run test:e2e` | Tests de parcours dans un vrai navigateur (Playwright, taille téléphone, sous-chemin `/sport/`). Sous Windows sans Chromium installé : `set PW_CHANNEL=msedge` (cmd) ou `$env:PW_CHANNEL='msedge'` (PowerShell) pour utiliser Edge |
 | `npm run typecheck` | Vérification TypeScript seule |
-| `npm run fetch-images` | Télécharge les illustrations et régénère `docs/images-a-verifier.md` (`-- --force` pour tout retélécharger) |
+| `npm run fetch-images` | Télécharge les illustrations, les convertit en WebP (850 px + miniature 240 px) et régénère `docs/images-a-verifier.md` (`-- --force` pour tout retraiter) |
 | `npm run icons` | Régénère les icônes PWA et le favicon |
 
 > Windows : si PowerShell refuse `npm` (« l'exécution de scripts est désactivée »), utilise `npm.cmd run dev`
@@ -121,9 +122,11 @@ src/
                  semaine, migrations, stockage, photos)
   stores/        Pinia : réglages, suivi, séances enregistrées, séance en cours
   composables/   Horloge, synthèses, sauvegarde, wake lock, reduced motion
-  components/    Composants réutilisables (illustration, stepper, minuteur, graphique…)
+  components/    Composants réutilisables (illustration, miniature, panneau du geste, stepper, minuteur, graphique…)
+    workout/       Mode séance : liste des séries, saisie d’une série, échauffement, bilan
   views/         Une vue par page
-tests/           Tests Vitest
+tests/           Tests unitaires Vitest (logique pure)
+e2e/             Tests de parcours Playwright (accueil, séance complète, geste, pesée, images, sauvegarde)
 scripts/         fetch-images.ts, generate-icons.mjs
 public/exercises Illustrations téléchargées (domaine public)
 docs/            images-a-verifier.md
@@ -249,6 +252,7 @@ Elles sont perdues si tu effaces les données du site ou changes de téléphone 
 | Mode reprise | Activable depuis Imprévus : −10 % de charge et 1 série de moins pendant 7 jours. |
 | TypeScript | Version 5.9 (TypeScript 7 n'expose plus l'API utilisée par `vue-tsc`). |
 | Pas de Tailwind | CSS maison avec variables (thèmes clair/sombre, contrastes AA). |
+| Images et hors ligne | Illustrations en WebP (pleine taille 850 px + miniature 240 px, environ −50 % par rapport aux JPG). À l'installation, seules les images des exercices du programme sont pré-chargées (~4,5 Mo au total avec l'app) ; celles des alternatives sont mises en cache au premier affichage et préchargées en arrière-plan 15 s après le lancement (en ligne, hors mode économie de données). La liste « programme » est calculée dans `src/data/imageSets.ts`. |
 
 ### Séances maison (v2)
 
@@ -270,6 +274,12 @@ Elles sont perdues si tu effaces les données du site ou changes de téléphone 
 | Migration | Schéma v2 (`ari:v1:schema = 2`) appliqué au démarrage : lieu de chaque séance, élastique par défaut pour les exercices maison sans variante, matériel par défaut dans les réglages, séance en cours complétée. Les sauvegardes JSON v1 restent importables (migrées à l'import). |
 
 ## Tests
+
+Les tests de parcours (`e2e/`) pilotent l'app dans un navigateur à la taille d'un téléphone, avec une date
+figée (un lundi) : séance du jour, séance complète avec « machine occupée », enchaînement automatique,
+« faire plus tard » et enregistrement, panneau du geste, pesée du matin, chargement des illustrations sous
+le sous-chemin GitHub Pages, rappel de sauvegarde. Le workflow de déploiement les exécute avant de publier.
+
 
 `npm test` couvre : moyenne glissante du poids, double progression (incréments, assistance, durée,
 référence), détection de stagnation, semaine courante / blocs / RIR (y compris changement d'heure),

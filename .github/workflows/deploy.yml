@@ -25,6 +25,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      # Tests de parcours (navigateur réel, taille téléphone) : rien n'est publié s'ils échouent.
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
       - name: Build
         run: npm run build
         env:
