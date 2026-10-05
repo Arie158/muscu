@@ -109,3 +109,14 @@ test('parties du corps : résumé de la séance, étiquettes par exercice et en 
   await page.getByRole('button', { name: 'Commencer' }).click()
   await expect(page.locator('.wex .parts').first()).toContainText('Pectoraux')
 })
+
+test('exercices : filtre par partie du corps, gardé dans l’URL', async ({ page }) => {
+  await open(page, '/exercices')
+  const filters = page.getByRole('group', { name: 'Filtrer par partie du corps ciblée' })
+  await filters.getByRole('button', { name: /^Mollets/ }).click()
+  await expect(page).toHaveURL(/partie=Mollets/)
+  await expect(page.getByText(/exercices? ciblant Mollets/)).toBeVisible()
+  await expect(page.getByRole('link', { name: /Leg curl/ })).toHaveCount(0)
+  await filters.getByRole('button', { name: 'Toutes' }).click()
+  await expect(page.getByRole('link', { name: /Leg curl/ }).first()).toBeVisible()
+})
