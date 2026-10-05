@@ -104,6 +104,9 @@ test('parties du corps : résumé de la séance, étiquettes par exercice et en 
   await expect(parts.getByText('Quadriceps')).toBeVisible()
   await expect(parts.getByRole('img', { name: /Schéma du corps\. Travaille : .*Quadriceps/ })).toBeVisible()
   await expect(page.locator('.items .parts').first()).toBeVisible()
+  await parts.getByRole('link', { name: 'Mollets : voir tous les exercices' }).click()
+  await expect(page).toHaveURL(/exercices\?partie=Mollets/)
+  await expect(page.getByText(/exercices? ciblant Mollets/)).toBeVisible()
 
   await open(page, '/seance/haut-a/go')
   await page.getByRole('button', { name: 'Commencer' }).click()

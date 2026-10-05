@@ -48,8 +48,11 @@ const deload = computed(() => settings.week.isDeload && (session.value?.category
       <h2 id="parts-title" class="eyebrow">Parties du corps travaillées</h2>
       <BodyMap :primary="bodyMap.primary" :secondary="bodyMap.secondary" />
       <ul class="list-plain chips">
-        <li v-for="p in bodyParts" :key="p.label" class="badge accent">
-          {{ p.label }}<span class="count num">{{ p.count > 1 ? ` ×${p.count}` : '' }}</span>
+        <li v-for="p in bodyParts" :key="p.label">
+          <RouterLink :to="{ path: '/exercices', query: { partie: p.label } }" class="badge accent chip" :aria-label="`${p.label} : voir tous les exercices`">
+            {{ p.label }}<span class="count num">{{ p.count > 1 ? ` ×${p.count}` : '' }}</span>
+            <AppIcon name="right" :size="14" />
+          </RouterLink>
         </li>
       </ul>
     </section>
@@ -87,6 +90,8 @@ const deload = computed(() => settings.week.isDeload && (session.value?.category
 .chips { margin-top: 0.6rem; justify-content: center; display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .chips > li + li { margin-top: 0; }
 .count { opacity: 0.75; }
+.chip { min-height: 36px; padding: 0 0.5rem 0 0.75rem; font-size: 0.85rem; text-decoration: none; }
+.chip:hover, .chip:focus-visible { background: var(--accent); color: var(--on-accent); }
 .fold { border-top: 1px solid var(--border); }
 .fold > summary { cursor: pointer; min-height: 48px; display: flex; align-items: center; font-weight: 600; color: var(--muted); }
 .fold-body p { margin: 0 0 0.5rem; }
