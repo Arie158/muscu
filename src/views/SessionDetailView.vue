@@ -8,6 +8,7 @@ import { useTrackingStore } from '@/stores/tracking'
 import PageHeader from '@/components/PageHeader.vue'
 import SessionItemList from '@/components/SessionItemList.vue'
 import AppIcon from '@/components/AppIcon.vue'
+import { sessionBodyParts } from '@/lib/muscles'
 
 const props = defineProps<{ id: string }>()
 const session = computed(() => sessionsById[props.id as SessionId])
@@ -17,6 +18,7 @@ const isLower = computed(() => session.value?.id.startsWith('bas'))
 const isHome = computed(() => session.value?.location === 'home')
 const restToday = computed(() => tracking.data.dailies[settings.today]?.home === 'repos')
 const intensity = computed(() => session.value?.fixedRir ?? (settings.week.rir ? `${settings.week.rir.base} sur les bases` : ''))
+const bodyParts = computed(() => (session.value ? sessionBodyParts(session.value) : []))
 const deload = computed(() => settings.week.isDeload && (session.value?.category === 'principale' || isHome.value))
 </script>
 
@@ -39,6 +41,15 @@ const deload = computed(() => settings.week.isDeload && (session.value?.category
       <button v-if="!restToday" type="button" class="link" @click="tracking.setHomeDay(settings.today, 'repos')">Repos complet aujourd’hui</button>
       <span v-else class="small muted">Repos complet noté pour aujourd’hui.</span>
     </p>
+
+    <section v-if="bodyParts.length" class="parts" aria-labelledby="parts-title">
+      <h2 id="parts-title" class="eyebrow">Parties du corps travaillées</h2>
+      <ul class="list-plain chips">
+        <li v-for="p in bodyParts" :key="p.label" class="badge accent">
+          {{ p.label }}<span class="count num">{{ p.count > 1 ? ` ×${p.count}` : '' }}</span>
+        </li>
+      </ul>
+    </section>
 
     <SessionItemList :session="session" />
 
@@ -69,6 +80,10 @@ const deload = computed(() => settings.week.isDeload && (session.value?.category
 .notice { border-left: 4px solid var(--warn); padding: 0.35rem 0 0.35rem 0.75rem; margin: 0; }
 .center { text-align: center; margin: -0.25rem 0 0; }
 .link { background: none; border: 0; color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; min-height: 44px; }
+.parts h2 { margin: 0 0 0.4rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.chips > li + li { margin-top: 0; }
+.count { opacity: 0.75; }
 .fold { border-top: 1px solid var(--border); }
 .fold > summary { cursor: pointer; min-height: 48px; display: flex; align-items: center; font-weight: 600; color: var(--muted); }
 .fold-body p { margin: 0 0 0.5rem; }

@@ -9,6 +9,7 @@ import { pickVariant, variantOf, variantTarget } from '@/lib/home'
 import { effectiveTarget, exerciseSetCount, itemSetCount } from '@/lib/plan'
 import { useSettingsStore } from '@/stores/settings'
 import ExerciseThumb from './ExerciseThumb.vue'
+import BodyPartTags from './BodyPartTags.vue'
 
 const props = defineProps<{ session: Session }>()
 const settings = useSettingsStore()
@@ -51,6 +52,7 @@ const groupTitle = (item: SessionItem) => {
               <span class="name">
                 {{ line(item, ie).name }}
                 <span v-if="line(item, ie).variant" class="variant small muted">{{ line(item, ie).variant }}</span>
+                <BodyPartTags v-if="line(item, ie).exercise" :exercise="line(item, ie).exercise!" :secondary="false" />
               </span>
               <span class="vol num">{{ line(item, ie).volume }}</span>
             </RouterLink>

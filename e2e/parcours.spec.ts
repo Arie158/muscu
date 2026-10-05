@@ -97,3 +97,14 @@ test('rappel de sauvegarde : « Plus tard » le masque', async ({ page }) => {
   await page.getByRole('button', { name: 'Plus tard' }).click()
   await expect(page.getByText('fais une première sauvegarde')).toBeHidden()
 })
+
+test('parties du corps : résumé de la séance, étiquettes par exercice et en mode séance', async ({ page }) => {
+  await open(page, '/seances/bas-a')
+  const parts = page.getByRole('region', { name: 'Parties du corps travaillées' })
+  await expect(parts.getByText('Quadriceps')).toBeVisible()
+  await expect(page.locator('.items .parts').first()).toBeVisible()
+
+  await open(page, '/seance/haut-a/go')
+  await page.getByRole('button', { name: 'Commencer' }).click()
+  await expect(page.locator('.wex .parts').first()).toContainText('Pectoraux')
+})

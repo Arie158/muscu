@@ -17,6 +17,7 @@ import { useWorkoutsStore } from '@/stores/workouts'
 import ExerciseThumb from './ExerciseThumb.vue'
 import ExerciseSheet from './ExerciseSheet.vue'
 import AppIcon from './AppIcon.vue'
+import BodyPartTags from './BodyPartTags.vue'
 
 const props = withDefaults(
   defineProps<{ ex: ActiveExercise; itemIdx: number; exIdx: number; showName?: boolean; cue?: string; canPostpone?: boolean }>(),
@@ -101,6 +102,7 @@ function onVariant(k: HomeEquipment) {
       <div class="info">
         <h2 v-if="showName" class="name">{{ exercise.name }}</h2>
         <p v-if="planned" class="swapped small">au lieu de {{ planned.name }}</p>
+        <BodyPartTags :exercise="exercise" />
         <template v-if="!light">
           <p class="last small"><span class="muted">Dernière fois</span> {{ lastSummary ?? '— première fois' }}</p>
           <p class="suggestion small" :class="tone"><AppIcon :name="icon" :size="16" /> {{ headline }}</p>
