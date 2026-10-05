@@ -84,3 +84,19 @@ export function sessionBodyParts(session: Session): (BodyPart & { count: number 
     (a, b) => ZONE_ORDER.indexOf(a.zone) - ZONE_ORDER.indexOf(b.zone) || b.count - a.count,
   )
 }
+
+/** Parties ciblées et sollicitées sur l'ensemble d'une séance (pour le schéma du corps). */
+export function sessionBodyMap(session: Session): { primary: string[]; secondary: string[] } {
+  const primary = new Set<string>()
+  const secondary = new Set<string>()
+  for (const item of session.items) {
+    for (const ie of item.exercises) {
+      const exercise = exercisesById[ie.exerciseId]
+      if (!exercise) continue
+      const parts = exerciseBodyParts(exercise)
+      parts.primary.forEach((p) => primary.add(p.label))
+      parts.secondary.forEach((p) => secondary.add(p.label))
+    }
+  }
+  return { primary: [...primary], secondary: [...secondary].filter((l) => !primary.has(l)) }
+}

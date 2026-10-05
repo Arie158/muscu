@@ -102,6 +102,7 @@ test('parties du corps : résumé de la séance, étiquettes par exercice et en 
   await open(page, '/seances/bas-a')
   const parts = page.getByRole('region', { name: 'Parties du corps travaillées' })
   await expect(parts.getByText('Quadriceps')).toBeVisible()
+  await expect(parts.getByRole('img', { name: /Schéma du corps\. Travaille : .*Quadriceps/ })).toBeVisible()
   await expect(page.locator('.items .parts').first()).toBeVisible()
 
   await open(page, '/seance/haut-a/go')

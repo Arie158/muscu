@@ -14,9 +14,12 @@ import { formatTarget } from '@/lib/format'
 import { pickVariant } from '@/lib/home'
 import { useSettingsStore } from '@/stores/settings'
 import AppIcon from '@/components/AppIcon.vue'
+import BodyMap from '@/components/BodyMap.vue'
+import { exerciseBodyParts } from '@/lib/muscles'
 
 const props = defineProps<{ id: string }>()
 const exercise = computed(() => exercisesById[props.id])
+const parts = computed(() => (exercise.value ? exerciseBodyParts(exercise.value) : { primary: [], secondary: [] }))
 const isHome = computed(() => exercise.value?.location === 'home')
 const alts = computed(() => alternativesFor(props.id))
 const altOf = computed(() => alternativeOf(props.id))
@@ -76,6 +79,7 @@ const setsSummary = (sets: { load: number | null; reps: number | null; rir: numb
     <ExerciseIllustration :exercise="exercise" />
 
     <section class="card">
+      <BodyMap :primary="parts.primary.map((p) => p.label)" :secondary="parts.secondary.map((p) => p.label)" class="map" />
       <dl class="facts">
         <div><dt>Muscles principaux</dt><dd>{{ exercise.primaryMuscles.join(', ') }}</dd></div>
         <div v-if="exercise.secondaryMuscles.length"><dt>Muscles secondaires</dt><dd>{{ exercise.secondaryMuscles.join(', ') }}</dd></div>
@@ -225,6 +229,7 @@ const setsSummary = (sets: { load: number | null; reps: number | null; rir: numb
 </template>
 
 <style scoped>
+.map { margin-bottom: 0.75rem; }
 .facts { margin: 0; display: grid; gap: 0.6rem; }
 .facts dt { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
 .facts dd { margin: 0; font-weight: 600; }

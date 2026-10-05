@@ -8,7 +8,8 @@ import { useTrackingStore } from '@/stores/tracking'
 import PageHeader from '@/components/PageHeader.vue'
 import SessionItemList from '@/components/SessionItemList.vue'
 import AppIcon from '@/components/AppIcon.vue'
-import { sessionBodyParts } from '@/lib/muscles'
+import { sessionBodyMap, sessionBodyParts } from '@/lib/muscles'
+import BodyMap from '@/components/BodyMap.vue'
 
 const props = defineProps<{ id: string }>()
 const session = computed(() => sessionsById[props.id as SessionId])
@@ -19,6 +20,7 @@ const isHome = computed(() => session.value?.location === 'home')
 const restToday = computed(() => tracking.data.dailies[settings.today]?.home === 'repos')
 const intensity = computed(() => session.value?.fixedRir ?? (settings.week.rir ? `${settings.week.rir.base} sur les bases` : ''))
 const bodyParts = computed(() => (session.value ? sessionBodyParts(session.value) : []))
+const bodyMap = computed(() => (session.value ? sessionBodyMap(session.value) : { primary: [], secondary: [] }))
 const deload = computed(() => settings.week.isDeload && (session.value?.category === 'principale' || isHome.value))
 </script>
 
@@ -44,6 +46,7 @@ const deload = computed(() => settings.week.isDeload && (session.value?.category
 
     <section v-if="bodyParts.length" class="parts" aria-labelledby="parts-title">
       <h2 id="parts-title" class="eyebrow">Parties du corps travaillées</h2>
+      <BodyMap :primary="bodyMap.primary" :secondary="bodyMap.secondary" />
       <ul class="list-plain chips">
         <li v-for="p in bodyParts" :key="p.label" class="badge accent">
           {{ p.label }}<span class="count num">{{ p.count > 1 ? ` ×${p.count}` : '' }}</span>
@@ -81,7 +84,7 @@ const deload = computed(() => settings.week.isDeload && (session.value?.category
 .center { text-align: center; margin: -0.25rem 0 0; }
 .link { background: none; border: 0; color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; min-height: 44px; }
 .parts h2 { margin: 0 0 0.4rem; }
-.chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.chips { margin-top: 0.6rem; justify-content: center; display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .chips > li + li { margin-top: 0; }
 .count { opacity: 0.75; }
 .fold { border-top: 1px solid var(--border); }

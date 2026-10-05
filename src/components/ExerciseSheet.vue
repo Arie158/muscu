@@ -2,11 +2,14 @@
 // Panneau qui s'ouvre par-dessus la séance (sans la quitter).
 // mode « geste »   : grande illustration, consigne clé, 3 points techniques, 2 erreurs, alternatives.
 // mode « occupee » : alternatives à prendre tout de suite, ou faire l'exercice plus tard.
-import { nextTick, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import type { EquipmentVariant, Exercise } from '@/data/types'
 import ExerciseIllustration from './ExerciseIllustration.vue'
 import ExerciseThumb from './ExerciseThumb.vue'
 import AppIcon from './AppIcon.vue'
+import BodyMap from './BodyMap.vue'
+import BodyPartTags from './BodyPartTags.vue'
+import { exerciseBodyParts } from '@/lib/muscles'
 
 const props = defineProps<{
   open: boolean
@@ -21,6 +24,7 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ close: []; swap: [id: string]; postpone: [] }>()
 
+const parts = computed(() => exerciseBodyParts(props.exercise))
 const dialog = ref<HTMLDialogElement | null>(null)
 watch(
   () => props.open,
@@ -56,6 +60,13 @@ function onBackdrop(e: MouseEvent) {
           :video-query="variant?.videoQuery"
         />
         <p v-if="cue" class="cue"><strong>Clé :</strong> {{ cue }}</p>
+        <section class="muscles">
+          <h3>Muscles travaillés</h3>
+          <div class="muscles-body">
+            <BodyMap :primary="parts.primary.map((p) => p.label)" :secondary="parts.secondary.map((p) => p.label)" size="sm" />
+            <BodyPartTags :exercise="exercise" />
+          </div>
+        </section>
         <section>
           <h3>Technique</h3>
           <ul>
@@ -110,6 +121,7 @@ function onBackdrop(e: MouseEvent) {
 </template>
 
 <style scoped>
+.muscles-body { display: flex; gap: 0.9rem; align-items: center; }
 .sheet {
   width: 100%;
   max-width: 720px;
