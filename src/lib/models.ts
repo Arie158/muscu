@@ -28,6 +28,8 @@ export interface ExerciseLog {
   level?: string
   /** Exercice prévu par le programme, si une alternative a été faite à la place (machine occupée). */
   plannedId?: string
+  /** Exercice ajouté hors programme pendant la séance. */
+  extra?: boolean
 }
 
 export interface WorkoutLog {

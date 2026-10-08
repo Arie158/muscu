@@ -46,7 +46,7 @@ export default defineConfig({
           {
             urlPattern: ({ url }) => url.pathname.includes('/exercises/'),
             handler: 'CacheFirst',
-            options: { cacheName: 'illustrations', expiration: { maxEntries: 500 } },
+            options: { cacheName: 'illustrations', expiration: { maxEntries: 1500 } },
           },
         ],
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,

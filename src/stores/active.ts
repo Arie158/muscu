@@ -4,7 +4,8 @@ import { exercisesById } from '@/data/exercises'
 import { sessionsById } from '@/data/sessions'
 import { RESUME_LOAD_FACTOR } from '@/data/contingencies'
 import type { Tempo } from '@/data/home'
-import type { HomeEquipment, Location, SessionId, SessionItem, Target } from '@/data/types'
+import type { HomeEquipment, ItemExercise, Location, SessionId, SessionItem, Target } from '@/data/types'
+import { extraItem, insertPosition, removeFromOrder } from '@/lib/extra'
 import { homeSuggestion, pickVariant, variantOf, variantTarget } from '@/lib/home'
 import { effectiveTarget, exerciseSetCount, itemSetCount, postponeInOrder } from '@/lib/plan'
 import { roundHalf, suggestNext, type Suggestion, type SuggestionAction } from '@/lib/progression'
@@ -39,6 +40,8 @@ export interface ActiveExercise {
 export interface ActiveItem {
   itemId: string
   exercises: ActiveExercise[]
+  /** Exercice ajouté hors programme : sa définition de bloc (il n'existe pas dans la séance). */
+  extra?: SessionItem
 }
 
 export interface RestState {
@@ -59,7 +62,7 @@ export interface ActiveSession {
   deload: boolean
   resume: boolean
   defaultRir: number
-  /** 0 = échauffement, 1..n = exercices, n+1 = bilan. */
+  /** 0 = échauffement, 1..n = exercices (programme puis ajouts), n+1 = bilan. */
   step: number
   /** Ordre de passage des blocs (index dans la séance) ; modifié par « faire plus tard ». */
   order?: number[]
@@ -88,6 +91,10 @@ export const useActiveStore = defineStore('active', () => {
   const tracking = useTrackingStore()
 
   const session = computed(() => (active.value ? sessionsById[active.value.sessionId] : null))
+  /** Définition du bloc d'index `i` : celle de la séance, ou celle d'un exercice ajouté. */
+  function itemDef(i: number): SessionItem | undefined {
+    return active.value?.items[i]?.extra ?? session.value?.items[i]
+  }
   const order = computed(() => active.value?.order ?? active.value?.items.map((_, i) => i) ?? [])
   /** Index (dans la séance) du bloc affiché à l'étape courante, ou -1 (échauffement / bilan). */
   const currentItemIdx = computed(() => {
@@ -160,6 +167,24 @@ export const useActiveStore = defineStore('active', () => {
     return { load, reps: ex.suggestion.targetReps, rir: noRir(ex.exerciseId) ? null : rir, done: false }
   }
 
+  /** Exercice prêt à saisir : réglages maison, suggestion et `setCount` séries pré-remplies. */
+  function buildExercise(ie: ItemExercise, target: Target, setCount: number, rir: number, resume: boolean): ActiveExercise {
+    const exercise = exercisesById[ie.exerciseId]!
+    const isHome = exercise.location === 'home'
+    const ex: ActiveExercise = {
+      exerciseId: ie.exerciseId,
+      machine: isHome ? '' : (workouts.lastPerformance(ie.exerciseId)?.machine ?? ''),
+      techniqueOk: true, baseTarget: target, basePerSide: ie.perSide, target, perSide: ie.perSide,
+      suggestion: { action: 'demarrer', load: null, targetReps: target.min, title: '', detail: '' },
+      stagnating: false, sets: [],
+      equipment: isHome ? pickVariant(exercise, settingsStore.settings.homeEquipment) : null,
+      dumbbells: false, tempo: 'normal', level: '',
+    }
+    plan(ex, setCount)
+    ex.sets = Array.from({ length: setCount }, () => freshSet(ex, rir, resume))
+    return ex
+  }
+
   function start(sessionId: SessionId): void {
     const s = sessionsById[sessionId]
     const week = settingsStore.week
@@ -175,20 +200,7 @@ export const useActiveStore = defineStore('active', () => {
         exercises: item.exercises.map((ie) => {
           const exercise = exercisesById[ie.exerciseId]!
           const target = s.category === 'principale' ? effectiveTarget(ie.target, exercise, week.block) : ie.target
-          const isHome = exercise.location === 'home'
-          const ex: ActiveExercise = {
-            exerciseId: ie.exerciseId,
-            machine: isHome ? '' : (workouts.lastPerformance(ie.exerciseId)?.machine ?? ''),
-            techniqueOk: true, baseTarget: target, basePerSide: ie.perSide, target, perSide: ie.perSide,
-            suggestion: { action: 'demarrer', load: null, targetReps: target.min, title: '', detail: '' },
-            stagnating: false, sets: [],
-            equipment: isHome ? pickVariant(exercise, settingsStore.settings.homeEquipment) : null,
-            dumbbells: false, tempo: 'normal', level: '',
-          }
-          const n = exerciseSetCount(ie, item, count)
-          plan(ex, n)
-          ex.sets = Array.from({ length: n }, () => freshSet(ex, defaultRir, resume))
-          return ex
+          return buildExercise(ie, target, exerciseSetCount(ie, item, count), defaultRir, resume)
         }),
       }
     })
@@ -213,6 +225,37 @@ export const useActiveStore = defineStore('active', () => {
     ex.machine = workouts.lastPerformance(newId)?.machine ?? ''
     ex.techniqueOk = true
     replan(itemIdx, exIdx)
+    return true
+  }
+
+  /**
+   * Exercice non prévu, fait quand même : ajouté juste après le bloc affiché (en fin de séance depuis le bilan).
+   * Renvoie l'étape où il se trouve (pour y aller), ou null si l'exercice est inconnu.
+   */
+  function addExtra(exerciseId: string): number | null {
+    const a = active.value
+    const exercise = exercisesById[exerciseId]
+    if (!a || !exercise) return null
+    const next = [...order.value]
+    const item = extraItem(exercise, `extra-${uid()}`)
+    const ie = item.exercises[0]!
+    a.items.push({ itemId: item.id, extra: item, exercises: [buildExercise(ie, ie.target, item.sets, a.defaultRir, a.resume)] })
+    const pos = insertPosition(a.step, next.length)
+    next.splice(pos, 0, a.items.length - 1)
+    a.order = next
+    return pos + 1
+  }
+
+  /** Retire un exercice ajouté (ajout par erreur). Les blocs du programme ne se retirent pas. */
+  function removeExtra(itemIdx: number): boolean {
+    const a = active.value
+    if (!a?.items[itemIdx]?.extra) return false
+    const pos = order.value.indexOf(itemIdx)
+    a.order = removeFromOrder(order.value, itemIdx)
+    a.items.splice(itemIdx, 1)
+    // On reste à la même position : le bloc suivant prend la place (ou le bilan si c'était le dernier).
+    if (a.step > a.items.length + 1) a.step = a.items.length + 1
+    else if (pos >= 0 && pos + 1 < a.step) a.step--
     return true
   }
 
@@ -287,7 +330,7 @@ export const useActiveStore = defineStore('active', () => {
       if (!next.done) next.load = set.load
     }
     const allDone = item.exercises.every((e) => e.sets[setIdx]?.done ?? true)
-    const sessionItem = session.value?.items[itemIdx]
+    const sessionItem = itemDef(itemIdx)
     if (allDone && sessionItem && sessionItem.rest.max > 0) {
       const rows = Math.max(...item.exercises.map((e) => e.sets.length))
       const isLast = setIdx === rows - 1
@@ -367,6 +410,7 @@ export const useActiveStore = defineStore('active', () => {
             exerciseId: e.exerciseId, itemId: it.itemId, machine: e.machine.trim(), techniqueOk: e.techniqueOk,
             sets: e.sets.map((s) => ({ ...s })),
             ...(e.plannedId ? { plannedId: e.plannedId } : {}),
+            ...(it.extra ? { extra: true } : {}),
             ...(home
               ? { equipment: e.equipment ?? undefined, dumbbells: e.dumbbells || undefined, tempo: e.tempo, level: e.level.trim() || undefined }
               : {}),
@@ -385,8 +429,8 @@ export const useActiveStore = defineStore('active', () => {
   }
 
   return {
-    active, session, order, currentItemIdx, doneSets, totalSets, usesKg,
-    start, changeMachine, changeVariant, setDumbbells, swapExercise, postpone, updateSet, toggleDone, addSet, removeSet,
+    active, session, order, currentItemIdx, doneSets, totalSets, usesKg, itemDef,
+    start, addExtra, removeExtra, changeMachine, changeVariant, setDumbbells, swapExercise, postpone, updateSet, toggleDone, addSet, removeSet,
     startRest, addRest, pauseRest, resumeRest, stopRest, goTo, finish, abandon,
   }
 })

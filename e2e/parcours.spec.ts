@@ -123,3 +123,50 @@ test('exercices : filtre par partie du corps, gardé dans l’URL', async ({ pag
   await filters.getByRole('button', { name: 'Toutes' }).click()
   await expect(page.getByRole('link', { name: /Leg curl/ }).first()).toBeVisible()
 })
+
+test('exercice non prévu : recherche, ajout en cours de séance et au bilan, enregistré dans le carnet', async ({ page }) => {
+  await open(page, '/seance/haut-a/go')
+  await page.getByRole('button', { name: 'Commencer' }).click()
+  await expect(heading(page)).toHaveText('Développé couché haltères ou Smith')
+
+  // Depuis les options du bloc : recherche par nom anglais, ajout juste après le bloc affiché
+  await page.getByText('Options').click()
+  await page.getByRole('button', { name: 'Exercice non prévu' }).click()
+  const dialog = page.getByRole('dialog', { name: 'Ajouter un exercice' })
+  await dialog.getByRole('searchbox', { name: 'Rechercher un exercice' }).fill('hammer curl')
+  await expect(dialog.locator('.opt').first()).toContainText('Curl marteau')
+  await dialog.locator('.opt').first().click()
+  await expect(dialog).toBeHidden()
+  await expect(heading(page)).toHaveText('Curl marteau')
+  await expect(page.locator('main .eyebrow').first()).toContainText('2 / 8 · Ajouté hors programme')
+  await page.getByRole('button', { name: 'Valider la série' }).click()
+
+  // Depuis le bilan : ajout puis retrait d'un exercice ajouté par erreur
+  for (let i = 0; i < 12 && (await heading(page).textContent()) !== 'Bilan'; i++) {
+    await page.locator('.workout-bar .btn.primary').click()
+  }
+  await expect(page.locator('.summary-item', { hasText: 'Curl marteau' })).toContainText('ajouté hors programme')
+  await page.getByRole('button', { name: 'Ajouter un exercice non prévu' }).click()
+  await dialog.getByRole('searchbox').fill('rameur')
+  await dialog.locator('.opt').first().click()
+  await expect(heading(page)).toHaveText('Rameur')
+  await page.getByText('Options').click()
+  await page.getByRole('button', { name: 'Retirer cet exercice' }).click()
+  await expect(heading(page)).toHaveText('Bilan')
+  await expect(page.locator('.summary-item', { hasText: 'Rameur' })).toHaveCount(0)
+
+  await page.getByRole('button', { name: 'Enregistrer la séance' }).click()
+  await expect(heading(page)).toHaveText('Séance enregistrée 💪')
+  await page.goto('./#/suivi')
+  await page.getByRole('tab', { name: 'Carnet' }).click()
+  await page.getByText('Haut A').first().click()
+  await expect(page.locator('.log li', { hasText: 'Curl marteau' })).toContainText('(ajouté)')
+})
+
+test('exercices : recherche dans tout le catalogue, gardée dans l’URL', async ({ page }) => {
+  await open(page, '/exercices')
+  await page.getByRole('searchbox', { name: 'Rechercher un exercice' }).fill('elliptique')
+  await expect(page).toHaveURL(/q=elliptique/)
+  await expect(page.getByRole('link', { name: /Vélo elliptique/ })).toBeVisible()
+  await expect(page.getByText('1 exercice pour « elliptique »')).toBeVisible()
+})

@@ -2,6 +2,7 @@ import type { Exercise } from './types'
 // Extension .ts explicite : ce fichier est aussi importé par scripts/fetch-images.ts (node --experimental-strip-types).
 import { homeExercises } from './homeExercises.ts'
 import { gymAlternatives } from './gymAlternatives.ts'
+import { catalogExercises } from './catalog.ts'
 
 // Catalogue des exercices du programme.
 // `illustration.dbId` = identifiant dans https://github.com/yuhonas/free-exercise-db
@@ -792,8 +793,8 @@ export const gymExercises: Exercise[] = [
   },
 ]
 
-/** Catalogue complet : salle, alternatives salle, puis maison. */
-export const exercises: Exercise[] = [...gymExercises, ...gymAlternatives, ...homeExercises]
+/** Catalogue complet : salle, alternatives salle, maison, puis exercices hors programme. */
+export const exercises: Exercise[] = [...gymExercises, ...gymAlternatives, ...homeExercises, ...catalogExercises]
 
 export const exercisesById: Record<string, Exercise> = Object.fromEntries(exercises.map((e) => [e.id, e]))
 

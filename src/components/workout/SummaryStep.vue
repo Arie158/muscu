@@ -7,7 +7,7 @@ import { useActiveStore, type ActiveSession } from '@/stores/active'
 import AppIcon from '../AppIcon.vue'
 
 const props = defineProps<{ session: Session; active: ActiveSession }>()
-const emit = defineEmits<{ finish: []; abandon: [] }>()
+const emit = defineEmits<{ finish: []; abandon: []; add: [] }>()
 const store = useActiveStore()
 const heading = ref<HTMLElement | null>(null)
 defineExpose({ heading })
@@ -24,11 +24,14 @@ const count = (i: number, onlyDone: boolean) =>
     <ul class="list-plain summary">
       <li v-for="(i, pos) in store.order" :key="active.items[i]!.itemId">
         <button type="button" class="summary-item" @click="store.goTo(pos + 1)">
-          <span>{{ session.items[i]?.label }}</span>
+          <span>{{ store.itemDef(i)?.label }}<span v-if="active.items[i]?.extra" class="small muted d-block">ajouté hors programme</span></span>
           <span class="badge" :class="count(i, true) === count(i, false) ? 'ok' : 'warn'">{{ count(i, true) }} / {{ count(i, false) }}</span>
         </button>
       </li>
     </ul>
+    <button type="button" class="btn block add-extra" @click="emit('add')">
+      <AppIcon name="plus" /> Ajouter un exercice non prévu
+    </button>
     <div class="field">
       <label for="notes">Notes <span class="hint">(sensations, douleur, machine…)</span></label>
       <textarea id="notes" v-model="active.notes" />
@@ -63,4 +66,6 @@ h1:focus { outline: none; }
   cursor: pointer;
 }
 .danger-text { color: var(--danger); }
+.add-extra { border-style: dashed; color: var(--muted); }
+.d-block { display: block; }
 </style>

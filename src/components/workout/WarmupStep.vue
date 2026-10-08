@@ -34,10 +34,10 @@ const intensity = computed(() => props.session.fixedRir ?? (settings.week.rir ? 
     </ul>
     <button type="button" class="btn primary lg block" @click="store.goTo(1)">Commencer <AppIcon name="right" /></button>
     <details class="plan">
-      <summary>Voir les {{ session.items.length }} blocs de la séance</summary>
+      <summary>Voir les {{ store.order.length }} blocs de la séance</summary>
       <ol class="small">
         <li v-for="(i, pos) in store.order" :key="i">
-          <button type="button" class="link-btn" @click="store.goTo(pos + 1)">{{ session.items[i]?.label }}</button>
+          <button type="button" class="link-btn" @click="store.goTo(pos + 1)">{{ store.itemDef(i)?.label }}</button>
         </li>
       </ol>
     </details>

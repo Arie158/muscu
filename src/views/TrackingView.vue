@@ -347,7 +347,7 @@ const setsText = (sets: { load: number | null; reps: number | null; rir: number 
             </summary>
             <ul class="small log">
               <li v-for="e in l.exercises.filter((x) => x.sets.some((s) => s.done))" :key="e.itemId + e.exerciseId">
-                {{ exercisesById[e.exerciseId]?.name }}<span v-if="e.plannedId" class="muted"> (au lieu de {{ exercisesById[e.plannedId]?.name }})</span><span v-else-if="e.machine || e.level" class="muted"> ({{ e.machine || e.level }})</span> :
+                {{ exercisesById[e.exerciseId]?.name }}<span v-if="e.extra" class="muted"> (ajouté)</span><span v-if="e.plannedId" class="muted"> (au lieu de {{ exercisesById[e.plannedId]?.name }})</span><span v-else-if="e.machine || e.level" class="muted"> ({{ e.machine || e.level }})</span> :
                 <span class="num">{{ setsText(e.sets) }}</span>
               </li>
             </ul>

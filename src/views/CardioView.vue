@@ -48,15 +48,15 @@ const weekCardio = computed(() =>
     .filter((c) => c.date >= monday.value && c.date <= addDays(monday.value, 6))
     .sort((a, b) => a.date.localeCompare(b.date)),
 )
-/** Minutes de cardio doux / marche enregistrées dans les séances maison de la semaine. */
-const homeMinutes = computed(() =>
+/** Minutes de cardio enregistrées dans les séances de la semaine (cardio doux maison, cardio ajouté à une séance). */
+const sessionMinutes = computed(() =>
   workouts.logs
-    .filter((l) => l.location === 'home' && l.date >= monday.value && l.date <= addDays(monday.value, 6))
+    .filter((l) => l.date >= monday.value && l.date <= addDays(monday.value, 6))
     .flatMap((l) => l.exercises)
     .filter((e) => exercisesById[e.exerciseId]?.kind === 'cardio')
     .reduce((n, e) => n + e.sets.filter((s) => s.done).reduce((m, s) => m + (s.reps ?? 0), 0), 0),
 )
-const weekMinutes = computed(() => weekCardio.value.reduce((n, c) => n + c.minutes, 0) + homeMinutes.value)
+const weekMinutes = computed(() => weekCardio.value.reduce((n, c) => n + c.minutes, 0) + sessionMinutes.value)
 const hiitThisWeek = computed(() => weekCardio.value.filter((c) => c.type === 'hiit').length)
 const hiitAllowed = computed(() => settings.week.week >= HIIT_FROM_WEEK)
 </script>
@@ -128,7 +128,7 @@ const hiitAllowed = computed(() => settings.week.week >= HIIT_FROM_WEEK)
       <h2 id="cardio-title">Cardio de la semaine</h2>
       <p>
         <span class="big-number">{{ weekMinutes }}</span> <span class="muted">/ {{ CARDIO_WEEKLY_MINUTES.min }}-{{ CARDIO_WEEKLY_MINUTES.max }} min visées</span>
-        <span v-if="homeMinutes" class="small muted d-block">dont {{ homeMinutes }} min dans les séances maison</span>
+        <span v-if="sessionMinutes" class="small muted d-block">dont {{ sessionMinutes }} min notées dans les séances</span>
       </p>
       <div v-if="hiitThisWeek > 1" class="callout warn"><p>HIIT : 1 fois par semaine maximum.</p></div>
       <form class="stack-sm" @submit.prevent="addCardio">

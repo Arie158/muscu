@@ -1,13 +1,14 @@
-import { alternativeImageIds } from '@/data/imageSets'
+import { alternativeImageIds, catalogImageIds } from '@/data/imageSets'
 import { exerciseImage } from './images'
 
 /**
- * Précharge en arrière-plan les illustrations des alternatives (« machine occupée »),
+ * Précharge en arrière-plan les illustrations des alternatives (« machine occupée ») et les miniatures
+ * du catalogue (panneau « Ajouter un exercice »),
  * pour qu'elles soient disponibles hors ligne à la salle sans alourdir le premier lancement.
  * Le service worker les met en cache (CacheFirst). Une seule fois par version, quand le
  * téléphone est en ligne, sans mode « économie de données », et quand l'app est au repos.
  */
-export function warmAlternativeImages(version = 1): void {
+export function warmAlternativeImages(version = 2): void {
   if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return
   const key = 'ari:v1:warm-images'
   try {
@@ -18,7 +19,10 @@ export function warmAlternativeImages(version = 1): void {
   const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
   if (!navigator.onLine || conn?.saveData) return
 
-  const urls = alternativeImageIds.flatMap((id) => [0, 1].flatMap((i) => [exerciseImage(id, i, 'thumb'), exerciseImage(id, i)]))
+  const urls = [
+    ...alternativeImageIds.flatMap((id) => [0, 1].flatMap((i) => [exerciseImage(id, i, 'thumb'), exerciseImage(id, i)])),
+    ...catalogImageIds.map((id) => exerciseImage(id, 0, 'thumb')),
+  ]
   const idle = (cb: () => void) => {
     if (typeof window.requestIdleCallback === 'function') window.requestIdleCallback(cb, { timeout: 5000 })
     else globalThis.setTimeout(cb, 1000)

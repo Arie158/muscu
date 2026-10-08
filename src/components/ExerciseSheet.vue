@@ -122,24 +122,6 @@ function onBackdrop(e: MouseEvent) {
 
 <style scoped>
 .muscles-body { display: flex; gap: 0.9rem; align-items: center; }
-.sheet {
-  width: 100%;
-  max-width: 720px;
-  max-height: 88dvh;
-  margin: auto auto 0;
-  padding: 0;
-  border: 0;
-  border-radius: 20px 20px 0 0;
-  background: var(--surface);
-  color: var(--text);
-  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
-}
-.sheet::backdrop { background: rgba(0, 0, 0, 0.55); }
-.sheet[open] { animation: up 0.22s ease-out; }
-@keyframes up { from { transform: translateY(30px); opacity: 0; } to { transform: none; opacity: 1; } }
-.sheet-inner { padding: 0.5rem 1rem calc(1.25rem + var(--safe-bottom)); display: flex; flex-direction: column; gap: 0.85rem; }
-.sheet-head { display: flex; justify-content: space-between; align-items: center; }
-.sheet-head .eyebrow { margin: 0; }
 .title { font-size: 1.25rem; margin: 0; }
 .cue { margin: 0; }
 h3 { font-size: 0.95rem; margin: 0 0 0.25rem; }

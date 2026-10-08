@@ -1,19 +1,23 @@
 <script setup lang="ts">
-// Liste des fiches, filtrable par partie du corps ciblée (filtre gardé dans l'URL : ?partie=Dos).
+// Liste des fiches, filtrable par partie du corps ciblée et par recherche (gardés dans l'URL : ?partie=Dos&q=rowing).
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { exercises } from '@/data/exercises'
 import { gymAlternatives } from '@/data/gymAlternatives'
+import { catalogExercises } from '@/data/catalog'
 import type { Exercise } from '@/data/types'
 import PageHeader from '@/components/PageHeader.vue'
 import { exerciseImage } from '@/lib/images'
 import { BODY_PARTS, exerciseBodyParts } from '@/lib/muscles'
+import { searchExercises } from '@/lib/search'
+import AppIcon from '@/components/AppIcon.vue'
 
 const route = useRoute()
 const router = useRouter()
 
-const altIds = new Set(gymAlternatives.map((e) => e.id))
-const gym = exercises.filter((e) => e.location !== 'home' && !altIds.has(e.id))
+const otherIds = new Set([...gymAlternatives, ...catalogExercises].map((e) => e.id))
+const gym = exercises.filter((e) => e.location !== 'home' && !otherIds.has(e.id))
+const catalog = (pred: (e: Exercise) => boolean) => catalogExercises.filter(pred).sort((a, b) => a.name.localeCompare(b.name, 'fr'))
 const groups: { id: string; title: string; list: Exercise[] }[] = [
   { id: 'haut', title: 'Salle · haut du corps', list: gym.filter((e) => e.region === 'haut') },
   { id: 'bas', title: 'Salle · bas du corps', list: gym.filter((e) => e.region === 'bas') },
@@ -25,6 +29,12 @@ const groups: { id: string; title: string; list: Exercise[] }[] = [
     title: 'Maison · gainage, mobilité, marche',
     list: exercises.filter((e) => e.location === 'home' && !e.variants),
   },
+  { id: 'autres-haut', title: 'Autres exercices · haut du corps', list: catalog((e) => e.region === 'haut' && e.kind !== 'mobilite') },
+  { id: 'autres-bas', title: 'Autres exercices · bas du corps', list: catalog((e) => e.region === 'bas' && e.kind !== 'mobilite') },
+  { id: 'autres-tronc', title: 'Autres exercices · abdos et tronc', list: catalog((e) => e.region === 'tronc' && e.kind !== 'mobilite') },
+  { id: 'autres-global', title: 'Autres exercices · complets et athlétiques', list: catalog((e) => e.region === 'global' && e.kind !== 'cardio' && e.kind !== 'mobilite') },
+  { id: 'autres-cardio', title: 'Autres exercices · cardio', list: catalog((e) => e.kind === 'cardio') },
+  { id: 'autres-mobilite', title: 'Autres exercices · mobilité et étirements', list: catalog((e) => e.kind === 'mobilite') },
 ]
 
 const targets = new Map(exercises.map((e) => [e.id, new Set(exerciseBodyParts(e).primary.map((p) => p.label))]))
@@ -35,12 +45,21 @@ const part = computed(() => {
   const q = route.query.partie
   return typeof q === 'string' && partCounts.some((p) => p.label === q) ? q : null
 })
+const search = computed(() => (typeof route.query.q === 'string' ? route.query.q : ''))
+function setQuery(next: { partie?: string | null; q?: string }) {
+  const partie = next.partie === undefined ? part.value : next.partie
+  const q = (next.q ?? search.value).trim() ? (next.q ?? search.value) : ''
+  router.replace({ query: { ...(partie ? { partie } : {}), ...(q ? { q } : {}) } })
+}
 function select(label: string | null) {
-  router.replace({ query: label ? { partie: label } : {} })
+  setQuery({ partie: label })
 }
 const shown = computed(() =>
   groups
-    .map((g) => ({ ...g, list: part.value ? g.list.filter((e) => targets.get(e.id)!.has(part.value!)) : g.list }))
+    .map((g) => {
+      const list = part.value ? g.list.filter((e) => targets.get(e.id)!.has(part.value!)) : g.list
+      return { ...g, list: searchExercises(list, search.value) }
+    })
     .filter((g) => g.list.length),
 )
 const shownCount = computed(() => shown.value.reduce((n, g) => n + g.list.length, 0))
@@ -48,16 +67,30 @@ const shownCount = computed(() => shown.value.reduce((n, g) => n + g.list.length
 
 <template>
   <div class="stack">
-    <PageHeader title="Exercices" :subtitle="`${exercises.length} fiches avec illustrations`" back="/seances" back-label="Séances" />
+    <PageHeader title="Exercices" :subtitle="`${exercises.length} fiches`" back="/seances" back-label="Séances" />
+    <div class="search">
+      <AppIcon name="search" :size="18" class="search-icon" />
+      <input
+        type="search"
+        :value="search"
+        inputmode="search"
+        enterkeyhint="search"
+        autocomplete="off"
+        aria-label="Rechercher un exercice"
+        placeholder="Rechercher : curl, presse, poulie, fessiers…"
+        @input="setQuery({ q: ($event.target as HTMLInputElement).value })"
+      />
+    </div>
     <div class="tabs filters" role="group" aria-label="Filtrer par partie du corps ciblée">
       <button type="button" :aria-pressed="part === null" @click="select(null)">Toutes</button>
       <button v-for="p in partCounts" :key="p.label" type="button" :aria-pressed="part === p.label" @click="select(p.label)">
         {{ p.label }} <span class="n num">{{ p.count }}</span>
       </button>
     </div>
-    <p v-if="part" class="small muted result" aria-live="polite">
-      {{ shownCount }} exercice{{ shownCount > 1 ? 's' : '' }} ciblant {{ part }}
+    <p v-if="part || search" class="small muted result" aria-live="polite">
+      {{ shownCount }} exercice{{ shownCount > 1 ? 's' : '' }}<template v-if="part"> ciblant {{ part }}</template><template v-if="search"> pour « {{ search }} »</template>
     </p>
+    <p v-if="!shownCount" class="muted">Aucun exercice trouvé. Essaie un autre mot : nom, muscle ou matériel.</p>
     <section v-for="g in shown" :key="g.id" class="stack-sm">
       <h2>{{ g.title }}</h2>
       <ul class="list-plain">
@@ -94,4 +127,7 @@ const shownCount = computed(() => shown.value.reduce((n, g) => n + g.list.length
 .filters button[aria-pressed='true'] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 .n { font-weight: 500; opacity: 0.7; margin-left: 0.15rem; }
 .result { margin: 0; }
+.search { position: relative; }
+.search input { width: 100%; padding-left: 2.4rem; }
+.search-icon { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
 </style>

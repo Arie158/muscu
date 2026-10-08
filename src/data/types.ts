@@ -97,6 +97,10 @@ export interface Exercise {
   startingRefs?: StartingReference[]
   /** Variantes de matériel (exercices maison). */
   variants?: Partial<Record<HomeEquipment, EquipmentVariant>>
+  /** Autres noms pour la recherche (anglais, jargon de salle) : « bench », « RDL »… */
+  aliases?: string[]
+  /** Cible proposée quand l'exercice est ajouté hors programme (sinon déduite de sa nature). */
+  defaultTarget?: Target
 }
 
 export interface ItemExercise {

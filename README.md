@@ -83,6 +83,11 @@ L'app met en avant ce qui sert tous les jours et range le reste :
   tempo ; séries chronométrées avec compte à rebours (et changement de côté) ; circuits en tours avec tour
   courant visible et minuteur entre les tours ; option « vrais haltères » qui réactive la saisie en kg et la
   double progression ; encart sécurité élastique.
+- **Exercice non prévu** : en séance (Options du bloc, ou au bilan), « Ajouter un exercice » ouvre une recherche
+  dans tout le catalogue (225 fiches ; insensible aux accents, noms anglais acceptés : « bench », « RDL »…, filtre
+  par partie du corps, ajouts récents en tête). L'exercice s'insère après le bloc affiché, se saisit comme les
+  autres (historique propre), peut être retiré, et apparaît « (ajouté) » dans le carnet. Le cardio ajouté compte
+  dans les minutes de la semaine.
 - **Mode séance** : un écran par exercice (supersets et circuits regroupés), saisie rapide charge /
   reps / RIR, case « série faite », minuteur de repos automatique (vibration + bip), rappel de la
   dernière performance (par machine), suggestion de progression, mention « technique propre »,
@@ -107,6 +112,7 @@ src/
   data/          Contenu du programme, typé, sans logique d'affichage
     types.ts         Modèle de données
     exercises.ts     Fiches exercices salle + mapping des illustrations + charges de référence
+    catalog.ts       Catalogue hors programme (~150 fiches : machines, poulies, barre, haltères, cardio, étirements)
     homeExercises.ts Fiches exercices maison + variantes de matériel (band / improvised / none)
     sessions.ts      Séances (salle, maison, secours) + ordre de priorité
     home.ts          Règles maison : matériel, tempo, étapes de progression, volume, sécurité, alertes

@@ -15,6 +15,7 @@ import { useWakeLock } from '@/composables/useWakeLock'
 import AppIcon from '@/components/AppIcon.vue'
 import RestTimer from '@/components/RestTimer.vue'
 import WorkoutExercise from '@/components/WorkoutExercise.vue'
+import ExercisePicker from '@/components/ExercisePicker.vue'
 import SetList from '@/components/workout/SetList.vue'
 import WarmupStep from '@/components/workout/WarmupStep.vue'
 import SummaryStep from '@/components/workout/SummaryStep.vue'
@@ -38,7 +39,8 @@ const itemCount = computed(() => a.value?.items.length ?? 0)
 /** Index dans la séance du bloc affiché (l'ordre peut changer avec « faire plus tard »). */
 const itemIdx = computed(() => store.currentItemIdx)
 const item = computed(() => a.value?.items[itemIdx.value])
-const sessionItem = computed(() => session.value?.items[itemIdx.value])
+const sessionItem = computed(() => store.itemDef(itemIdx.value))
+const isExtra = computed(() => !!item.value?.extra)
 const isSummary = computed(() => step.value === itemCount.value + 1)
 const multi = computed(() => (item.value?.exercises.length ?? 0) > 1)
 const itemDone = computed(() => item.value?.exercises.every((e) => e.sets.every((s) => s.done)) ?? false)
@@ -83,6 +85,23 @@ function postpone() {
     window.scrollTo({ top: 0 })
     notify('Déplacé en fin de séance')
   }
+}
+
+// ── Exercice non prévu ──
+const adding = ref(false)
+function addExercise(id: string) {
+  adding.value = false
+  const target = store.addExtra(id)
+  if (target === null) return
+  store.goTo(target)
+  notify(`${exercisesById[id]?.name ?? 'Exercice'} ajouté`)
+}
+function removeExtra() {
+  const it = item.value
+  if (!it) return
+  const started = it.exercises.some((e) => e.sets.some((s) => s.done))
+  if (started && !window.confirm('Retirer cet exercice ajouté ? Ses séries validées ne seront pas enregistrées.')) return
+  if (store.removeExtra(itemIdx.value)) notify('Exercice retiré')
 }
 
 function switchSession() {
@@ -144,10 +163,10 @@ function finish() {
       <!-- Bloc en cours -->
       <section v-else-if="item && sessionItem" class="stack">
         <header>
-          <p class="eyebrow">{{ step }} / {{ itemCount }}<template v-if="sessionItem.format !== 'simple'"> · {{ formatLabel[sessionItem.format] }}</template></p>
+          <p class="eyebrow">{{ step }} / {{ itemCount }}<template v-if="sessionItem.format !== 'simple'"> · {{ formatLabel[sessionItem.format] }}</template><template v-if="isExtra"> · Ajouté hors programme</template></p>
           <h1 tabindex="-1" class="item-title">{{ itemTitle }}</h1>
           <p class="muted small num">{{ volume }}<template v-if="sessionItem.rest.max > 0"> · repos {{ sessionItem.restLabel }}</template></p>
-          <p class="cue small">{{ sessionItem.cue }}</p>
+          <p v-if="sessionItem.cue" class="cue small">{{ sessionItem.cue }}</p>
         </header>
 
         <p v-if="item.exercises.some((e) => e.equipment === 'band')" class="safety small" role="note">
@@ -162,7 +181,7 @@ function finish() {
             :item-idx="itemIdx"
             :ex-idx="j"
             :show-name="multi || sessionItem.format !== 'simple'"
-            :cue="sessionItem.cue"
+            :cue="sessionItem.cue || undefined"
             :can-postpone="step < itemCount && !itemDone"
             @notify="notify"
             @postpone="postpone"
@@ -171,19 +190,23 @@ function finish() {
 
         <SetList :item="item" :item-idx="itemIdx" :format="sessionItem.format" @finished="onItemFinished" />
 
-        <details v-if="sessionItem.format !== 'activite'" class="options">
+        <details class="options">
           <summary>Options</summary>
           <div class="row">
-            <button type="button" class="btn" @click="store.addSet(itemIdx)"><AppIcon name="plus" /> {{ sessionItem.format === 'circuit' ? 'Tour' : 'Série' }}</button>
-            <button type="button" class="btn" @click="store.removeSet(itemIdx)"><AppIcon name="minus" /> {{ sessionItem.format === 'circuit' ? 'Tour' : 'Série' }}</button>
+            <template v-if="sessionItem.format !== 'activite'">
+              <button type="button" class="btn" @click="store.addSet(itemIdx)"><AppIcon name="plus" /> {{ sessionItem.format === 'circuit' ? 'Tour' : 'Série' }}</button>
+              <button type="button" class="btn" @click="store.removeSet(itemIdx)"><AppIcon name="minus" /> {{ sessionItem.format === 'circuit' ? 'Tour' : 'Série' }}</button>
+            </template>
             <button v-if="sessionItem.rest.max > 0" type="button" class="btn" @click="store.startRest(defaultRest(sessionItem))">
               <AppIcon name="timer" /> Repos
             </button>
+            <button type="button" class="btn" @click="adding = true"><AppIcon name="plus" /> Exercice non prévu</button>
+            <button v-if="isExtra" type="button" class="btn danger-text" @click="removeExtra"><AppIcon name="trash" /> Retirer cet exercice</button>
           </div>
         </details>
       </section>
 
-      <SummaryStep v-else-if="isSummary" :session="session" :active="a" @finish="finish" @abandon="abandon" />
+      <SummaryStep v-else-if="isSummary" :session="session" :active="a" @finish="finish" @abandon="abandon" @add="adding = true" />
 
       <!-- Barre de navigation fixe -->
       <nav v-if="item" class="workout-bar" aria-label="Navigation entre exercices">
@@ -193,6 +216,7 @@ function finish() {
         </button>
       </nav>
 
+      <ExercisePicker :open="adding" @close="adding = false" @pick="addExercise" />
       <RestTimer />
       <p class="toast" :class="{ show: !!toast }" role="status" aria-live="polite">{{ toast }}</p>
     </template>
@@ -227,6 +251,7 @@ header p { margin: 0; }
 .safety { display: flex; gap: 0.4rem; align-items: center; color: var(--warn); margin: 0; }
 .exercises { display: flex; flex-direction: column; gap: 0.9rem; }
 .exercises > * + * { padding-top: 0.9rem; border-top: 1px solid var(--border); }
+.danger-text { color: var(--danger); }
 .options > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; color: var(--muted); font-weight: 600; }
 .workout-bar {
   position: fixed;
