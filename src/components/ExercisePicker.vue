@@ -61,7 +61,7 @@ const showRecent = computed(() => !query.value.trim() && !part.value && recent.v
 </script>
 
 <template>
-  <dialog ref="dialog" class="sheet picker" aria-labelledby="picker-title" @close="emit('close')" @click="onBackdrop">
+  <dialog ref="dialog" class="sheet picker" aria-labelledby="picker-title" @close="open && emit('close')" @click="onBackdrop">
     <div class="sheet-inner">
       <header class="sheet-head">
         <p class="eyebrow">Exercice non prévu</p>

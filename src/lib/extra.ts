@@ -1,7 +1,8 @@
-// Exercice ajouté hors programme pendant une séance (« Ajouter un exercice »).
+// Exercice ajouté hors programme, pendant une séance (« Ajouter un exercice ») ou après coup depuis le carnet.
 // Il n'existe pas dans la séance : on lui fabrique un bloc simple (séries, cible, repos)
 // déduit de la nature de l'exercice. Fonctions pures.
-import type { Exercise, SessionItem, Target } from '@/data/types'
+import type { Exercise, HomeEquipment, SessionItem, Target } from '@/data/types'
+import type { ExerciseLog } from './models'
 
 /** Séries proposées par défaut (modifiables avec + / − Série). */
 export const EXTRA_SETS = 3
@@ -54,4 +55,32 @@ export function insertPosition(step: number, orderLength: number): number {
  */
 export function removeFromOrder(order: number[], idx: number): number[] {
   return order.filter((i) => i !== idx).map((i) => (i > idx ? i - 1 : i))
+}
+
+/** Un exercice noté après coup se saisit en kg seulement s'il est chargé (salle, hors exercices maison). */
+export function loggedWithKg(exercise: Exercise): boolean {
+  return exercise.location !== 'home' && (exercise.loadType === 'poids' || exercise.loadType === 'assistance')
+}
+
+/**
+ * Exercice ajouté après coup à une séance du carnet : les séries saisies (toutes faites),
+ * sans RIR (inconnu après coup). `equipment` = variante de matériel pour un exercice maison.
+ */
+export function extraLog(
+  exercise: Exercise,
+  sets: { load: number | null; reps: number | null }[],
+  opts: { itemId: string; equipment?: HomeEquipment | null },
+): ExerciseLog {
+  const kg = loggedWithKg(exercise)
+  return {
+    exerciseId: exercise.id,
+    itemId: opts.itemId,
+    machine: '',
+    techniqueOk: true,
+    extra: true,
+    sets: sets
+      .filter((s) => s.reps !== null && s.reps > 0)
+      .map((s) => ({ load: kg ? s.load : null, reps: s.reps, rir: null, done: true })),
+    ...(opts.equipment ? { equipment: opts.equipment } : {}),
+  }
 }

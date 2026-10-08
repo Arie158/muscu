@@ -4,7 +4,7 @@ import { exercises, exercisesById } from '@/data/exercises'
 import { SESSION_ORDER } from '@/data/sessions'
 import type { HomeEquipment, SessionId, StartingReference } from '@/data/types'
 import type { ExerciseHistory } from '@/lib/criteria'
-import type { PerformanceEntry, WorkoutLog } from '@/lib/models'
+import type { ExerciseLog, PerformanceEntry, WorkoutLog } from '@/lib/models'
 import { detectStagnation } from '@/lib/progression'
 import { persistedRef } from '@/lib/storage'
 
@@ -95,6 +95,20 @@ export const useWorkoutsStore = defineStore('workouts', () => {
   function removeLog(id: string): void {
     logs.value = logs.value.filter((l) => l.id !== id)
   }
+  /** Correction après coup : ajoute un exercice non prévu à une séance enregistrée. */
+  function addToLog(logId: string, entry: ExerciseLog): boolean {
+    const log = logs.value.find((l) => l.id === logId)
+    if (!log || !entry.sets.length) return false
+    log.exercises.push(entry)
+    return true
+  }
+  /** Retire un exercice ajouté hors programme (les exercices du programme restent). */
+  function removeExtraFromLog(logId: string, index: number): boolean {
+    const log = logs.value.find((l) => l.id === logId)
+    if (!log?.exercises[index]?.extra) return false
+    log.exercises.splice(index, 1)
+    return true
+  }
   function setReferences(exerciseId: string, refs: StartingReference[]): void {
     references.value[exerciseId] = refs
   }
@@ -105,6 +119,6 @@ export const useWorkoutsStore = defineStore('workouts', () => {
 
   return {
     logs, references, sortedLogs, histories, nextInOrder,
-    historyFor, homeHistoryFor, lastPerformance, machinesFor, isStagnating, addLog, removeLog, setReferences, replace,
+    historyFor, homeHistoryFor, lastPerformance, machinesFor, isStagnating, addLog, removeLog, addToLog, removeExtraFromLog, setReferences, replace,
   }
 })

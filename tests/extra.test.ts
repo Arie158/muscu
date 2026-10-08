@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { catalogExercises } from '@/data/catalog'
 import { exercises, exercisesById } from '@/data/exercises'
 import { BODY_PARTS, exerciseBodyParts } from '@/lib/muscles'
-import { EXTRA_SETS, extraItem, extraTarget, insertPosition, removeFromOrder } from '@/lib/extra'
+import { EXTRA_SETS, extraItem, extraLog, extraTarget, insertPosition, loggedWithKg, removeFromOrder } from '@/lib/extra'
 import { normalize, searchExercises } from '@/lib/search'
 
 const ids = (list: { id: string }[]) => list.map((e) => e.id)
@@ -95,5 +95,31 @@ describe('exercice ajouté hors programme', () => {
     expect(removeFromOrder([0, 4, 2, 3, 1], 4)).toEqual([0, 2, 3, 1])
     // Deux ajouts (4 et 5) : retirer le premier renumérote le second.
     expect(removeFromOrder([0, 1, 4, 2, 3, 5], 4)).toEqual([0, 1, 2, 3, 4])
+  })
+})
+
+describe('correction après coup depuis le carnet', () => {
+  it('saisit en kg seulement les exercices chargés de la salle', () => {
+    expect(loggedWithKg(exercisesById['curl-marteau']!)).toBe(true)
+    expect(loggedWithKg(exercisesById['tractions-assistees']!)).toBe(true)
+    expect(loggedWithKg(exercisesById['tractions']!)).toBe(false)
+    expect(loggedWithKg(exercisesById['pompes']!)).toBe(false) // exercice maison
+  })
+
+  it('enregistre les séries saisies comme faites, sans RIR, marquées « ajouté »', () => {
+    const log = extraLog(exercisesById['curl-marteau']!, [{ load: 12, reps: 10 }, { load: 12, reps: 9 }], { itemId: 'extra-x' })
+    expect(log).toMatchObject({ exerciseId: 'curl-marteau', itemId: 'extra-x', extra: true, techniqueOk: true })
+    expect(log.sets).toEqual([
+      { load: 12, reps: 10, rir: null, done: true },
+      { load: 12, reps: 9, rir: null, done: true },
+    ])
+  })
+
+  it('ignore les séries vides et la charge des exercices sans kg, garde la variante maison', () => {
+    const log = extraLog(exercisesById['pompes']!, [{ load: 20, reps: 12 }, { load: null, reps: null }, { load: null, reps: 0 }], {
+      itemId: 'extra-y', equipment: 'none',
+    })
+    expect(log.sets).toEqual([{ load: null, reps: 12, rir: null, done: true }])
+    expect(log.equipment).toBe('none')
   })
 })

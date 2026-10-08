@@ -86,7 +86,9 @@ L'app met en avant ce qui sert tous les jours et range le reste :
 - **Exercice non prévu** : en séance (Options du bloc, ou au bilan), « Ajouter un exercice » ouvre une recherche
   dans tout le catalogue (225 fiches ; insensible aux accents, noms anglais acceptés : « bench », « RDL »…, filtre
   par partie du corps, ajouts récents en tête). L'exercice s'insère après le bloc affiché, se saisit comme les
-  autres (historique propre), peut être retiré, et apparaît « (ajouté) » dans le carnet. Le cardio ajouté compte
+  autres (historique propre), peut être retiré, et apparaît « (ajouté) » dans le carnet. Oublié pendant la séance ?
+  Dans le carnet, « Ajouter un exercice » sur une séance enregistrée permet de le noter après coup (séries en kg
+  et reps, sans RIR), et de le retirer. Le cardio ajouté compte
   dans les minutes de la semaine.
 - **Mode séance** : un écran par exercice (supersets et circuits regroupés), saisie rapide charge /
   reps / RIR, case « série faite », minuteur de repos automatique (vibration + bip), rappel de la

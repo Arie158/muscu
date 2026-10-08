@@ -170,3 +170,44 @@ test('exercices : recherche dans tout le catalogue, gardée dans l’URL', async
   await expect(page.getByRole('link', { name: /Vélo elliptique/ })).toBeVisible()
   await expect(page.getByText('1 exercice pour « elliptique »')).toBeVisible()
 })
+
+test('carnet : ajout après coup d’un exercice oublié, puis retrait', async ({ page }) => {
+  // Une séance enregistrée avec une série validée
+  await open(page, '/seance/haut-a/go')
+  await page.getByRole('button', { name: 'Commencer' }).click()
+  await page.getByRole('button', { name: 'Valider la série' }).click()
+  for (let i = 0; i < 10 && (await heading(page).textContent()) !== 'Bilan'; i++) {
+    await page.locator('.workout-bar .btn.primary').click()
+  }
+  await page.getByRole('button', { name: 'Enregistrer la séance' }).click()
+  await expect(heading(page)).toHaveText('Séance enregistrée 💪')
+
+  await page.goto('./#/suivi')
+  await page.getByRole('tab', { name: 'Carnet' }).click()
+  await page.getByText('Haut A').first().click()
+  await page.getByRole('button', { name: 'Ajouter un exercice' }).click()
+
+  // Choix, changement d'avis, puis saisie des séries
+  const picker = page.getByRole('dialog', { name: 'Ajouter un exercice' })
+  await picker.getByRole('searchbox').fill('rameur')
+  await picker.locator('.opt').first().click()
+  const editor = page.getByRole('dialog', { name: 'Rameur' })
+  await expect(editor).toBeVisible()
+  await editor.getByRole('button', { name: 'Changer d’exercice' }).click()
+  await picker.getByRole('searchbox').fill('curl marteau')
+  await picker.locator('.opt').first().click()
+  const curl = page.getByRole('dialog', { name: 'Curl marteau' })
+  await expect(curl.getByText('Série 3')).toBeVisible()
+  await curl.getByRole('textbox', { name: 'Charge série 1' }).fill('14')
+  await curl.getByRole('button', { name: 'Ajouter à la séance' }).click()
+  await expect(curl).toBeHidden()
+
+  const row = page.locator('.log li', { hasText: 'Curl marteau' })
+  await expect(row).toContainText('(ajouté)')
+  await expect(row).toContainText('14×10 · 14×10 · 14×10') // la charge saisie se reporte sur les séries suivantes
+
+  // Retrait
+  page.once('dialog', (d) => d.accept())
+  await row.getByRole('button', { name: /Retirer Curl marteau/ }).click()
+  await expect(page.locator('.log li', { hasText: 'Curl marteau' })).toHaveCount(0)
+})

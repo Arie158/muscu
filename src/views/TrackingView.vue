@@ -17,6 +17,11 @@ import { useInsights } from '@/composables/useInsights'
 import ChoicePicker from '@/components/ChoicePicker.vue'
 import InsightAlerts from '@/components/InsightAlerts.vue'
 import AppIcon from '@/components/AppIcon.vue'
+import ExercisePicker from '@/components/ExercisePicker.vue'
+import LogExtraEditor from '@/components/LogExtraEditor.vue'
+import type { HomeEquipment } from '@/data/types'
+import { extraLog } from '@/lib/extra'
+import { uid } from '@/lib/storage'
 
 const LineChart = defineAsyncComponent(() => import('@/components/LineChart.vue'))
 const PhotosPanel = defineAsyncComponent(() => import('@/components/PhotosPanel.vue'))
@@ -159,6 +164,41 @@ const recentLogs = computed(() => [...workouts.sortedLogs].reverse().slice(0, 30
 function removeLog(id: string) {
   if (window.confirm('Supprimer cette séance du carnet ?')) workouts.removeLog(id)
 }
+// Correction après coup : exercice non prévu ajouté à une séance enregistrée (choix, puis séries).
+const correcting = ref<string | null>(null)
+const picking = ref(false)
+const chosen = ref<string | null>(null)
+const correctingLabel = computed(() => {
+  const l = workouts.logs.find((x) => x.id === correcting.value)
+  return l ? `${sessionsById[l.sessionId].name} du ${formatShort(l.date)}` : ''
+})
+function startCorrection(logId: string) {
+  correcting.value = logId
+  chosen.value = null
+  picking.value = true
+}
+function onPick(id: string) {
+  chosen.value = id
+  picking.value = false
+}
+function onPickerClose() {
+  picking.value = false
+  if (!chosen.value) correcting.value = null
+}
+function endCorrection() {
+  correcting.value = null
+  chosen.value = null
+  picking.value = false
+}
+function saveCorrection(sets: { load: number | null; reps: number | null }[], equipment: HomeEquipment | null) {
+  const exercise = chosen.value ? exercisesById[chosen.value] : undefined
+  if (correcting.value && exercise) workouts.addToLog(correcting.value, extraLog(exercise, sets, { itemId: `extra-${uid()}`, equipment }))
+  endCorrection()
+}
+function removeExtra(logId: string, index: number, name: string) {
+  if (window.confirm(`Retirer « ${name} » de cette séance ?`)) workouts.removeExtraFromLog(logId, index)
+}
+
 const setsText = (sets: { load: number | null; reps: number | null; rir: number | null; done: boolean }[]) =>
   sets.filter((s) => s.done).map((s) => `${s.load !== null ? `${s.load}×` : ''}${s.reps}`).join(' · ')
 </script>
@@ -346,16 +386,39 @@ const setsText = (sets: { load: number | null; reps: number | null; rir: number 
               <span class="small muted">{{ formatShort(l.date) }} · S{{ l.programWeek }}</span>
             </summary>
             <ul class="small log">
-              <li v-for="e in l.exercises.filter((x) => x.sets.some((s) => s.done))" :key="e.itemId + e.exerciseId">
-                {{ exercisesById[e.exerciseId]?.name }}<span v-if="e.extra" class="muted"> (ajouté)</span><span v-if="e.plannedId" class="muted"> (au lieu de {{ exercisesById[e.plannedId]?.name }})</span><span v-else-if="e.machine || e.level" class="muted"> ({{ e.machine || e.level }})</span> :
-                <span class="num">{{ setsText(e.sets) }}</span>
-              </li>
+              <template v-for="(e, i) in l.exercises" :key="e.itemId + e.exerciseId">
+                <li v-if="e.sets.some((s) => s.done)">
+                  {{ exercisesById[e.exerciseId]?.name }}<span v-if="e.extra" class="muted"> (ajouté)</span><span v-if="e.plannedId" class="muted"> (au lieu de {{ exercisesById[e.plannedId]?.name }})</span><span v-else-if="e.machine || e.level" class="muted"> ({{ e.machine || e.level }})</span> :
+                  <span class="num">{{ setsText(e.sets) }}</span>
+                  <button
+                    v-if="e.extra"
+                    type="button"
+                    class="btn ghost icon remove-extra"
+                    :aria-label="`Retirer ${exercisesById[e.exerciseId]?.name ?? 'cet exercice'} de la séance`"
+                    @click="removeExtra(l.id, i, exercisesById[e.exerciseId]?.name ?? 'cet exercice')"
+                  >
+                    <AppIcon name="trash" :size="16" />
+                  </button>
+                </li>
+              </template>
             </ul>
             <p v-if="l.notes" class="small"><em>{{ l.notes }}</em></p>
-            <button type="button" class="btn ghost danger-text" @click="removeLog(l.id)"><AppIcon name="trash" :size="18" /> Supprimer</button>
+            <div class="row">
+              <button type="button" class="btn ghost" @click="startCorrection(l.id)"><AppIcon name="plus" :size="18" /> Ajouter un exercice</button>
+              <button type="button" class="btn ghost danger-text" @click="removeLog(l.id)"><AppIcon name="trash" :size="18" /> Supprimer</button>
+            </div>
           </details>
         </li>
       </ul>
+      <ExercisePicker :open="picking" @close="onPickerClose" @pick="onPick" />
+      <LogExtraEditor
+        :open="!!chosen && !picking"
+        :exercise-id="chosen"
+        :session-label="correctingLabel"
+        @close="endCorrection"
+        @change="picking = true"
+        @save="saveCorrection"
+      />
     </section>
   </div>
 </template>
@@ -395,5 +458,6 @@ h2 { font-size: 1.05rem; margin-bottom: 0.5rem; }
 .log-list > li + li { margin-top: 0; border-top: 1px solid var(--border); }
 .log-list summary { cursor: pointer; min-height: 52px; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }
 .log { margin-top: 0.25rem; }
+.remove-extra { min-height: 32px; width: 32px; padding: 0; vertical-align: middle; color: var(--muted); }
 .danger-text { color: var(--danger); }
 </style>
