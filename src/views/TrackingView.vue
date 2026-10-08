@@ -18,9 +18,9 @@ import ChoicePicker from '@/components/ChoicePicker.vue'
 import InsightAlerts from '@/components/InsightAlerts.vue'
 import AppIcon from '@/components/AppIcon.vue'
 import ExercisePicker from '@/components/ExercisePicker.vue'
-import LogExtraEditor from '@/components/LogExtraEditor.vue'
+import LogExerciseEditor from '@/components/LogExerciseEditor.vue'
 import type { HomeEquipment } from '@/data/types'
-import { extraLog } from '@/lib/extra'
+import { editedSets, extraLog, loggedUnit, loggedWithKg } from '@/lib/extra'
 import { uid } from '@/lib/storage'
 
 const LineChart = defineAsyncComponent(() => import('@/components/LineChart.vue'))
@@ -164,15 +164,26 @@ const recentLogs = computed(() => [...workouts.sortedLogs].reverse().slice(0, 30
 function removeLog(id: string) {
   if (window.confirm('Supprimer cette séance du carnet ?')) workouts.removeLog(id)
 }
-// Correction après coup : exercice non prévu ajouté à une séance enregistrée (choix, puis séries).
+// Correction après coup : exercice non prévu ajouté à une séance enregistrée (choix, puis séries),
+// ou modification des séries d'un exercice enregistré.
 const correcting = ref<string | null>(null)
 const picking = ref(false)
 const chosen = ref<string | null>(null)
+const editing = ref<{ logId: string; index: number } | null>(null)
+const editingLog = computed(() => (editing.value ? workouts.logs.find((x) => x.id === editing.value!.logId) : undefined))
+const editingEntry = computed(() => (editing.value ? (editingLog.value?.exercises[editing.value.index] ?? null) : null))
+const editingUnit = computed(() => (editingLog.value && editingEntry.value ? loggedUnit(editingLog.value, editingEntry.value) : null))
+const editorOpen = computed(() => !!editingEntry.value || (!!chosen.value && !picking.value))
 const correctingLabel = computed(() => {
-  const l = workouts.logs.find((x) => x.id === correcting.value)
+  const l = workouts.logs.find((x) => x.id === (editing.value?.logId ?? correcting.value))
   return l ? `${sessionsById[l.sessionId].name} du ${formatShort(l.date)}` : ''
 })
+function startEdit(logId: string, index: number) {
+  endCorrection()
+  editing.value = { logId, index }
+}
 function startCorrection(logId: string) {
+  editing.value = null
   correcting.value = logId
   chosen.value = null
   picking.value = true
@@ -186,11 +197,19 @@ function onPickerClose() {
   if (!chosen.value) correcting.value = null
 }
 function endCorrection() {
+  editing.value = null
   correcting.value = null
   chosen.value = null
   picking.value = false
 }
 function saveCorrection(sets: { load: number | null; reps: number | null }[], equipment: HomeEquipment | null) {
+  const entry = editingEntry.value
+  if (editing.value && entry) {
+    const kg = loggedWithKg(exercisesById[entry.exerciseId]!, !!entry.dumbbells)
+    workouts.updateLogExercise(editing.value.logId, editing.value.index, { sets: editedSets(sets, entry.sets, kg), equipment })
+    endCorrection()
+    return
+  }
   const exercise = chosen.value ? exercisesById[chosen.value] : undefined
   if (correcting.value && exercise) workouts.addToLog(correcting.value, extraLog(exercise, sets, { itemId: `extra-${uid()}`, equipment }))
   endCorrection()
@@ -391,9 +410,18 @@ const setsText = (sets: { load: number | null; reps: number | null; rir: number 
                   {{ exercisesById[e.exerciseId]?.name }}<span v-if="e.extra" class="muted"> (ajouté)</span><span v-if="e.plannedId" class="muted"> (au lieu de {{ exercisesById[e.plannedId]?.name }})</span><span v-else-if="e.machine || e.level" class="muted"> ({{ e.machine || e.level }})</span> :
                   <span class="num">{{ setsText(e.sets) }}</span>
                   <button
+                    v-if="exercisesById[e.exerciseId]"
+                    type="button"
+                    class="btn ghost icon row-action"
+                    :aria-label="`Modifier ${exercisesById[e.exerciseId]!.name}`"
+                    @click="startEdit(l.id, i)"
+                  >
+                    <AppIcon name="edit" :size="16" />
+                  </button>
+                  <button
                     v-if="e.extra"
                     type="button"
-                    class="btn ghost icon remove-extra"
+                    class="btn ghost icon row-action"
                     :aria-label="`Retirer ${exercisesById[e.exerciseId]?.name ?? 'cet exercice'} de la séance`"
                     @click="removeExtra(l.id, i, exercisesById[e.exerciseId]?.name ?? 'cet exercice')"
                   >
@@ -411,9 +439,11 @@ const setsText = (sets: { load: number | null; reps: number | null; rir: number 
         </li>
       </ul>
       <ExercisePicker :open="picking" @close="onPickerClose" @pick="onPick" />
-      <LogExtraEditor
-        :open="!!chosen && !picking"
-        :exercise-id="chosen"
+      <LogExerciseEditor
+        :open="editorOpen"
+        :exercise-id="editingEntry?.exerciseId ?? chosen"
+        :entry="editingEntry"
+        :unit="editingUnit"
         :session-label="correctingLabel"
         @close="endCorrection"
         @change="picking = true"
@@ -458,6 +488,6 @@ h2 { font-size: 1.05rem; margin-bottom: 0.5rem; }
 .log-list > li + li { margin-top: 0; border-top: 1px solid var(--border); }
 .log-list summary { cursor: pointer; min-height: 52px; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }
 .log { margin-top: 0.25rem; }
-.remove-extra { min-height: 32px; width: 32px; padding: 0; vertical-align: middle; color: var(--muted); }
+.row-action { min-height: 32px; width: 32px; padding: 0; vertical-align: middle; color: var(--muted); }
 .danger-text { color: var(--danger); }
 </style>

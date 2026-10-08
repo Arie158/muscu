@@ -88,7 +88,8 @@ L'app met en avant ce qui sert tous les jours et range le reste :
   par partie du corps, ajouts récents en tête). L'exercice s'insère après le bloc affiché, se saisit comme les
   autres (historique propre), peut être retiré, et apparaît « (ajouté) » dans le carnet. Oublié pendant la séance ?
   Dans le carnet, « Ajouter un exercice » sur une séance enregistrée permet de le noter après coup (séries en kg
-  et reps, sans RIR), et de le retirer. Le cardio ajouté compte
+  et reps, sans RIR), et de le retirer. Le crayon à côté de chaque exercice du carnet corrige ses séries après
+  coup (charge, reps, séries en plus ou en moins ; le RIR déjà noté est conservé). Le cardio ajouté compte
   dans les minutes de la semaine.
 - **Mode séance** : un écran par exercice (supersets et circuits regroupés), saisie rapide charge /
   reps / RIR, case « série faite », minuteur de repos automatique (vibration + bip), rappel de la

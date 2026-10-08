@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { catalogExercises } from '@/data/catalog'
 import { exercises, exercisesById } from '@/data/exercises'
 import { BODY_PARTS, exerciseBodyParts } from '@/lib/muscles'
-import { EXTRA_SETS, extraItem, extraLog, extraTarget, insertPosition, loggedWithKg, removeFromOrder } from '@/lib/extra'
+import { EXTRA_SETS, editedSets, extraItem, extraLog, extraTarget, insertPosition, loggedUnit, loggedWithKg, removeFromOrder } from '@/lib/extra'
 import { normalize, searchExercises } from '@/lib/search'
 
 const ids = (list: { id: string }[]) => list.map((e) => e.id)
@@ -121,5 +121,36 @@ describe('correction après coup depuis le carnet', () => {
     })
     expect(log.sets).toEqual([{ load: null, reps: 12, rir: null, done: true }])
     expect(log.equipment).toBe('none')
+  })
+})
+
+describe('modification d’un exercice du carnet', () => {
+  it('garde le RIR déjà noté série par série, ignore les lignes vides', () => {
+    const previous = [
+      { load: 40, reps: 8, rir: 2, done: true },
+      { load: 40, reps: null, rir: null, done: false },
+      { load: 40, reps: 7, rir: 1, done: true },
+    ]
+    const rows = [{ load: 42.5, reps: 8 }, { load: 42.5, reps: 7 }, { load: 42.5, reps: 6 }, { load: null, reps: null }]
+    expect(editedSets(rows, previous, true)).toEqual([
+      { load: 42.5, reps: 8, rir: 2, done: true },
+      { load: 42.5, reps: 7, rir: 1, done: true },
+      { load: 42.5, reps: 6, rir: null, done: true },
+    ])
+    expect(editedSets([{ load: 10, reps: 12 }], [], false)).toEqual([{ load: null, reps: 12, rir: null, done: true }])
+  })
+
+  it('saisit en kg un exercice maison fait avec de vrais haltères', () => {
+    expect(loggedWithKg(exercisesById['curl-maison']!)).toBe(false)
+    expect(loggedWithKg(exercisesById['curl-maison']!, true)).toBe(true)
+  })
+
+  it('retrouve l’unité de l’exercice dans son bloc, sa variante, ou sa nature', () => {
+    expect(loggedUnit({ sessionId: 'haut-a' }, { exerciseId: 'planche', itemId: 'inconnu' })).toBe('duree')
+    expect(loggedUnit({ sessionId: 'haut-a' }, { exerciseId: 'curl-marteau', itemId: 'extra-1' })).toBe('reps')
+    expect(loggedUnit({ sessionId: 'haut-a' }, { exerciseId: 'rameur', itemId: 'extra-2' })).toBe('minutes')
+    const lat = exercisesById['elevations-laterales-maison']!
+    const timed = (['band', 'improvised', 'none'] as const).find((k) => lat.variants?.[k]?.target?.kind === 'duree')
+    if (timed) expect(loggedUnit({ sessionId: 'maison-2' }, { exerciseId: lat.id, itemId: 'x', equipment: timed })).toBe('duree')
   })
 })

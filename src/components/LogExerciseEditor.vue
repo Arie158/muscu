@@ -1,11 +1,13 @@
 <script setup lang="ts">
-// Correction après coup depuis le carnet : séries d'un exercice non prévu, ajouté à une séance enregistrée.
-// Charge (si l'exercice se fait en kg) et répétitions / secondes / minutes ; pas de RIR après coup.
+// Correction après coup depuis le carnet : séries d'un exercice non prévu ajouté à une séance enregistrée
+// (sans `entry`), ou modification d'un exercice déjà enregistré (avec `entry`).
+// Charge (si l'exercice se fait en kg) et répétitions / secondes / minutes ; le RIR déjà noté est conservé.
 import { computed, nextTick, ref, watch } from 'vue'
 import { exercisesById } from '@/data/exercises'
 import { equipmentLabels, EQUIPMENT_PREFERENCE } from '@/data/home'
-import type { HomeEquipment } from '@/data/types'
+import type { HomeEquipment, Target } from '@/data/types'
 import { EXTRA_SETS, extraTarget, loggedWithKg } from '@/lib/extra'
+import type { ExerciseLog } from '@/lib/models'
 import { pickVariant } from '@/lib/home'
 import { useSettingsStore } from '@/stores/settings'
 import { useWorkoutsStore } from '@/stores/workouts'
@@ -13,7 +15,10 @@ import AppIcon from './AppIcon.vue'
 import ExerciseThumb from './ExerciseThumb.vue'
 import NumberStepper from './NumberStepper.vue'
 
-const props = defineProps<{ open: boolean; exerciseId: string | null; sessionLabel: string }>()
+const props = withDefaults(
+  defineProps<{ open: boolean; exerciseId: string | null; sessionLabel: string; entry?: ExerciseLog | null; unit?: Target['kind'] | null }>(),
+  { entry: null, unit: null },
+)
 const emit = defineEmits<{
   close: []
   change: []
@@ -23,19 +28,26 @@ const workouts = useWorkoutsStore()
 const settings = useSettingsStore()
 
 const exercise = computed(() => (props.exerciseId ? exercisesById[props.exerciseId] : undefined))
-const kg = computed(() => !!exercise.value && loggedWithKg(exercise.value))
+const editing = computed(() => !!props.entry)
+const kg = computed(() => !!exercise.value && loggedWithKg(exercise.value, !!props.entry?.dumbbells))
 const target = computed(() => (exercise.value ? extraTarget(exercise.value) : null))
-const valueLabel = computed(() => (target.value?.kind === 'duree' ? 'Secondes' : target.value?.kind === 'minutes' ? 'Minutes' : 'Reps'))
+const unitKind = computed(() => props.unit ?? target.value?.kind ?? 'reps')
+const valueLabel = computed(() => (unitKind.value === 'duree' ? 'Secondes' : unitKind.value === 'minutes' ? 'Minutes' : 'Reps'))
 const variantKeys = computed(() => EQUIPMENT_PREFERENCE.filter((k) => exercise.value?.variants?.[k]))
 const loadStep = computed(() => (exercise.value?.region === 'haut' && exercise.value.kind === 'isolation' ? 1 : 2.5))
 
 const rows = ref<{ load: number | null; reps: number | null }[]>([])
 const equipment = ref<HomeEquipment | null>(null)
 
-/** Pré-remplissage : dernière charge connue, bas de la fourchette cible. */
+/** Pré-remplissage : séries déjà enregistrées (modification), sinon dernière charge connue et bas de la fourchette cible. */
 function reset() {
   const e = exercise.value
   if (!e || !target.value) return
+  if (props.entry) {
+    rows.value = props.entry.sets.filter((s) => s.done).map((s) => ({ load: s.load, reps: s.reps }))
+    equipment.value = props.entry.equipment ?? null
+    return
+  }
   const lastLoad = kg.value ? (workouts.lastPerformance(e.id)?.sets.find((s) => s.done && s.load !== null)?.load ?? null) : null
   const count = e.kind === 'cardio' ? 1 : EXTRA_SETS
   rows.value = Array.from({ length: count }, () => ({ load: lastLoad, reps: target.value!.min }))
@@ -44,7 +56,7 @@ function reset() {
 
 const dialog = ref<HTMLDialogElement | null>(null)
 watch(
-  () => [props.open, props.exerciseId] as const,
+  () => [props.open, props.exerciseId, props.entry] as const,
   async ([o]) => {
     if (o) reset()
     await nextTick()
@@ -77,14 +89,14 @@ const canSave = computed(() => rows.value.some((r) => r.reps !== null && r.reps 
   <dialog ref="dialog" class="sheet" aria-labelledby="log-extra-title" @close="open && emit('close')" @click="onBackdrop">
     <div v-if="exercise" class="sheet-inner">
       <header class="sheet-head">
-        <p class="eyebrow">Ajout à {{ sessionLabel }}</p>
+        <p class="eyebrow">{{ editing ? 'Modifier' : 'Ajout à' }} {{ sessionLabel }}</p>
         <button type="button" class="btn icon ghost" aria-label="Fermer" @click="emit('close')"><AppIcon name="close" /></button>
       </header>
       <div class="ex">
         <ExerciseThumb :exercise="exercise" size="sm" :animate="false" :interactive="false" />
         <div>
           <h2 id="log-extra-title" class="title">{{ exercise.name }}</h2>
-          <button type="button" class="link small" @click="emit('change')">Changer d’exercice</button>
+          <button v-if="!editing" type="button" class="link small" @click="emit('change')">Changer d’exercice</button>
         </div>
       </div>
 
@@ -104,18 +116,18 @@ const canSave = computed(() => rows.value.some((r) => r.reps !== null && r.reps 
             </div>
             <div class="field">
               <span class="small muted">{{ valueLabel }}</span>
-              <NumberStepper :model-value="r.reps" @update:model-value="(v: number | null) => setValue(k, 'reps', v)" :label="`${valueLabel} série ${k + 1}`" :step="target?.kind === 'reps' ? 1 : 5" />
+              <NumberStepper :model-value="r.reps" @update:model-value="(v: number | null) => setValue(k, 'reps', v)" :label="`${valueLabel} série ${k + 1}`" :step="unitKind === 'reps' ? 1 : 5" />
             </div>
           </div>
         </li>
       </ol>
-      <div v-if="exercise.kind !== 'cardio'" class="row">
+      <div v-if="exercise.kind !== 'cardio' || editing" class="row">
         <button type="button" class="btn" @click="addRow"><AppIcon name="plus" /> Série</button>
         <button type="button" class="btn" :disabled="rows.length < 2" @click="removeRow"><AppIcon name="minus" /> Série</button>
       </div>
 
       <button type="button" class="btn primary lg block" :disabled="!canSave" @click="emit('save', rows, equipment)">
-        <AppIcon name="check" /> Ajouter à la séance
+        <AppIcon name="check" /> {{ editing ? 'Enregistrer les modifications' : 'Ajouter à la séance' }}
       </button>
     </div>
   </dialog>

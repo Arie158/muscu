@@ -1,8 +1,11 @@
-// Exercice ajouté hors programme, pendant une séance (« Ajouter un exercice ») ou après coup depuis le carnet.
-// Il n'existe pas dans la séance : on lui fabrique un bloc simple (séries, cible, repos)
-// déduit de la nature de l'exercice. Fonctions pures.
+// Exercice ajouté hors programme, pendant une séance (« Ajouter un exercice ») ou après coup depuis le carnet,
+// et correction d'un exercice déjà enregistré. Un exercice ajouté n'existe pas dans la séance : on lui fabrique
+// un bloc simple (séries, cible, repos) déduit de la nature de l'exercice.
+import { exercisesById } from '@/data/exercises'
+import { sessionsById } from '@/data/sessions'
 import type { Exercise, HomeEquipment, SessionItem, Target } from '@/data/types'
-import type { ExerciseLog } from './models'
+import { variantOf } from './home'
+import type { ExerciseLog, SetLog, WorkoutLog } from './models'
 
 /** Séries proposées par défaut (modifiables avec + / − Série). */
 export const EXTRA_SETS = 3
@@ -57,9 +60,34 @@ export function removeFromOrder(order: number[], idx: number): number[] {
   return order.filter((i) => i !== idx).map((i) => (i > idx ? i - 1 : i))
 }
 
-/** Un exercice noté après coup se saisit en kg seulement s'il est chargé (salle, hors exercices maison). */
-export function loggedWithKg(exercise: Exercise): boolean {
-  return exercise.location !== 'home' && (exercise.loadType === 'poids' || exercise.loadType === 'assistance')
+/**
+ * Un exercice noté après coup se saisit en kg s'il est chargé : salle (poids ou assistance),
+ * ou exercice maison fait avec de vrais haltères.
+ */
+export function loggedWithKg(exercise: Exercise, dumbbells = false): boolean {
+  if (exercise.location === 'home') return dumbbells
+  return exercise.loadType === 'poids' || exercise.loadType === 'assistance'
+}
+
+/** Unité d'un exercice enregistré : celle de son bloc dans la séance (ou de sa variante maison), sinon celle d'un ajout. */
+export function loggedUnit(log: Pick<WorkoutLog, 'sessionId'>, entry: Pick<ExerciseLog, 'exerciseId' | 'itemId' | 'plannedId' | 'equipment'>): Target['kind'] {
+  const exercise = exercisesById[entry.exerciseId]
+  const variant = exercise ? variantOf(exercise, entry.equipment) : null
+  if (variant?.target) return variant.target.kind
+  const item = sessionsById[log.sessionId]?.items.find((i) => i.id === entry.itemId)
+  const planned = item?.exercises.find((x) => x.exerciseId === (entry.plannedId ?? entry.exerciseId))
+  return planned?.target.kind ?? (exercise ? extraTarget(exercise).kind : 'reps')
+}
+
+/**
+ * Séries saisies dans le carnet → séries enregistrées (toutes faites). Les lignes vides sont ignorées ;
+ * le RIR déjà noté pour la même série est conservé (inconnu pour une série ajoutée après coup).
+ */
+export function editedSets(rows: { load: number | null; reps: number | null }[], previous: SetLog[], kg: boolean): SetLog[] {
+  const done = previous.filter((s) => s.done)
+  return rows
+    .map((r, i) => ({ load: kg ? r.load : null, reps: r.reps, rir: done[i]?.rir ?? null, done: true }))
+    .filter((s) => s.reps !== null && s.reps > 0)
 }
 
 /**
@@ -71,16 +99,13 @@ export function extraLog(
   sets: { load: number | null; reps: number | null }[],
   opts: { itemId: string; equipment?: HomeEquipment | null },
 ): ExerciseLog {
-  const kg = loggedWithKg(exercise)
   return {
     exerciseId: exercise.id,
     itemId: opts.itemId,
     machine: '',
     techniqueOk: true,
     extra: true,
-    sets: sets
-      .filter((s) => s.reps !== null && s.reps > 0)
-      .map((s) => ({ load: kg ? s.load : null, reps: s.reps, rir: null, done: true })),
+    sets: editedSets(sets, [], loggedWithKg(exercise)),
     ...(opts.equipment ? { equipment: opts.equipment } : {}),
   }
 }

@@ -102,6 +102,14 @@ export const useWorkoutsStore = defineStore('workouts', () => {
     log.exercises.push(entry)
     return true
   }
+  /** Correction après coup : remplace les séries (et la variante maison) d'un exercice enregistré. */
+  function updateLogExercise(logId: string, index: number, patch: Pick<ExerciseLog, 'sets'> & { equipment?: HomeEquipment | null }): boolean {
+    const entry = logs.value.find((l) => l.id === logId)?.exercises[index]
+    if (!entry || !patch.sets.length) return false
+    entry.sets = patch.sets
+    if (patch.equipment) entry.equipment = patch.equipment
+    return true
+  }
   /** Retire un exercice ajouté hors programme (les exercices du programme restent). */
   function removeExtraFromLog(logId: string, index: number): boolean {
     const log = logs.value.find((l) => l.id === logId)
@@ -119,6 +127,6 @@ export const useWorkoutsStore = defineStore('workouts', () => {
 
   return {
     logs, references, sortedLogs, histories, nextInOrder,
-    historyFor, homeHistoryFor, lastPerformance, machinesFor, isStagnating, addLog, removeLog, addToLog, removeExtraFromLog, setReferences, replace,
+    historyFor, homeHistoryFor, lastPerformance, machinesFor, isStagnating, addLog, removeLog, addToLog, updateLogExercise, removeExtraFromLog, setReferences, replace,
   }
 })

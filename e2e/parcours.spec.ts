@@ -211,3 +211,30 @@ test('carnet : ajout après coup d’un exercice oublié, puis retrait', async (
   await row.getByRole('button', { name: /Retirer Curl marteau/ }).click()
   await expect(page.locator('.log li', { hasText: 'Curl marteau' })).toHaveCount(0)
 })
+
+test('carnet : modification des séries d’un exercice enregistré', async ({ page }) => {
+  await open(page, '/seance/haut-a/go')
+  await page.getByRole('button', { name: 'Commencer' }).click()
+  await page.getByRole('textbox', { name: /Charge série 1/ }).fill('20')
+  await page.getByRole('button', { name: 'Valider la série' }).click()
+  for (let i = 0; i < 10 && (await heading(page).textContent()) !== 'Bilan'; i++) {
+    await page.locator('.workout-bar .btn.primary').click()
+  }
+  await page.getByRole('button', { name: 'Enregistrer la séance' }).click()
+
+  await page.goto('./#/suivi')
+  await page.getByRole('tab', { name: 'Carnet' }).click()
+  await page.getByText('Haut A').first().click()
+  const row = page.locator('.log li', { hasText: 'Développé couché' })
+  await expect(row).toContainText('20×6')
+
+  await row.getByRole('button', { name: /Modifier Développé couché/ }).click()
+  const editor = page.getByRole('dialog', { name: 'Développé couché haltères ou Smith' })
+  await expect(editor.getByText(/Modifier Haut A/)).toBeVisible()
+  await expect(editor.getByRole('button', { name: 'Changer d’exercice' })).toHaveCount(0)
+  await editor.getByRole('textbox', { name: 'Charge série 1' }).fill('22.5')
+  await editor.getByRole('button', { name: 'Série', exact: true }).first().click() // + Série
+  await editor.getByRole('button', { name: 'Enregistrer les modifications' }).click()
+  await expect(editor).toBeHidden()
+  await expect(row).toContainText('22.5×6 · 22.5×6')
+})
