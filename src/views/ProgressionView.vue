@@ -9,8 +9,12 @@ import { effectiveTarget } from '@/lib/plan'
 import { useSettingsStore } from '@/stores/settings'
 import { useWorkoutsStore } from '@/stores/workouts'
 import PageHeader from '@/components/PageHeader.vue'
-import { homeProgressionRules, homeProgressionSteps, homeVolume } from '@/data/home'
+import { homeProgressionRules, homeProgressionSteps } from '@/data/home'
+import { weekTemplate } from '@/data/week'
+import { PROGRAM_WEEKS } from '@/data/plan'
+import { balanceAlerts, doneVolume, plannedVolume, recentAverage, volumeRows } from '@/lib/volume'
 import InsightAlerts from '@/components/InsightAlerts.vue'
+import AppIcon from '@/components/AppIcon.vue'
 
 const settings = useSettingsStore()
 const workouts = useWorkoutsStore()
@@ -38,6 +42,19 @@ const rows = computed(() => {
 })
 const tracked = computed(() => rows.value.filter((r) => r.history.length))
 const stagnating = computed(() => rows.value.filter((r) => r.stagnating))
+// Volume par muscle : semaine type (décharge et mode reprise compris), semaine en cours,
+// et moyenne des 4 dernières semaines terminées (dès 2 semaines de recul).
+const planned = computed(() => plannedVolume(weekTemplate, { deload: settings.week.isDeload, resume: settings.resumeActive }))
+const recent = computed(() => {
+  const r = recentAverage(workouts.logs, Math.min(settings.week.week, PROGRAM_WEEKS + 1))
+  return r.weeks >= 2 ? r : null
+})
+const volume = computed(() =>
+  volumeRows(planned.value, doneVolume(workouts.logs.filter((l) => l.programWeek === settings.week.week)), recent.value?.volume),
+)
+const balance = computed(() => balanceAlerts(recent.value?.volume ?? planned.value))
+const sets = (n: number) => n.toLocaleString('fr-FR', { maximumFractionDigits: 1 })
+
 const tone: Record<string, string> = { augmenter: 'ok', baisser: 'warn', repetitions: 'accent' }
 </script>
 
@@ -82,17 +99,53 @@ const tone: Record<string, string> = { augmenter: 'ok', baisser: 'warn', repetit
       <ul>
         <li v-for="t in progressionText.volume" :key="t">{{ t }}</li>
       </ul>
-      <h3>Ajouté par Maison 2 (par semaine)</h3>
-      <table>
-        <thead><tr><th scope="col">Groupe</th><th scope="col">Séries</th><th scope="col">Exercice</th></tr></thead>
-        <tbody>
-          <tr v-for="v in homeVolume" :key="v.group">
-            <td>{{ v.group }}</td>
-            <td class="num">≈ +{{ v.sets }}</td>
-            <td>{{ v.from }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <h3 id="volume-muscles">Séries par muscle et par semaine</h3>
+      <p class="small muted">
+        Une série compte 1 pour un muscle principal, ½ pour un muscle secondaire (cardio et mobilité exclus) :
+        les chiffres sont donc plus hauts que les séries directes ci-dessus.
+        « Prévu » suit la semaine type<template v-if="settings.week.isDeload"> en décharge</template><template v-if="settings.resumeActive"> en mode reprise</template>, Maison 3 non comprise.
+        <template v-if="recent">« Moyenne » porte sur les {{ recent.weeks }} dernières semaines terminées : c’est elle qui est comparée au repère.</template>
+      </p>
+      <div class="table-wrap">
+        <table aria-labelledby="volume-muscles" class="volume">
+          <thead>
+            <tr>
+              <th scope="col">Muscle <span class="small">(repère)</span></th>
+              <th scope="col" class="num">Prévu</th>
+              <th scope="col" class="num">Cette sem.</th>
+              <th v-if="recent" scope="col" class="num">Moyenne</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="r in volume" :key="r.id">
+              <th scope="row">
+                {{ r.label }}
+                <span v-if="r.range" class="small muted num d-block">
+                  {{ r.range[0] }}-{{ r.range[1] }}
+                  <span v-if="r.status === 'sous'" class="badge warn">bas</span>
+                  <span v-else-if="r.status === 'au-dessus'" class="badge">élevé</span>
+                </span>
+              </th>
+              <td class="num">{{ sets(r.planned) }}</td>
+              <td class="num">{{ sets(r.done) }}</td>
+              <td v-if="recent" class="num">{{ sets(r.average ?? 0) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">
+        Repères indicatifs. Sous le repère, le muscle risque d’être peu stimulé ; au-dessus, ce n’est pas une erreur,
+        mais la récupération devient la limite (surtout en déficit calorique).
+      </p>
+      <h3>Équilibre</h3>
+      <ul v-if="balance.length" class="list-plain balance">
+        <li v-for="b in balance" :key="b.id" class="callout small"><AppIcon name="alert" :size="16" /> {{ b.text }}</li>
+      </ul>
+      <p v-else class="small">
+        <span class="badge ok">Équilibré</span>
+        Tirage et poussée, avant et arrière des épaules, quadriceps et ischio-jambiers
+        <template v-if="recent">: d’après tes séances des dernières semaines.</template><template v-else>: d’après la semaine type (tes séances seront prises en compte après 2 semaines).</template>
+      </p>
     </section>
 
     <section class="card" aria-labelledby="home-prog">
@@ -131,5 +184,11 @@ const tone: Record<string, string> = { augmenter: 'ok', baisser: 'warn', repetit
 
 <style scoped>
 .list-plain > li + li { margin-top: 0.6rem; }
+.table-wrap { overflow-x: auto; }
+.volume th[scope='row'] { font-weight: 500; text-align: left; }
+.volume .badge { margin-left: 0.25rem; font-size: 0.72rem; padding: 0.05rem 0.4rem; }
+.volume .num { text-align: right; }
+.d-block { display: block; }
+.balance li { display: flex; gap: 0.4rem; align-items: flex-start; }
 .card p:last-child { margin-bottom: 0; }
 </style>

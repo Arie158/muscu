@@ -25,41 +25,45 @@ export type BodyPartLabel =
 
 export interface Muscle {
   label: string
+  /** Libellé court pour les tableaux (sinon `label`). */
+  short?: string
   part: BodyPartLabel
   zone: BodyZone
   /**
    * Repère indicatif de séries par semaine (une série compte 1 pour un muscle principal,
-   * ½ pour un muscle secondaire). Absent : muscle suivi sans repère (stabilisateurs, mobilité).
+   * ½ pour un muscle secondaire) : en dessous, le muscle risque d'être sous-stimulé ; au-dessus,
+   * ce n'est pas une erreur mais la récupération devient le facteur limitant.
+   * Absent : muscle suivi sans repère (stabilisateurs, mobilité).
    */
   weeklySets?: readonly [min: number, max: number]
 }
 
-export const MUSCLES = {
-  pectoraux: { label: 'Pectoraux', part: 'Pectoraux', zone: 'haut', weeklySets: [10, 20] },
-  'grand-dorsal': { label: 'Grand dorsal', part: 'Dos', zone: 'haut', weeklySets: [10, 20] },
-  'haut-du-dos': { label: 'Haut du dos (rhomboïdes, trapèzes moyens)', part: 'Dos', zone: 'haut', weeklySets: [8, 16] },
+const LIST = {
+  pectoraux: { label: 'Pectoraux', part: 'Pectoraux', zone: 'haut', weeklySets: [10, 22] },
+  'grand-dorsal': { label: 'Grand dorsal', part: 'Dos', zone: 'haut', weeklySets: [10, 22] },
+  'haut-du-dos': { label: 'Haut du dos (rhomboïdes, trapèzes moyens)', short: 'Haut du dos', part: 'Dos', zone: 'haut', weeklySets: [8, 20] },
   trapezes: { label: 'Trapèzes', part: 'Trapèzes', zone: 'haut' },
-  'deltoides-anterieurs': { label: 'Épaules, avant (deltoïdes antérieurs)', part: 'Épaules', zone: 'haut' },
-  'deltoides-lateraux': { label: 'Épaules, côté (deltoïdes latéraux)', part: 'Épaules', zone: 'haut', weeklySets: [8, 16] },
-  'deltoides-posterieurs': { label: 'Épaules, arrière (deltoïdes postérieurs)', part: 'Épaules', zone: 'haut', weeklySets: [6, 14] },
+  'deltoides-anterieurs': { label: 'Épaules, avant (deltoïdes antérieurs)', short: 'Épaules avant', part: 'Épaules', zone: 'haut' },
+  'deltoides-lateraux': { label: 'Épaules, côté (deltoïdes latéraux)', short: 'Épaules côté', part: 'Épaules', zone: 'haut', weeklySets: [8, 20] },
+  'deltoides-posterieurs': { label: 'Épaules, arrière (deltoïdes postérieurs)', short: 'Épaules arrière', part: 'Épaules', zone: 'haut', weeklySets: [6, 16] },
   'coiffe-rotateurs': { label: 'Coiffe des rotateurs', part: 'Épaules', zone: 'haut' },
-  biceps: { label: 'Biceps', part: 'Biceps', zone: 'haut', weeklySets: [6, 14] },
-  triceps: { label: 'Triceps', part: 'Triceps', zone: 'haut', weeklySets: [6, 14] },
+  biceps: { label: 'Biceps', part: 'Biceps', zone: 'haut', weeklySets: [6, 20] },
+  triceps: { label: 'Triceps', part: 'Triceps', zone: 'haut', weeklySets: [6, 20] },
   'avant-bras': { label: 'Avant-bras', part: 'Avant-bras', zone: 'haut' },
-  abdominaux: { label: 'Abdominaux', part: 'Abdos', zone: 'tronc', weeklySets: [6, 16] },
+  abdominaux: { label: 'Abdominaux', part: 'Abdos', zone: 'tronc', weeklySets: [6, 20] },
   obliques: { label: 'Obliques', part: 'Abdos', zone: 'tronc' },
   lombaires: { label: 'Lombaires', part: 'Lombaires', zone: 'tronc' },
-  'flechisseurs-hanche': { label: 'Fléchisseurs de hanche', part: 'Hanches', zone: 'bas' },
-  quadriceps: { label: 'Quadriceps', part: 'Quadriceps', zone: 'bas', weeklySets: [10, 20] },
-  'ischio-jambiers': { label: 'Ischio-jambiers', part: 'Ischio-jambiers', zone: 'bas', weeklySets: [8, 16] },
-  fessiers: { label: 'Fessiers', part: 'Fessiers', zone: 'bas', weeklySets: [8, 16] },
+  'flechisseurs-hanche': { label: 'Fléchisseurs de hanche', short: 'Fléchisseurs hanche', part: 'Hanches', zone: 'bas' },
+  quadriceps: { label: 'Quadriceps', part: 'Quadriceps', zone: 'bas', weeklySets: [10, 22] },
+  'ischio-jambiers': { label: 'Ischio-jambiers', part: 'Ischio-jambiers', zone: 'bas', weeklySets: [10, 22] },
+  fessiers: { label: 'Fessiers', part: 'Fessiers', zone: 'bas', weeklySets: [10, 22] },
   adducteurs: { label: 'Adducteurs', part: 'Adducteurs', zone: 'bas' },
-  mollets: { label: 'Mollets', part: 'Mollets', zone: 'bas', weeklySets: [6, 14] },
+  mollets: { label: 'Mollets', part: 'Mollets', zone: 'bas', weeklySets: [6, 16] },
   cardio: { label: 'Système cardiovasculaire', part: 'Cardio', zone: 'global' },
 } as const satisfies Record<string, Muscle>
 
-export type MuscleId = keyof typeof MUSCLES
+export type MuscleId = keyof typeof LIST
+
+export const MUSCLES: Record<MuscleId, Muscle> = LIST
 
 export const MUSCLE_IDS = Object.keys(MUSCLES) as MuscleId[]
-
-export const muscle = (id: MuscleId): Muscle => MUSCLES[id]

@@ -267,3 +267,12 @@ test('carnet : modification des séries d’un exercice enregistré', async ({ p
   await expect(editor).toBeHidden()
   await expect(row).toContainText('22.5×6 · 22.5×6')
 })
+
+test('progression : séries par muscle et par semaine, équilibre', async ({ page }) => {
+  await open(page, '/progression')
+  const table = page.getByRole('table', { name: /Séries par muscle/ })
+  await expect(table.getByRole('rowheader', { name: /Pectoraux/ })).toBeVisible()
+  await expect(table.getByRole('rowheader', { name: /Épaules arrière/ })).toBeVisible()
+  await expect(table.getByRole('rowheader', { name: /Système cardiovasculaire/ })).toHaveCount(0)
+  await expect(page.getByText('Équilibré')).toBeVisible()
+})

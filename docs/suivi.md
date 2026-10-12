@@ -11,14 +11,15 @@ Type : 🐞 bug · ✨ fonctionnalité · 🎨 ergonomie
 
 | Id | Type | Sujet | Statut | Notes |
 |---|---|---|---|---|
-| S-003 | ✨ | Mieux gérer les muscles dans l'app | 🔍 | Proposition du 2026-10-13, à valider : (1) liste de muscles fixe à la place du texte libre (48 libellés aujourd'hui, rapprochés par des règles fragiles : « Jambes », « Épaules » sans distinguer avant/côté/arrière, « Cardio » compté comme une partie du corps) ; (2) nombre de séries par muscle et par semaine (prévu et réalisé), comparé à une fourchette conseillée ; (3) alerte de déséquilibre (ex. pousser/tirer, avant/arrière de l'épaule). |
+| — | | (rien en attente) | | |
 
 ## Fait
 
 | Id | Type | Sujet | Livré le | Commit |
 |---|---|---|---|---|
-| S-001 | 🐞 | Fiche exercice : « Retour » ramène à la page d'origine (séance, carnet, liste filtrée) ; vers la liste des exercices seulement si la fiche est ouverte directement | 2026-10-13 | à enregistrer |
-| S-002 | 🎨 | Ajout d'un exercice non prévu : bouton après le dernier exercice de la séance (plus dans « Options » de chaque bloc) et au bilan ; dans le carnet, juste sous la liste des exercices | 2026-10-13 | à enregistrer |
+| S-003 | ✨ | Muscles : liste fixe de 21 muscles (épaule avant / côté / arrière), séries par muscle et par semaine (prévu, semaine en cours, moyenne 4 semaines) avec repères, alertes d'équilibre (pousser/tirer, épaules avant/arrière, quadriceps/ischios) dans Progression | 2026-10-13 | 59e22f9 + suivant |
+| S-001 | 🐞 | Fiche exercice : « Retour » ramène à la page d'origine (séance, carnet, liste filtrée) ; vers la liste des exercices seulement si la fiche est ouverte directement | 2026-10-13 | 8fa14e8 |
+| S-002 | 🎨 | Ajout d'un exercice non prévu : bouton après le dernier exercice de la séance (plus dans « Options » de chaque bloc) et au bilan ; dans le carnet, juste sous la liste des exercices | 2026-10-13 | b860792 |
 | — | ✨ | Modification des séries d'un exercice enregistré dans le carnet | 2026-10-08 | 55fe223 |
 | — | ✨ | Ajout après coup d'un exercice oublié dans le carnet | 2026-10-08 | 3d1f8cc |
 | — | ✨ | Ajout d'un exercice non prévu en séance, catalogue de 225 fiches | 2026-10-08 | 184bf24 |
