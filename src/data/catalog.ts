@@ -27,7 +27,7 @@ const entries: Entry[] = [
   // ───────────────────────── Pectoraux ─────────────────────────
   {
     id: 'developpe-incline-barre', name: 'Développé incliné barre', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['incline bench press'], primaryMuscles: ['Pectoraux (haut)'], secondaryMuscles: ['Deltoïdes antérieurs', 'Triceps'],
+    aliases: ['incline bench press'], primaryMuscles: ['pectoraux'], secondaryMuscles: ['deltoides-anterieurs', 'triceps'], muscleFocus: 'haut des pectoraux',
     equipment: 'Banc incliné à 30° + barre',
     technique: ['Banc à 30°, omoplates serrées et abaissées.', 'Barre vers le haut des pectoraux, coudes à ~45°.', 'Descente contrôlée, pousser sans décoller les épaules.'],
     mistakes: ['Banc trop incliné (ça devient un développé épaules).', 'Rebond sur la poitrine.'],
@@ -36,7 +36,7 @@ const entries: Entry[] = [
   },
   {
     id: 'developpe-couche-smith', name: 'Développé couché au Smith', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['smith bench press'], primaryMuscles: ['Pectoraux'], secondaryMuscles: ['Triceps', 'Deltoïdes antérieurs'],
+    aliases: ['smith bench press'], primaryMuscles: ['pectoraux'], secondaryMuscles: ['triceps', 'deltoides-anterieurs'],
     equipment: 'Smith machine + banc plat',
     technique: ['Banc placé pour que la barre descende sur le bas des pectoraux.', 'Omoplates serrées, pieds ancrés.', 'Descente en 2 s, pousser sans verrouiller.'],
     mistakes: ['Banc mal placé (barre vers le cou).', 'Fesses qui décollent.'],
@@ -45,7 +45,7 @@ const entries: Entry[] = [
   },
   {
     id: 'chest-press-inclinee', name: 'Chest press inclinée (machine)', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['incline chest press'], primaryMuscles: ['Pectoraux (haut)'], secondaryMuscles: ['Deltoïdes antérieurs', 'Triceps'],
+    aliases: ['incline chest press'], primaryMuscles: ['pectoraux'], secondaryMuscles: ['deltoides-anterieurs', 'triceps'], muscleFocus: 'haut des pectoraux',
     equipment: 'Machine développé incliné',
     technique: ['Siège réglé pour que les poignées partent au niveau du haut des pectoraux.', 'Dos et omoplates collés au dossier.', 'Pousser sans verrouiller, retour lent.'],
     mistakes: ['Épaules qui avancent en fin de poussée.', 'Retour sans contrôle.'],
@@ -54,7 +54,7 @@ const entries: Entry[] = [
   },
   {
     id: 'chest-press-declinee', name: 'Chest press déclinée (machine)', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['decline chest press'], primaryMuscles: ['Pectoraux (bas)'], secondaryMuscles: ['Triceps', 'Deltoïdes antérieurs'],
+    aliases: ['decline chest press'], primaryMuscles: ['pectoraux'], secondaryMuscles: ['triceps', 'deltoides-anterieurs'], muscleFocus: 'bas des pectoraux',
     equipment: 'Machine développé décliné',
     technique: ['Poignées au niveau du bas des pectoraux.', 'Omoplates serrées contre le dossier.', 'Pousser vers le bas et l’avant, retour contrôlé.'],
     mistakes: ['Amplitude raccourcie.', 'Épaules qui remontent.'],
@@ -63,7 +63,7 @@ const entries: Entry[] = [
   },
   {
     id: 'ecarte-incline-halteres', name: 'Écarté incliné haltères', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['incline dumbbell fly'], primaryMuscles: ['Pectoraux (haut)'], secondaryMuscles: ['Deltoïdes antérieurs'],
+    aliases: ['incline dumbbell fly'], primaryMuscles: ['pectoraux'], secondaryMuscles: ['deltoides-anterieurs'], muscleFocus: 'haut des pectoraux',
     equipment: 'Banc incliné + haltères',
     technique: ['Banc à 30°, coudes légèrement fléchis et fixes.', 'Descendre en arc jusqu’à un étirement confortable.', 'Remonter en serrant les pectoraux.'],
     mistakes: ['Descendre trop bas (épaules).', 'Plier les coudes (ça devient un développé).'],
@@ -72,7 +72,7 @@ const entries: Entry[] = [
   },
   {
     id: 'ecarte-poulie-basse', name: 'Écarté poulie basse (vers le haut)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['low cable fly', 'low to high'], primaryMuscles: ['Pectoraux (haut)'], secondaryMuscles: ['Deltoïdes antérieurs'],
+    aliases: ['low cable fly', 'low to high'], primaryMuscles: ['pectoraux'], secondaryMuscles: ['deltoides-anterieurs'], muscleFocus: 'haut des pectoraux',
     equipment: 'Deux poulies basses',
     technique: ['Poignées en bas, un pas en avant.', 'Ramener les mains vers le haut, devant le menton.', 'Coudes légèrement fléchis, serrer 1 s.'],
     mistakes: ['Tirer avec les bras.', 'Cambrer le dos.'],
@@ -81,7 +81,7 @@ const entries: Entry[] = [
   },
   {
     id: 'ecarte-poulie-incline', name: 'Écarté poulie sur banc incliné', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['incline cable fly'], primaryMuscles: ['Pectoraux (haut)'], secondaryMuscles: ['Deltoïdes antérieurs'],
+    aliases: ['incline cable fly'], primaryMuscles: ['pectoraux'], secondaryMuscles: ['deltoides-anterieurs'], muscleFocus: 'haut des pectoraux',
     equipment: 'Banc incliné entre deux poulies basses',
     technique: ['Banc à 30° au centre des poulies.', 'Coudes légèrement fléchis, ouvrir en arc.', 'Rapprocher les mains au-dessus de la poitrine.'],
     mistakes: ['Descendre les coudes trop bas.', 'Charge trop lourde.'],
@@ -90,7 +90,7 @@ const entries: Entry[] = [
   },
   {
     id: 'pull-over-haltere', name: 'Pull-over haltère', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['pullover'], primaryMuscles: ['Pectoraux', 'Grand dorsal'], secondaryMuscles: ['Triceps'],
+    aliases: ['pullover'], primaryMuscles: ['pectoraux', 'grand-dorsal'], secondaryMuscles: ['triceps'],
     equipment: 'Haltère + banc plat',
     technique: ['Haltère tenu à deux mains au-dessus de la poitrine.', 'Descendre derrière la tête bras presque tendus.', 'Revenir au-dessus de la poitrine sans plier les coudes.'],
     mistakes: ['Descendre trop loin (épaules).', 'Cambrer fortement le dos.'],
@@ -99,7 +99,7 @@ const entries: Entry[] = [
   },
   {
     id: 'dips-barres', name: 'Dips aux barres parallèles', region: 'haut', kind: 'base', loadType: 'poids-du-corps',
-    aliases: ['dips'], primaryMuscles: ['Pectoraux (bas)', 'Triceps'], secondaryMuscles: ['Deltoïdes antérieurs'],
+    aliases: ['dips'], primaryMuscles: ['pectoraux', 'triceps'], secondaryMuscles: ['deltoides-anterieurs'], muscleFocus: 'bas des pectoraux',
     equipment: 'Barres parallèles (station dips)',
     technique: ['Bras tendus, épaules basses.', 'Descendre jusqu’à ~90° au coude, buste légèrement penché.', 'Remonter sans verrouiller brutalement.'],
     mistakes: ['Descendre trop bas (épaules).', 'Épaules qui montent vers les oreilles.'],
@@ -108,7 +108,7 @@ const entries: Entry[] = [
   },
   {
     id: 'pompes-declinees', name: 'Pompes déclinées (pieds surélevés)', region: 'haut', kind: 'base', loadType: 'poids-du-corps',
-    aliases: ['decline push-up'], primaryMuscles: ['Pectoraux (haut)'], secondaryMuscles: ['Deltoïdes antérieurs', 'Triceps'],
+    aliases: ['decline push-up'], primaryMuscles: ['pectoraux'], secondaryMuscles: ['deltoides-anterieurs', 'triceps'], muscleFocus: 'haut des pectoraux',
     equipment: 'Banc ou marche pour les pieds',
     technique: ['Pieds sur un banc, mains un peu plus larges que les épaules.', 'Corps gainé en ligne.', 'Poitrine vers le sol, pousser en expirant.'],
     mistakes: ['Bassin qui s’affaisse.', 'Amplitude partielle.'],
@@ -117,7 +117,7 @@ const entries: Entry[] = [
   },
   {
     id: 'pompes-serrees', name: 'Pompes serrées (diamant)', region: 'haut', kind: 'base', loadType: 'poids-du-corps',
-    aliases: ['diamond push-up', 'close grip push-up'], primaryMuscles: ['Triceps', 'Pectoraux'], secondaryMuscles: ['Deltoïdes antérieurs'],
+    aliases: ['diamond push-up', 'close grip push-up'], primaryMuscles: ['triceps', 'pectoraux'], secondaryMuscles: ['deltoides-anterieurs'],
     equipment: 'Aucun',
     technique: ['Mains rapprochées sous la poitrine.', 'Coudes le long du corps.', 'Corps gainé, descente contrôlée.'],
     mistakes: ['Coudes qui s’écartent.', 'Bassin qui s’affaisse.'],
@@ -126,7 +126,7 @@ const entries: Entry[] = [
   },
   {
     id: 'developpe-poulie-debout', name: 'Développé à la poulie debout', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['cable chest press'], primaryMuscles: ['Pectoraux'], secondaryMuscles: ['Triceps', 'Deltoïdes antérieurs'],
+    aliases: ['cable chest press'], primaryMuscles: ['pectoraux'], secondaryMuscles: ['triceps', 'deltoides-anterieurs'],
     equipment: 'Deux poulies à hauteur de poitrine',
     technique: ['Un pied devant, buste gainé.', 'Pousser les poignées devant la poitrine.', 'Retour lent jusqu’à l’étirement.'],
     mistakes: ['Cambrer le dos.', 'Perdre l’équilibre (charge trop lourde).'],
@@ -135,7 +135,7 @@ const entries: Entry[] = [
   },
   {
     id: 'floor-press-halteres', name: 'Floor press haltères (au sol)', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['floor press'], primaryMuscles: ['Pectoraux', 'Triceps'], secondaryMuscles: ['Deltoïdes antérieurs'],
+    aliases: ['floor press'], primaryMuscles: ['pectoraux', 'triceps'], secondaryMuscles: ['deltoides-anterieurs'],
     equipment: 'Haltères, au sol',
     technique: ['Allongé au sol, genoux fléchis.', 'Descendre jusqu’à ce que les coudes touchent le sol.', 'Pousser sans rebondir.'],
     mistakes: ['Laisser tomber les coudes au sol.', 'Coudes à 90° du buste.'],
@@ -146,7 +146,7 @@ const entries: Entry[] = [
   // ───────────────────────── Dos ─────────────────────────
   {
     id: 'tractions', name: 'Tractions (pronation)', region: 'haut', kind: 'base', loadType: 'poids-du-corps',
-    aliases: ['pull-up', 'pullups'], primaryMuscles: ['Grand dorsal'], secondaryMuscles: ['Biceps', 'Rhomboïdes'],
+    aliases: ['pull-up', 'pullups'], primaryMuscles: ['grand-dorsal'], secondaryMuscles: ['biceps', 'haut-du-dos'],
     equipment: 'Barre de traction',
     technique: ['Prise un peu plus large que les épaules, paumes vers l’avant.', 'Tirer la poitrine vers la barre, coudes vers les hanches.', 'Redescendre bras tendus, sans balancer.'],
     mistakes: ['Amplitude partielle.', 'Se balancer (kipping).'],
@@ -155,7 +155,7 @@ const entries: Entry[] = [
   },
   {
     id: 'tractions-supination', name: 'Tractions supination (chin-up)', region: 'haut', kind: 'base', loadType: 'poids-du-corps',
-    aliases: ['chin-up'], primaryMuscles: ['Grand dorsal', 'Biceps'], secondaryMuscles: ['Rhomboïdes'],
+    aliases: ['chin-up'], primaryMuscles: ['grand-dorsal', 'biceps'], secondaryMuscles: ['haut-du-dos'],
     equipment: 'Barre de traction',
     technique: ['Prise largeur d’épaules, paumes vers soi.', 'Menton au-dessus de la barre.', 'Descente lente jusqu’à bras tendus.'],
     mistakes: ['Amplitude partielle.', 'Balancer les jambes.'],
@@ -164,7 +164,7 @@ const entries: Entry[] = [
   },
   {
     id: 'tirage-vertical-supination', name: 'Tirage vertical prise inversée', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['underhand pulldown', 'reverse grip lat pulldown'], primaryMuscles: ['Grand dorsal'], secondaryMuscles: ['Biceps', 'Rhomboïdes'],
+    aliases: ['underhand pulldown', 'reverse grip lat pulldown'], primaryMuscles: ['grand-dorsal'], secondaryMuscles: ['biceps', 'haut-du-dos'],
     equipment: 'Poulie haute, barre droite',
     technique: ['Prise largeur d’épaules, paumes vers soi.', 'Tirer la barre vers le haut de la poitrine.', 'Remonter lentement jusqu’à bras tendus.'],
     mistakes: ['Se pencher en arrière pour tirer.', 'Remonter sans contrôle.'],
@@ -173,7 +173,7 @@ const entries: Entry[] = [
   },
   {
     id: 'tirage-vertical-serre', name: 'Tirage vertical prise serrée', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['close grip lat pulldown'], primaryMuscles: ['Grand dorsal'], secondaryMuscles: ['Biceps', 'Rhomboïdes'],
+    aliases: ['close grip lat pulldown'], primaryMuscles: ['grand-dorsal'], secondaryMuscles: ['biceps', 'haut-du-dos'],
     equipment: 'Poulie haute, barre droite prise serrée',
     technique: ['Mains rapprochées, poitrine sortie.', 'Tirer les coudes vers le bas et l’arrière.', 'Remonter jusqu’à l’étirement complet.'],
     mistakes: ['Tirer avec les bras.', 'Balancer le buste.'],
@@ -182,7 +182,7 @@ const entries: Entry[] = [
   },
   {
     id: 'tirage-bras-tendus', name: 'Tirage bras tendus à la poulie (pull-over poulie)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['straight arm pulldown', 'pullover poulie'], primaryMuscles: ['Grand dorsal'], secondaryMuscles: ['Triceps', 'Abdominaux'],
+    aliases: ['straight arm pulldown', 'pullover poulie'], primaryMuscles: ['grand-dorsal'], secondaryMuscles: ['triceps', 'abdominaux'],
     equipment: 'Poulie haute, barre droite ou corde',
     technique: ['Bras presque tendus, buste légèrement penché.', 'Ramener la barre vers les cuisses en arc.', 'Remonter lentement jusqu’aux yeux.'],
     mistakes: ['Plier les coudes (ça devient un pushdown).', 'Hausser les épaules.'],
@@ -191,7 +191,7 @@ const entries: Entry[] = [
   },
   {
     id: 'rowing-barre', name: 'Rowing barre buste penché', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['barbell row', 'bent over row'], primaryMuscles: ['Dos (rhomboïdes, trapèzes moyens)', 'Grand dorsal'], secondaryMuscles: ['Biceps', 'Lombaires'],
+    aliases: ['barbell row', 'bent over row'], primaryMuscles: ['haut-du-dos', 'grand-dorsal'], secondaryMuscles: ['biceps', 'lombaires'],
     equipment: 'Barre',
     technique: ['Buste penché à ~45°, dos neutre, genoux fléchis.', 'Tirer la barre vers le nombril.', 'Serrer les omoplates, redescendre lentement.'],
     mistakes: ['Arrondir le dos.', 'Se redresser pour tirer la charge.'],
@@ -200,7 +200,7 @@ const entries: Entry[] = [
   },
   {
     id: 'rowing-halteres', name: 'Rowing deux haltères buste penché', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['dumbbell row'], primaryMuscles: ['Dos (rhomboïdes, trapèzes moyens)', 'Grand dorsal'], secondaryMuscles: ['Biceps', 'Lombaires'],
+    aliases: ['dumbbell row'], primaryMuscles: ['haut-du-dos', 'grand-dorsal'], secondaryMuscles: ['biceps', 'lombaires'],
     equipment: 'Haltères',
     technique: ['Buste penché, dos neutre.', 'Tirer les coudes vers l’arrière, près du corps.', 'Redescendre jusqu’à bras tendus.'],
     mistakes: ['Arrondir le dos.', 'Donner de l’élan.'],
@@ -209,7 +209,7 @@ const entries: Entry[] = [
   },
   {
     id: 'rowing-poitrine-appuyee', name: 'Rowing poitrine appuyée (banc incliné)', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['chest supported row', 'seal row'], primaryMuscles: ['Dos (rhomboïdes, trapèzes moyens)'], secondaryMuscles: ['Grand dorsal', 'Biceps', 'Deltoïdes postérieurs'],
+    aliases: ['chest supported row', 'seal row'], primaryMuscles: ['haut-du-dos'], secondaryMuscles: ['grand-dorsal', 'biceps', 'deltoides-posterieurs'],
     equipment: 'Banc incliné + haltères',
     technique: ['Poitrine contre le banc incliné.', 'Tirer les coudes vers l’arrière.', 'Serrer les omoplates 1 s.'],
     mistakes: ['Décoller la poitrine du banc.', 'Hausser les épaules.'],
@@ -218,7 +218,7 @@ const entries: Entry[] = [
   },
   {
     id: 'rowing-t-bar', name: 'Rowing T-bar', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['t-bar row', 'landmine row'], primaryMuscles: ['Dos (rhomboïdes, trapèzes moyens)', 'Grand dorsal'], secondaryMuscles: ['Biceps', 'Lombaires'],
+    aliases: ['t-bar row', 'landmine row'], primaryMuscles: ['haut-du-dos', 'grand-dorsal'], secondaryMuscles: ['biceps', 'lombaires'],
     equipment: 'Barre T (ou landmine) avec poignée',
     technique: ['Pieds de part et d’autre de la barre, dos neutre.', 'Tirer la poignée vers le bas de la poitrine.', 'Redescendre jusqu’à l’étirement.'],
     mistakes: ['Arrondir le dos.', 'Se redresser en tirant.'],
@@ -227,7 +227,7 @@ const entries: Entry[] = [
   },
   {
     id: 'rowing-machine-haute', name: 'High row (tirage machine vers le bas)', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['high row'], primaryMuscles: ['Grand dorsal'], secondaryMuscles: ['Rhomboïdes', 'Biceps'],
+    aliases: ['high row'], primaryMuscles: ['grand-dorsal'], secondaryMuscles: ['haut-du-dos', 'biceps'],
     equipment: 'Machine high row (convergente)',
     technique: ['Cuisses calées, poitrine contre l’appui.', 'Tirer les poignées vers le bas et l’arrière.', 'Remonter lentement.'],
     mistakes: ['Se pencher en arrière.', 'Tirer avec les mains.'],
@@ -236,7 +236,7 @@ const entries: Entry[] = [
   },
   {
     id: 'rowing-machine', name: 'Rowing machine convergente', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['machine row', 'iso row'], primaryMuscles: ['Dos (rhomboïdes, trapèzes moyens)'], secondaryMuscles: ['Grand dorsal', 'Biceps'],
+    aliases: ['machine row', 'iso row'], primaryMuscles: ['haut-du-dos'], secondaryMuscles: ['grand-dorsal', 'biceps'],
     equipment: 'Machine rowing convergente',
     technique: ['Poitrine contre l’appui, dos neutre.', 'Tirer les coudes vers l’arrière.', 'Serrer les omoplates, retour lent.'],
     mistakes: ['Décoller la poitrine.', 'Hausser les épaules.'],
@@ -245,7 +245,7 @@ const entries: Entry[] = [
   },
   {
     id: 'rowing-smith', name: 'Rowing au Smith', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['smith row'], primaryMuscles: ['Dos (rhomboïdes, trapèzes moyens)', 'Grand dorsal'], secondaryMuscles: ['Biceps', 'Lombaires'],
+    aliases: ['smith row'], primaryMuscles: ['haut-du-dos', 'grand-dorsal'], secondaryMuscles: ['biceps', 'lombaires'],
     equipment: 'Smith machine',
     technique: ['Buste penché, dos neutre.', 'Tirer la barre vers le nombril.', 'Redescendre lentement.'],
     mistakes: ['Arrondir le dos.', 'Se redresser.'],
@@ -254,7 +254,7 @@ const entries: Entry[] = [
   },
   {
     id: 'rowing-inverse', name: 'Rowing inversé (australian pull-up)', region: 'haut', kind: 'base', loadType: 'poids-du-corps',
-    aliases: ['inverted row', 'australian pull-up'], primaryMuscles: ['Dos (rhomboïdes, trapèzes moyens)'], secondaryMuscles: ['Grand dorsal', 'Biceps'],
+    aliases: ['inverted row', 'australian pull-up'], primaryMuscles: ['haut-du-dos'], secondaryMuscles: ['grand-dorsal', 'biceps'],
     equipment: 'Barre du Smith ou TRX',
     technique: ['Sous la barre, corps gainé en ligne.', 'Tirer la poitrine vers la barre.', 'Redescendre bras tendus.'],
     mistakes: ['Bassin qui s’affaisse.', 'Amplitude partielle.'],
@@ -263,7 +263,7 @@ const entries: Entry[] = [
   },
   {
     id: 'rowing-poulie-un-bras', name: 'Rowing poulie un bras (assis)', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['single arm cable row'], primaryMuscles: ['Grand dorsal', 'Dos (rhomboïdes, trapèzes moyens)'], secondaryMuscles: ['Biceps'],
+    aliases: ['single arm cable row'], primaryMuscles: ['grand-dorsal', 'haut-du-dos'], secondaryMuscles: ['biceps'],
     equipment: 'Poulie basse + poignée simple',
     technique: ['Assis, dos neutre.', 'Tirer le coude vers la hanche.', 'Retour lent jusqu’à l’étirement.'],
     mistakes: ['Pivoter le buste.', 'Hausser l’épaule.'],
@@ -272,7 +272,7 @@ const entries: Entry[] = [
   },
   {
     id: 'souleve-de-terre', name: 'Soulevé de terre', region: 'bas', kind: 'base', loadType: 'poids', noFailure: true,
-    aliases: ['deadlift', 'sdt'], primaryMuscles: ['Ischio-jambiers', 'Fessiers', 'Lombaires'], secondaryMuscles: ['Quadriceps', 'Trapèzes', 'Avant-bras'],
+    aliases: ['deadlift', 'sdt'], primaryMuscles: ['ischio-jambiers', 'fessiers', 'lombaires'], secondaryMuscles: ['quadriceps', 'trapezes', 'avant-bras'],
     equipment: 'Barre + disques',
     technique: ['Barre au-dessus du milieu du pied, dos neutre.', 'Pousser le sol avec les jambes, barre collée aux jambes.', 'Verrouiller en serrant les fessiers, sans cambrer.'],
     mistakes: ['Arrondir le dos.', 'Barre qui s’éloigne des jambes.'],
@@ -281,7 +281,7 @@ const entries: Entry[] = [
   },
   {
     id: 'souleve-de-terre-sumo', name: 'Soulevé de terre sumo', region: 'bas', kind: 'base', loadType: 'poids', noFailure: true,
-    aliases: ['sumo deadlift'], primaryMuscles: ['Fessiers', 'Quadriceps', 'Adducteurs'], secondaryMuscles: ['Ischio-jambiers', 'Lombaires'],
+    aliases: ['sumo deadlift'], primaryMuscles: ['fessiers', 'quadriceps', 'adducteurs'], secondaryMuscles: ['ischio-jambiers', 'lombaires'],
     equipment: 'Barre + disques (ou kettlebell)',
     technique: ['Pieds écartés, pointes vers l’extérieur.', 'Mains entre les jambes, dos neutre.', 'Pousser les genoux vers l’extérieur en montant.'],
     mistakes: ['Genoux qui rentrent.', 'Arrondir le dos.'],
@@ -290,7 +290,7 @@ const entries: Entry[] = [
   },
   {
     id: 'souleve-de-terre-jambes-tendues', name: 'Soulevé de terre jambes tendues', region: 'bas', kind: 'base', loadType: 'poids',
-    aliases: ['stiff leg deadlift'], primaryMuscles: ['Ischio-jambiers'], secondaryMuscles: ['Fessiers', 'Lombaires'],
+    aliases: ['stiff leg deadlift'], primaryMuscles: ['ischio-jambiers'], secondaryMuscles: ['fessiers', 'lombaires'],
     equipment: 'Barre ou haltères',
     technique: ['Jambes presque tendues, dos neutre.', 'Descendre en poussant les hanches en arrière.', 'Remonter en serrant les fessiers.'],
     mistakes: ['Arrondir le dos.', 'Descendre plus bas que la souplesse ne le permet.'],
@@ -299,7 +299,7 @@ const entries: Entry[] = [
   },
   {
     id: 'extensions-lombaires', name: 'Extensions lombaires (banc à 45°)', region: 'tronc', kind: 'isolation', loadType: 'poids-du-corps',
-    aliases: ['hyperextension', 'back extension'], primaryMuscles: ['Lombaires'], secondaryMuscles: ['Fessiers', 'Ischio-jambiers'],
+    aliases: ['hyperextension', 'back extension'], primaryMuscles: ['lombaires'], secondaryMuscles: ['fessiers', 'ischio-jambiers'],
     equipment: 'Banc à lombaires (45° ou 90°)',
     technique: ['Bassin calé, bras croisés sur la poitrine.', 'Descendre dos neutre.', 'Remonter jusqu’à l’alignement, sans hyper-cambrer.'],
     mistakes: ['Hyper-cambrer en haut.', 'Aller trop vite.'],
@@ -308,7 +308,7 @@ const entries: Entry[] = [
   },
   {
     id: 'extension-lombaires-machine', name: 'Extension lombaires (machine)', region: 'tronc', kind: 'isolation', loadType: 'poids',
-    aliases: ['lower back machine'], primaryMuscles: ['Lombaires'], secondaryMuscles: ['Fessiers'],
+    aliases: ['lower back machine'], primaryMuscles: ['lombaires'], secondaryMuscles: ['fessiers'],
     equipment: 'Machine extension lombaires',
     technique: ['Dossier calé en haut du dos.', 'Pousser vers l’arrière lentement.', 'Revenir sans laisser claquer les poids.'],
     mistakes: ['Charge trop lourde.', 'Mouvement brusque.'],
@@ -317,7 +317,7 @@ const entries: Entry[] = [
   },
   {
     id: 'superman', name: 'Superman (au sol)', region: 'tronc', kind: 'gainage', loadType: 'poids-du-corps',
-    aliases: ['superman'], primaryMuscles: ['Lombaires'], secondaryMuscles: ['Fessiers', 'Deltoïdes postérieurs'],
+    aliases: ['superman'], primaryMuscles: ['lombaires'], secondaryMuscles: ['fessiers', 'deltoides-posterieurs'],
     equipment: 'Aucun (tapis)',
     technique: ['À plat ventre, bras tendus devant.', 'Décoller bras et jambes de quelques centimètres.', 'Tenir 2 s, redescendre lentement.'],
     mistakes: ['Cambrer fort la nuque.', 'Monter trop haut.'],
@@ -326,7 +326,7 @@ const entries: Entry[] = [
   },
   {
     id: 'shrug-halteres', name: 'Shrug haltères (haussements d’épaules)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['shrug', 'dumbbell shrug'], primaryMuscles: ['Trapèzes'], secondaryMuscles: ['Avant-bras'],
+    aliases: ['shrug', 'dumbbell shrug'], primaryMuscles: ['trapezes'], secondaryMuscles: ['avant-bras'],
     equipment: 'Haltères',
     technique: ['Bras tendus le long du corps.', 'Monter les épaules vers les oreilles.', 'Tenir 1 s, redescendre lentement.'],
     mistakes: ['Rouler les épaules.', 'Plier les coudes.'],
@@ -335,7 +335,7 @@ const entries: Entry[] = [
   },
   {
     id: 'shrug-barre', name: 'Shrug barre (ou Smith)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['barbell shrug'], primaryMuscles: ['Trapèzes'], secondaryMuscles: ['Avant-bras'],
+    aliases: ['barbell shrug'], primaryMuscles: ['trapezes'], secondaryMuscles: ['avant-bras'],
     equipment: 'Barre ou Smith machine',
     technique: ['Barre devant les cuisses, bras tendus.', 'Monter les épaules droit vers le haut.', 'Redescendre lentement.'],
     mistakes: ['Rouler les épaules.', 'Donner de l’élan avec les jambes.'],
@@ -344,7 +344,7 @@ const entries: Entry[] = [
   },
   {
     id: 'suspension-barre', name: 'Suspension à la barre (dead hang)', region: 'haut', kind: 'gainage', loadType: 'duree',
-    aliases: ['dead hang'], primaryMuscles: ['Avant-bras'], secondaryMuscles: ['Grand dorsal', 'Épaules'],
+    aliases: ['dead hang'], primaryMuscles: ['avant-bras'], secondaryMuscles: ['grand-dorsal', 'deltoides-anterieurs'],
     equipment: 'Barre de traction',
     technique: ['Prise largeur d’épaules, bras tendus.', 'Épaules légèrement engagées (pas complètement relâchées).', 'Respirer calmement.'],
     mistakes: ['Se balancer.', 'Épaules totalement passives si douleur.'],
@@ -355,7 +355,7 @@ const entries: Entry[] = [
   // ───────────────────────── Épaules ─────────────────────────
   {
     id: 'developpe-militaire', name: 'Développé militaire barre (debout)', region: 'haut', kind: 'base', loadType: 'poids', noFailure: true,
-    aliases: ['overhead press', 'ohp', 'military press'], primaryMuscles: ['Deltoïdes antérieurs et latéraux'], secondaryMuscles: ['Triceps', 'Trapèzes', 'Abdominaux'],
+    aliases: ['overhead press', 'ohp', 'military press'], primaryMuscles: ['deltoides-anterieurs', 'deltoides-lateraux'], secondaryMuscles: ['triceps', 'trapezes', 'abdominaux'],
     equipment: 'Barre (rack)',
     technique: ['Barre sur le haut de la poitrine, fessiers et abdos serrés.', 'Pousser à la verticale en passant la tête sous la barre.', 'Redescendre contrôlé.'],
     mistakes: ['Cambrer le bas du dos.', 'Pousser la barre vers l’avant.'],
@@ -364,7 +364,7 @@ const entries: Entry[] = [
   },
   {
     id: 'developpe-arnold', name: 'Développé Arnold', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['arnold press'], primaryMuscles: ['Deltoïdes antérieurs et latéraux'], secondaryMuscles: ['Triceps'],
+    aliases: ['arnold press'], primaryMuscles: ['deltoides-anterieurs', 'deltoides-lateraux'], secondaryMuscles: ['triceps'],
     equipment: 'Haltères + banc à dossier',
     technique: ['Départ paumes vers soi devant les épaules.', 'Tourner les paumes vers l’avant en poussant.', 'Redescendre en faisant la rotation inverse.'],
     mistakes: ['Cambrer.', 'Aller trop vite sur la rotation.'],
@@ -373,7 +373,7 @@ const entries: Entry[] = [
   },
   {
     id: 'elevations-laterales-machine', name: 'Élévations latérales (machine)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['lateral raise machine'], primaryMuscles: ['Deltoïdes latéraux'], secondaryMuscles: ['Trapèzes'],
+    aliases: ['lateral raise machine'], primaryMuscles: ['deltoides-lateraux'], secondaryMuscles: ['trapezes'],
     equipment: 'Machine élévations latérales',
     technique: ['Siège réglé : épaules alignées avec l’axe de la machine.', 'Monter les coudes jusqu’à hauteur d’épaules.', 'Redescendre lentement.'],
     mistakes: ['Hausser les épaules.', 'Laisser claquer les poids.'],
@@ -382,7 +382,7 @@ const entries: Entry[] = [
   },
   {
     id: 'elevations-frontales-halteres', name: 'Élévations frontales haltères', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['front raise'], primaryMuscles: ['Deltoïdes antérieurs'], secondaryMuscles: ['Pectoraux (haut)'],
+    aliases: ['front raise'], primaryMuscles: ['deltoides-anterieurs'], secondaryMuscles: ['pectoraux'],
     equipment: 'Haltères',
     technique: ['Bras presque tendus devant les cuisses.', 'Monter jusqu’à hauteur d’yeux.', 'Redescendre lentement.'],
     mistakes: ['Se balancer.', 'Monter trop haut.'],
@@ -391,7 +391,7 @@ const entries: Entry[] = [
   },
   {
     id: 'elevations-frontales-poulie', name: 'Élévations frontales poulie', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['cable front raise'], primaryMuscles: ['Deltoïdes antérieurs'], secondaryMuscles: ['Pectoraux (haut)'],
+    aliases: ['cable front raise'], primaryMuscles: ['deltoides-anterieurs'], secondaryMuscles: ['pectoraux'],
     equipment: 'Poulie basse, barre ou corde',
     technique: ['Dos à la poulie ou face à elle, buste gainé.', 'Monter bras tendus jusqu’à hauteur d’yeux.', 'Redescendre lentement.'],
     mistakes: ['Cambrer.', 'Donner de l’élan.'],
@@ -400,7 +400,7 @@ const entries: Entry[] = [
   },
   {
     id: 'elevations-frontales-disque', name: 'Élévation frontale avec disque', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['plate raise'], primaryMuscles: ['Deltoïdes antérieurs'], secondaryMuscles: ['Trapèzes'],
+    aliases: ['plate raise'], primaryMuscles: ['deltoides-anterieurs'], secondaryMuscles: ['trapezes'],
     equipment: 'Disque',
     technique: ['Disque tenu à deux mains devant les cuisses.', 'Monter bras tendus jusqu’à hauteur d’yeux.', 'Redescendre lentement.'],
     mistakes: ['Se cambrer.', 'Élan des jambes.'],
@@ -409,7 +409,7 @@ const entries: Entry[] = [
   },
   {
     id: 'oiseau-poulie', name: 'Oiseau à la poulie (croisé)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['cable rear delt fly', 'reverse fly'], primaryMuscles: ['Deltoïdes postérieurs'], secondaryMuscles: ['Rhomboïdes', 'Trapèzes'],
+    aliases: ['cable rear delt fly', 'reverse fly'], primaryMuscles: ['deltoides-posterieurs'], secondaryMuscles: ['haut-du-dos', 'trapezes'],
     equipment: 'Deux poulies hautes (câbles croisés)',
     technique: ['Câbles croisés devant soi, bras presque tendus.', 'Ouvrir les bras vers l’arrière à hauteur d’épaules.', 'Retour lent.'],
     mistakes: ['Tirer avec le dos (omoplates).', 'Charge trop lourde.'],
@@ -418,7 +418,7 @@ const entries: Entry[] = [
   },
   {
     id: 'tirage-menton', name: 'Tirage menton (rowing debout)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['upright row'], primaryMuscles: ['Deltoïdes latéraux', 'Trapèzes'], secondaryMuscles: ['Biceps'],
+    aliases: ['upright row'], primaryMuscles: ['deltoides-lateraux', 'trapezes'], secondaryMuscles: ['biceps'],
     equipment: 'Barre, barre EZ ou poulie basse',
     technique: ['Prise largeur d’épaules (pas trop serrée).', 'Monter les coudes jusqu’à hauteur d’épaules, pas plus.', 'Redescendre lentement.'],
     mistakes: ['Prise trop serrée (épaules).', 'Monter les coudes trop haut.'],
@@ -427,7 +427,7 @@ const entries: Entry[] = [
   },
   {
     id: 'rotation-externe-poulie', name: 'Rotation externe à la poulie', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['external rotation'], primaryMuscles: ['Rotateurs de l’épaule'], secondaryMuscles: ['Deltoïdes postérieurs'],
+    aliases: ['external rotation'], primaryMuscles: ['coiffe-rotateurs'], secondaryMuscles: ['deltoides-posterieurs'],
     equipment: 'Poulie à hauteur de coude',
     technique: ['Coude collé au corps, fléchi à 90°.', 'Tourner l’avant-bras vers l’extérieur.', 'Retour lent.'],
     mistakes: ['Décoller le coude.', 'Charge trop lourde.'],
@@ -436,7 +436,7 @@ const entries: Entry[] = [
   },
   {
     id: 'rotation-externe-elastique', name: 'Rotation externe à l’élastique', region: 'haut', kind: 'isolation', loadType: 'poids-du-corps',
-    aliases: ['band external rotation'], primaryMuscles: ['Rotateurs de l’épaule'], secondaryMuscles: ['Deltoïdes postérieurs'],
+    aliases: ['band external rotation'], primaryMuscles: ['coiffe-rotateurs'], secondaryMuscles: ['deltoides-posterieurs'],
     equipment: 'Élastique',
     technique: ['Coude collé au corps, fléchi à 90°.', 'Tourner l’avant-bras vers l’extérieur.', 'Retour lent.'],
     mistakes: ['Décoller le coude.', 'Élastique trop dur.'],
@@ -445,7 +445,7 @@ const entries: Entry[] = [
   },
   {
     id: 'band-pull-apart', name: 'Écartés à l’élastique (pull-apart)', region: 'haut', kind: 'isolation', loadType: 'poids-du-corps',
-    aliases: ['band pull apart'], primaryMuscles: ['Deltoïdes postérieurs'], secondaryMuscles: ['Rhomboïdes', 'Trapèzes'],
+    aliases: ['band pull apart'], primaryMuscles: ['deltoides-posterieurs'], secondaryMuscles: ['haut-du-dos', 'trapezes'],
     equipment: 'Élastique',
     technique: ['Bras tendus devant, élastique à hauteur d’épaules.', 'Écarter les mains jusqu’à toucher la poitrine.', 'Retour lent.'],
     mistakes: ['Hausser les épaules.', 'Cambrer.'],
@@ -456,7 +456,7 @@ const entries: Entry[] = [
   // ───────────────────────── Biceps et avant-bras ─────────────────────────
   {
     id: 'curl-barre', name: 'Curl barre', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['barbell curl'], primaryMuscles: ['Biceps'], secondaryMuscles: ['Avant-bras'],
+    aliases: ['barbell curl'], primaryMuscles: ['biceps'], secondaryMuscles: ['avant-bras'],
     equipment: 'Barre droite',
     technique: ['Coudes collés au corps.', 'Monter la barre sans bouger les coudes.', 'Redescendre lentement jusqu’à bras tendus.'],
     mistakes: ['Se balancer.', 'Avancer les coudes.'],
@@ -465,7 +465,7 @@ const entries: Entry[] = [
   },
   {
     id: 'curl-barre-ez', name: 'Curl barre EZ', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['ez bar curl'], primaryMuscles: ['Biceps'], secondaryMuscles: ['Avant-bras'],
+    aliases: ['ez bar curl'], primaryMuscles: ['biceps'], secondaryMuscles: ['avant-bras'],
     equipment: 'Barre EZ',
     technique: ['Prise sur les parties inclinées de la barre.', 'Coudes fixes le long du corps.', 'Descente lente.'],
     mistakes: ['Élan du buste.', 'Amplitude partielle.'],
@@ -474,7 +474,7 @@ const entries: Entry[] = [
   },
   {
     id: 'curl-marteau', name: 'Curl marteau', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['hammer curl'], primaryMuscles: ['Biceps', 'Brachial'], secondaryMuscles: ['Avant-bras'],
+    aliases: ['hammer curl'], primaryMuscles: ['biceps'], secondaryMuscles: ['avant-bras'], muscleFocus: 'brachial',
     equipment: 'Haltères',
     technique: ['Paumes face à face (prise neutre).', 'Coudes fixes, monter jusqu’à l’épaule.', 'Redescendre lentement.'],
     mistakes: ['Balancer.', 'Coudes qui avancent.'],
@@ -483,7 +483,7 @@ const entries: Entry[] = [
   },
   {
     id: 'curl-marteau-corde', name: 'Curl marteau à la corde (poulie)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['rope hammer curl'], primaryMuscles: ['Brachial', 'Biceps'], secondaryMuscles: ['Avant-bras'],
+    aliases: ['rope hammer curl'], primaryMuscles: ['biceps'], secondaryMuscles: ['avant-bras'], muscleFocus: 'brachial',
     equipment: 'Poulie basse + corde',
     technique: ['Coudes collés au corps.', 'Monter la corde jusqu’aux épaules.', 'Retour lent.'],
     mistakes: ['Se pencher en arrière.', 'Coudes qui avancent.'],
@@ -492,7 +492,7 @@ const entries: Entry[] = [
   },
   {
     id: 'curl-pupitre', name: 'Curl pupitre (barre EZ)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['preacher curl', 'larry scott'], primaryMuscles: ['Biceps'], secondaryMuscles: ['Brachial'],
+    aliases: ['preacher curl', 'larry scott'], primaryMuscles: ['biceps'], secondaryMuscles: [], muscleFocus: 'brachial',
     equipment: 'Pupitre + barre EZ',
     technique: ['Aisselles calées en haut du pupitre.', 'Descendre presque bras tendus, sans verrouiller.', 'Monter sans décoller les coudes.'],
     mistakes: ['Laisser tomber la charge en bas.', 'Décoller les coudes.'],
@@ -501,7 +501,7 @@ const entries: Entry[] = [
   },
   {
     id: 'curl-pupitre-machine', name: 'Curl pupitre machine', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['machine preacher curl'], primaryMuscles: ['Biceps'], secondaryMuscles: ['Brachial'],
+    aliases: ['machine preacher curl'], primaryMuscles: ['biceps'], secondaryMuscles: [], muscleFocus: 'brachial',
     equipment: 'Machine curl pupitre',
     technique: ['Coudes alignés avec l’axe de la machine.', 'Monter sans décoller les bras.', 'Retour lent.'],
     mistakes: ['Laisser claquer les poids.', 'Amplitude partielle.'],
@@ -510,7 +510,7 @@ const entries: Entry[] = [
   },
   {
     id: 'curl-concentre', name: 'Curl concentré', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['concentration curl'], primaryMuscles: ['Biceps'], secondaryMuscles: ['Brachial'],
+    aliases: ['concentration curl'], primaryMuscles: ['biceps'], secondaryMuscles: [], muscleFocus: 'brachial',
     equipment: 'Haltère + banc',
     technique: ['Assis, coude calé contre l’intérieur de la cuisse.', 'Monter l’haltère vers l’épaule.', 'Descente lente.'],
     mistakes: ['Bouger le buste.', 'Décoller le coude.'],
@@ -519,7 +519,7 @@ const entries: Entry[] = [
   },
   {
     id: 'curl-poulie-haute', name: 'Curl poulie haute (double biceps)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['high cable curl'], primaryMuscles: ['Biceps'], secondaryMuscles: [],
+    aliases: ['high cable curl'], primaryMuscles: ['biceps'], secondaryMuscles: [],
     equipment: 'Deux poulies hautes',
     technique: ['Bras à hauteur d’épaules, paumes vers le haut.', 'Plier les coudes vers les oreilles.', 'Retour lent.'],
     mistakes: ['Baisser les coudes.', 'Charge trop lourde.'],
@@ -528,7 +528,7 @@ const entries: Entry[] = [
   },
   {
     id: 'curl-inverse', name: 'Curl inversé (prise pronation)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['reverse curl'], primaryMuscles: ['Avant-bras', 'Brachial'], secondaryMuscles: ['Biceps'],
+    aliases: ['reverse curl'], primaryMuscles: ['avant-bras', 'biceps'], secondaryMuscles: [], muscleFocus: 'brachial',
     equipment: 'Barre droite ou EZ',
     technique: ['Paumes vers le bas.', 'Coudes fixes, monter la barre.', 'Descente lente.'],
     mistakes: ['Casser les poignets.', 'Élan du buste.'],
@@ -537,7 +537,7 @@ const entries: Entry[] = [
   },
   {
     id: 'curl-poignets', name: 'Flexion des poignets (wrist curl)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['wrist curl'], primaryMuscles: ['Avant-bras'], secondaryMuscles: [],
+    aliases: ['wrist curl'], primaryMuscles: ['avant-bras'], secondaryMuscles: [],
     equipment: 'Barre ou haltères + banc',
     technique: ['Avant-bras posés sur les cuisses, paumes vers le haut.', 'Enrouler les poignets.', 'Redescendre lentement.'],
     mistakes: ['Bouger les avant-bras.', 'Aller trop vite.'],
@@ -546,7 +546,7 @@ const entries: Entry[] = [
   },
   {
     id: 'extension-poignets', name: 'Extension des poignets (reverse wrist curl)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['reverse wrist curl'], primaryMuscles: ['Avant-bras'], secondaryMuscles: [],
+    aliases: ['reverse wrist curl'], primaryMuscles: ['avant-bras'], secondaryMuscles: [],
     equipment: 'Barre ou haltères + banc',
     technique: ['Avant-bras posés, paumes vers le bas.', 'Relever le dos des mains.', 'Redescendre lentement.'],
     mistakes: ['Charge trop lourde.', 'À-coups.'],
@@ -555,7 +555,7 @@ const entries: Entry[] = [
   },
   {
     id: 'marche-fermier', name: 'Marche du fermier', region: 'global', kind: 'base', loadType: 'poids', defaultTarget: SEC(30, 45),
-    aliases: ['farmer walk', 'farmers carry'], primaryMuscles: ['Avant-bras', 'Trapèzes'], secondaryMuscles: ['Abdominaux', 'Jambes'],
+    aliases: ['farmer walk', 'farmers carry'], primaryMuscles: ['avant-bras', 'trapezes'], secondaryMuscles: ['abdominaux', 'quadriceps', 'fessiers', 'mollets'],
     equipment: 'Haltères lourds ou kettlebells',
     technique: ['Charges de chaque côté, épaules basses.', 'Marcher à petits pas, buste droit.', 'Gainage permanent.'],
     mistakes: ['Pencher d’un côté.', 'Épaules qui tombent vers l’avant.'],
@@ -566,7 +566,7 @@ const entries: Entry[] = [
   // ───────────────────────── Triceps ─────────────────────────
   {
     id: 'extension-triceps-corde', name: 'Extension triceps à la corde (poulie haute)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['rope pushdown', 'triceps pushdown'], primaryMuscles: ['Triceps'], secondaryMuscles: [],
+    aliases: ['rope pushdown', 'triceps pushdown'], primaryMuscles: ['triceps'], secondaryMuscles: [],
     equipment: 'Poulie haute + corde',
     technique: ['Coudes collés au corps.', 'Pousser vers le bas en écartant la corde en fin de mouvement.', 'Remonter lentement jusqu’à 90°.'],
     mistakes: ['Coudes qui avancent.', 'Se pencher sur la charge.'],
@@ -575,7 +575,7 @@ const entries: Entry[] = [
   },
   {
     id: 'extension-triceps-prise-inversee', name: 'Extension triceps poulie prise inversée', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['reverse grip pushdown'], primaryMuscles: ['Triceps'], secondaryMuscles: ['Avant-bras'],
+    aliases: ['reverse grip pushdown'], primaryMuscles: ['triceps'], secondaryMuscles: ['avant-bras'],
     equipment: 'Poulie haute + barre droite',
     technique: ['Paumes vers le haut, coudes collés.', 'Pousser jusqu’à bras tendus.', 'Retour lent.'],
     mistakes: ['Coudes qui s’écartent.', 'Charge trop lourde.'],
@@ -584,7 +584,7 @@ const entries: Entry[] = [
   },
   {
     id: 'extension-triceps-un-bras', name: 'Extension triceps un bras à la poulie', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['single arm pushdown'], primaryMuscles: ['Triceps'], secondaryMuscles: [],
+    aliases: ['single arm pushdown'], primaryMuscles: ['triceps'], secondaryMuscles: [],
     equipment: 'Poulie haute + poignée simple',
     technique: ['Coude collé au corps.', 'Tendre le bras vers le bas.', 'Retour lent.'],
     mistakes: ['Pivoter le buste.', 'Coude qui bouge.'],
@@ -593,7 +593,7 @@ const entries: Entry[] = [
   },
   {
     id: 'barre-front', name: 'Barre au front (barre EZ)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['skull crusher', 'skullcrusher'], primaryMuscles: ['Triceps'], secondaryMuscles: [],
+    aliases: ['skull crusher', 'skullcrusher'], primaryMuscles: ['triceps'], secondaryMuscles: [],
     equipment: 'Barre EZ + banc plat',
     technique: ['Bras verticaux, coudes fixes.', 'Descendre la barre vers le front (ou derrière la tête).', 'Tendre les bras sans bouger les coudes.'],
     mistakes: ['Coudes qui s’écartent.', 'Charge trop lourde (coudes douloureux).'],
@@ -602,7 +602,7 @@ const entries: Entry[] = [
   },
   {
     id: 'developpe-couche-serre', name: 'Développé couché prise serrée', region: 'haut', kind: 'base', loadType: 'poids',
-    aliases: ['close grip bench press'], primaryMuscles: ['Triceps', 'Pectoraux'], secondaryMuscles: ['Deltoïdes antérieurs'],
+    aliases: ['close grip bench press'], primaryMuscles: ['triceps', 'pectoraux'], secondaryMuscles: ['deltoides-anterieurs'],
     equipment: 'Barre (ou Smith) + banc plat',
     technique: ['Mains largeur d’épaules.', 'Coudes près du corps en descendant.', 'Pousser sans verrouiller brutalement.'],
     mistakes: ['Mains trop serrées (poignets).', 'Coudes ouverts.'],
@@ -611,7 +611,7 @@ const entries: Entry[] = [
   },
   {
     id: 'kickback-triceps', name: 'Kickback triceps haltère', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['triceps kickback'], primaryMuscles: ['Triceps'], secondaryMuscles: [],
+    aliases: ['triceps kickback'], primaryMuscles: ['triceps'], secondaryMuscles: [],
     equipment: 'Haltère + banc',
     technique: ['Buste penché, bras collé au corps à l’horizontale.', 'Tendre l’avant-bras vers l’arrière.', 'Retour lent.'],
     mistakes: ['Coude qui descend.', 'Élan.'],
@@ -620,7 +620,7 @@ const entries: Entry[] = [
   },
   {
     id: 'dips-banc', name: 'Dips sur banc', region: 'haut', kind: 'base', loadType: 'poids-du-corps',
-    aliases: ['bench dips'], primaryMuscles: ['Triceps'], secondaryMuscles: ['Pectoraux', 'Deltoïdes antérieurs'],
+    aliases: ['bench dips'], primaryMuscles: ['triceps'], secondaryMuscles: ['pectoraux', 'deltoides-anterieurs'],
     equipment: 'Banc',
     technique: ['Mains sur le bord du banc, dos près du banc.', 'Descendre jusqu’à ~90° au coude.', 'Remonter en poussant sur les mains.'],
     mistakes: ['Descendre trop bas (épaules).', 'Dos qui s’éloigne du banc.'],
@@ -629,7 +629,7 @@ const entries: Entry[] = [
   },
   {
     id: 'extension-triceps-machine', name: 'Extension triceps machine', region: 'haut', kind: 'isolation', loadType: 'poids',
-    aliases: ['triceps machine'], primaryMuscles: ['Triceps'], secondaryMuscles: [],
+    aliases: ['triceps machine'], primaryMuscles: ['triceps'], secondaryMuscles: [],
     equipment: 'Machine triceps',
     technique: ['Coudes alignés avec l’axe de la machine.', 'Tendre les bras complètement.', 'Retour lent.'],
     mistakes: ['Laisser claquer les poids.', 'Décoller les coudes.'],
@@ -640,7 +640,7 @@ const entries: Entry[] = [
   // ───────────────────────── Quadriceps ─────────────────────────
   {
     id: 'squat-barre', name: 'Squat barre (back squat)', region: 'bas', kind: 'base', loadType: 'poids', noFailure: true,
-    aliases: ['back squat', 'squat'], primaryMuscles: ['Quadriceps', 'Fessiers'], secondaryMuscles: ['Ischio-jambiers', 'Lombaires'],
+    aliases: ['back squat', 'squat'], primaryMuscles: ['quadriceps', 'fessiers'], secondaryMuscles: ['ischio-jambiers', 'lombaires'],
     equipment: 'Rack + barre',
     technique: ['Barre sur les trapèzes, pieds largeur d’épaules.', 'Descendre en poussant les genoux dans l’axe des pieds.', 'Remonter dos neutre, talons au sol.'],
     mistakes: ['Genoux qui rentrent.', 'Talons qui décollent.'],
@@ -649,7 +649,7 @@ const entries: Entry[] = [
   },
   {
     id: 'squat-avant', name: 'Squat avant (front squat)', region: 'bas', kind: 'base', loadType: 'poids', noFailure: true,
-    aliases: ['front squat'], primaryMuscles: ['Quadriceps'], secondaryMuscles: ['Fessiers', 'Abdominaux'],
+    aliases: ['front squat'], primaryMuscles: ['quadriceps'], secondaryMuscles: ['fessiers', 'abdominaux'],
     equipment: 'Rack + barre',
     technique: ['Barre sur l’avant des épaules, coudes hauts.', 'Buste droit, descendre entre les talons.', 'Remonter sans laisser tomber les coudes.'],
     mistakes: ['Coudes qui tombent.', 'Buste qui plonge vers l’avant.'],
@@ -658,7 +658,7 @@ const entries: Entry[] = [
   },
   {
     id: 'squat-halteres', name: 'Squat haltères', region: 'bas', kind: 'base', loadType: 'poids',
-    aliases: ['dumbbell squat'], primaryMuscles: ['Quadriceps', 'Fessiers'], secondaryMuscles: ['Ischio-jambiers'],
+    aliases: ['dumbbell squat'], primaryMuscles: ['quadriceps', 'fessiers'], secondaryMuscles: ['ischio-jambiers'],
     equipment: 'Haltères',
     technique: ['Haltères le long du corps.', 'Descendre dos neutre, genoux dans l’axe.', 'Remonter en poussant le sol.'],
     mistakes: ['Arrondir le dos.', 'Talons qui décollent.'],
@@ -667,7 +667,7 @@ const entries: Entry[] = [
   },
   {
     id: 'squat-poids-du-corps', name: 'Squat au poids du corps', region: 'bas', kind: 'base', loadType: 'poids-du-corps',
-    aliases: ['air squat', 'bodyweight squat'], primaryMuscles: ['Quadriceps', 'Fessiers'], secondaryMuscles: ['Ischio-jambiers'],
+    aliases: ['air squat', 'bodyweight squat'], primaryMuscles: ['quadriceps', 'fessiers'], secondaryMuscles: ['ischio-jambiers'],
     equipment: 'Aucun',
     technique: ['Pieds largeur d’épaules.', 'Descendre comme pour s’asseoir, bras devant.', 'Remonter en poussant le sol.'],
     mistakes: ['Genoux qui rentrent.', 'Talons qui décollent.'],
@@ -676,7 +676,7 @@ const entries: Entry[] = [
   },
   {
     id: 'squat-saute', name: 'Squat sauté', region: 'bas', kind: 'base', loadType: 'poids-du-corps',
-    aliases: ['jump squat'], primaryMuscles: ['Quadriceps', 'Fessiers'], secondaryMuscles: ['Mollets', 'Système cardiovasculaire'],
+    aliases: ['jump squat'], primaryMuscles: ['quadriceps', 'fessiers'], secondaryMuscles: ['mollets', 'cardio'],
     equipment: 'Aucun',
     technique: ['Demi-squat puis saut vertical.', 'Réception souple, genoux dans l’axe.', 'Enchaîner sans à-coup.'],
     mistakes: ['Réception jambes tendues.', 'Genoux qui rentrent.'],
@@ -685,7 +685,7 @@ const entries: Entry[] = [
   },
   {
     id: 'squat-bulgare', name: 'Squat bulgare (pied arrière surélevé)', region: 'bas', kind: 'base', loadType: 'poids',
-    aliases: ['bulgarian split squat'], primaryMuscles: ['Quadriceps', 'Fessiers'], secondaryMuscles: ['Adducteurs'],
+    aliases: ['bulgarian split squat'], primaryMuscles: ['quadriceps', 'fessiers'], secondaryMuscles: ['adducteurs'],
     equipment: 'Banc + haltères',
     technique: ['Pied arrière posé sur un banc.', 'Descendre à la verticale, genou avant dans l’axe.', 'Remonter en poussant sur le talon avant.'],
     mistakes: ['Pied avant trop proche du banc.', 'Genou qui rentre.'],
@@ -694,7 +694,7 @@ const entries: Entry[] = [
   },
   {
     id: 'fentes-marchees', name: 'Fentes marchées', region: 'bas', kind: 'base', loadType: 'poids',
-    aliases: ['walking lunge'], primaryMuscles: ['Quadriceps', 'Fessiers'], secondaryMuscles: ['Ischio-jambiers', 'Adducteurs'],
+    aliases: ['walking lunge'], primaryMuscles: ['quadriceps', 'fessiers'], secondaryMuscles: ['ischio-jambiers', 'adducteurs'],
     equipment: 'Haltères ou poids du corps',
     technique: ['Grand pas en avant, genou arrière vers le sol.', 'Pousser sur le talon avant pour avancer.', 'Buste droit.'],
     mistakes: ['Pas trop courts.', 'Genou avant qui rentre.'],
@@ -703,7 +703,7 @@ const entries: Entry[] = [
   },
   {
     id: 'fentes-arriere', name: 'Fentes arrière', region: 'bas', kind: 'base', loadType: 'poids',
-    aliases: ['reverse lunge'], primaryMuscles: ['Quadriceps', 'Fessiers'], secondaryMuscles: ['Ischio-jambiers'],
+    aliases: ['reverse lunge'], primaryMuscles: ['quadriceps', 'fessiers'], secondaryMuscles: ['ischio-jambiers'],
     equipment: 'Haltères ou poids du corps',
     technique: ['Reculer d’un grand pas.', 'Genou arrière vers le sol, buste droit.', 'Revenir en poussant sur la jambe avant.'],
     mistakes: ['Perdre l’équilibre (pas trop étroit).', 'Genou avant qui rentre.'],
@@ -712,7 +712,7 @@ const entries: Entry[] = [
   },
   {
     id: 'fentes-laterales', name: 'Fentes latérales', region: 'bas', kind: 'base', loadType: 'poids',
-    aliases: ['lateral lunge', 'side lunge'], primaryMuscles: ['Adducteurs', 'Quadriceps'], secondaryMuscles: ['Fessiers'],
+    aliases: ['lateral lunge', 'side lunge'], primaryMuscles: ['adducteurs', 'quadriceps'], secondaryMuscles: ['fessiers'],
     equipment: 'Poids du corps ou haltère',
     technique: ['Grand pas sur le côté.', 'S’asseoir sur la jambe fléchie, l’autre tendue.', 'Revenir au centre.'],
     mistakes: ['Talon qui décolle.', 'Dos rond.'],
@@ -721,7 +721,7 @@ const entries: Entry[] = [
   },
   {
     id: 'step-up', name: 'Montées sur banc (step-up)', region: 'bas', kind: 'base', loadType: 'poids',
-    aliases: ['step up'], primaryMuscles: ['Quadriceps', 'Fessiers'], secondaryMuscles: ['Ischio-jambiers', 'Mollets'],
+    aliases: ['step up'], primaryMuscles: ['quadriceps', 'fessiers'], secondaryMuscles: ['ischio-jambiers', 'mollets'],
     equipment: 'Banc ou box + haltères',
     technique: ['Pied entier sur le banc.', 'Monter en poussant sur la jambe du haut.', 'Redescendre lentement.'],
     mistakes: ['Pousser avec la jambe du bas.', 'Banc trop haut.'],
@@ -730,7 +730,7 @@ const entries: Entry[] = [
   },
   {
     id: 'squat-sumo-haltere', name: 'Squat sumo haltère', region: 'bas', kind: 'base', loadType: 'poids',
-    aliases: ['sumo squat', 'plie squat'], primaryMuscles: ['Adducteurs', 'Fessiers', 'Quadriceps'], secondaryMuscles: ['Ischio-jambiers'],
+    aliases: ['sumo squat', 'plie squat'], primaryMuscles: ['adducteurs', 'fessiers', 'quadriceps'], secondaryMuscles: ['ischio-jambiers'],
     equipment: 'Haltère ou kettlebell',
     technique: ['Pieds très écartés, pointes vers l’extérieur.', 'Haltère tenu entre les jambes.', 'Descendre buste droit, genoux vers l’extérieur.'],
     mistakes: ['Genoux qui rentrent.', 'Buste penché.'],
@@ -739,7 +739,7 @@ const entries: Entry[] = [
   },
   {
     id: 'chaise-murale', name: 'Chaise contre un mur', region: 'bas', kind: 'gainage', loadType: 'duree',
-    aliases: ['wall sit'], primaryMuscles: ['Quadriceps'], secondaryMuscles: ['Fessiers'],
+    aliases: ['wall sit'], primaryMuscles: ['quadriceps'], secondaryMuscles: ['fessiers'],
     equipment: 'Un mur',
     technique: ['Dos collé au mur, cuisses parallèles au sol.', 'Genoux au-dessus des chevilles.', 'Respirer calmement.'],
     mistakes: ['Genoux qui dépassent les pieds.', 'Mains sur les cuisses.'],
@@ -748,7 +748,7 @@ const entries: Entry[] = [
   },
   {
     id: 'presse-unilaterale', name: 'Presse à cuisses unilatérale', region: 'bas', kind: 'base', loadType: 'poids',
-    aliases: ['single leg press'], primaryMuscles: ['Quadriceps', 'Fessiers'], secondaryMuscles: ['Ischio-jambiers'],
+    aliases: ['single leg press'], primaryMuscles: ['quadriceps', 'fessiers'], secondaryMuscles: ['ischio-jambiers'],
     equipment: 'Presse à cuisses',
     technique: ['Un pied au centre du plateau.', 'Descendre jusqu’à ~90° au genou.', 'Pousser sans verrouiller.'],
     mistakes: ['Bassin qui décolle.', 'Genou qui rentre.'],
@@ -757,7 +757,7 @@ const entries: Entry[] = [
   },
   {
     id: 'leg-extension-unilaterale', name: 'Leg extension unilatéral', region: 'bas', kind: 'isolation', loadType: 'poids',
-    aliases: ['single leg extension'], primaryMuscles: ['Quadriceps'], secondaryMuscles: [],
+    aliases: ['single leg extension'], primaryMuscles: ['quadriceps'], secondaryMuscles: [],
     equipment: 'Machine leg extension',
     technique: ['Genou aligné avec l’axe de la machine.', 'Tendre la jambe, serrer 1 s.', 'Redescendre lentement.'],
     mistakes: ['Lancer la charge.', 'Décoller les fesses.'],
@@ -768,7 +768,7 @@ const entries: Entry[] = [
   // ───────────────────────── Ischios et fessiers ─────────────────────────
   {
     id: 'leg-curl-debout', name: 'Leg curl debout (unilatéral)', region: 'bas', kind: 'isolation', loadType: 'poids',
-    aliases: ['standing leg curl'], primaryMuscles: ['Ischio-jambiers'], secondaryMuscles: ['Mollets'],
+    aliases: ['standing leg curl'], primaryMuscles: ['ischio-jambiers'], secondaryMuscles: ['mollets'],
     equipment: 'Machine leg curl debout (ou poulie basse + sangle)',
     technique: ['Genou aligné avec l’axe.', 'Ramener le talon vers la fesse.', 'Redescendre lentement.'],
     mistakes: ['Bassin qui bouge.', 'À-coups.'],
@@ -777,7 +777,7 @@ const entries: Entry[] = [
   },
   {
     id: 'leg-curl-ballon', name: 'Leg curl au ballon', region: 'bas', kind: 'isolation', loadType: 'poids-du-corps',
-    aliases: ['swiss ball leg curl'], primaryMuscles: ['Ischio-jambiers'], secondaryMuscles: ['Fessiers', 'Mollets'],
+    aliases: ['swiss ball leg curl'], primaryMuscles: ['ischio-jambiers'], secondaryMuscles: ['fessiers', 'mollets'],
     equipment: 'Swiss ball',
     technique: ['Allongé, talons sur le ballon, bassin levé.', 'Ramener le ballon vers les fesses.', 'Retour lent sans baisser le bassin.'],
     mistakes: ['Bassin qui retombe.', 'Aller trop vite.'],
@@ -786,7 +786,7 @@ const entries: Entry[] = [
   },
   {
     id: 'nordic-curl', name: 'Nordic curl (ischios)', region: 'bas', kind: 'isolation', loadType: 'poids-du-corps',
-    aliases: ['nordic hamstring curl', 'glute ham raise'], primaryMuscles: ['Ischio-jambiers'], secondaryMuscles: ['Fessiers', 'Mollets'],
+    aliases: ['nordic hamstring curl', 'glute ham raise'], primaryMuscles: ['ischio-jambiers'], secondaryMuscles: ['fessiers', 'mollets'],
     equipment: 'Pieds calés (partenaire, banc ou machine)',
     technique: ['À genoux, chevilles bloquées.', 'Descendre le buste en freinant le plus longtemps possible.', 'Se rattraper avec les mains, remonter en poussant.'],
     mistakes: ['Casser au niveau des hanches.', 'Descente trop rapide.'],
@@ -795,7 +795,7 @@ const entries: Entry[] = [
   },
   {
     id: 'sdt-unilateral', name: 'Soulevé de terre roumain sur une jambe', region: 'bas', kind: 'base', loadType: 'poids',
-    aliases: ['single leg rdl'], primaryMuscles: ['Ischio-jambiers', 'Fessiers'], secondaryMuscles: ['Lombaires'],
+    aliases: ['single leg rdl'], primaryMuscles: ['ischio-jambiers', 'fessiers'], secondaryMuscles: ['lombaires'],
     equipment: 'Haltère ou kettlebell',
     technique: ['Debout sur une jambe, genou légèrement fléchi.', 'Pencher le buste, jambe libre vers l’arrière.', 'Remonter en serrant le fessier.'],
     mistakes: ['Bassin qui s’ouvre.', 'Dos rond.'],
@@ -804,7 +804,7 @@ const entries: Entry[] = [
   },
   {
     id: 'good-morning', name: 'Good morning', region: 'bas', kind: 'base', loadType: 'poids',
-    aliases: ['good morning'], primaryMuscles: ['Ischio-jambiers'], secondaryMuscles: ['Lombaires', 'Fessiers'],
+    aliases: ['good morning'], primaryMuscles: ['ischio-jambiers'], secondaryMuscles: ['lombaires', 'fessiers'],
     equipment: 'Barre (ou élastique)',
     technique: ['Barre sur les trapèzes, genoux légèrement fléchis.', 'Pencher le buste en poussant les hanches en arrière.', 'Remonter dos neutre.'],
     mistakes: ['Arrondir le dos.', 'Charge trop lourde.'],
@@ -813,7 +813,7 @@ const entries: Entry[] = [
   },
   {
     id: 'abducteurs-machine', name: 'Abducteurs (machine)', region: 'bas', kind: 'isolation', loadType: 'poids',
-    aliases: ['hip abduction', 'abductor'], primaryMuscles: ['Fessiers (moyen fessier)'], secondaryMuscles: [],
+    aliases: ['hip abduction', 'abductor'], primaryMuscles: ['fessiers'], secondaryMuscles: [], muscleFocus: 'moyen fessier',
     equipment: 'Machine hip abduction',
     technique: ['Dos collé au dossier.', 'Écarter les jambes de façon contrôlée.', 'Revenir sans laisser claquer les poids.'],
     mistakes: ['Mouvement rapide.', 'Bassin qui bascule.'],
@@ -822,7 +822,7 @@ const entries: Entry[] = [
   },
   {
     id: 'kickback-poulie', name: 'Kickback fessier à la poulie', region: 'bas', kind: 'isolation', loadType: 'poids',
-    aliases: ['cable kickback', 'glute kickback'], primaryMuscles: ['Fessiers'], secondaryMuscles: ['Ischio-jambiers'],
+    aliases: ['cable kickback', 'glute kickback'], primaryMuscles: ['fessiers'], secondaryMuscles: ['ischio-jambiers'],
     equipment: 'Poulie basse + sangle de cheville',
     technique: ['Buste légèrement penché, mains sur la machine.', 'Pousser la jambe vers l’arrière en serrant le fessier.', 'Retour lent.'],
     mistakes: ['Cambrer le dos.', 'Lancer la jambe.'],
@@ -831,7 +831,7 @@ const entries: Entry[] = [
   },
   {
     id: 'kickback-machine', name: 'Glute machine (kickback)', region: 'bas', kind: 'isolation', loadType: 'poids',
-    aliases: ['glute machine', 'glute kickback machine'], primaryMuscles: ['Fessiers'], secondaryMuscles: ['Ischio-jambiers'],
+    aliases: ['glute machine', 'glute kickback machine'], primaryMuscles: ['fessiers'], secondaryMuscles: ['ischio-jambiers'],
     equipment: 'Machine fessiers',
     technique: ['Buste calé, dos neutre.', 'Pousser la plateforme vers l’arrière avec le talon.', 'Retour lent.'],
     mistakes: ['Cambrer.', 'Amplitude partielle.'],
@@ -840,7 +840,7 @@ const entries: Entry[] = [
   },
   {
     id: 'pont-fessier-unilateral', name: 'Pont fessier sur une jambe', region: 'bas', kind: 'isolation', loadType: 'poids-du-corps',
-    aliases: ['single leg glute bridge'], primaryMuscles: ['Fessiers'], secondaryMuscles: ['Ischio-jambiers'],
+    aliases: ['single leg glute bridge'], primaryMuscles: ['fessiers'], secondaryMuscles: ['ischio-jambiers'],
     equipment: 'Aucun (tapis)',
     technique: ['Allongé, un pied au sol, l’autre jambe tendue.', 'Monter le bassin en poussant sur le talon.', 'Tenir 1 s, redescendre.'],
     mistakes: ['Bassin qui penche.', 'Pousser avec le bas du dos.'],
@@ -849,7 +849,7 @@ const entries: Entry[] = [
   },
   {
     id: 'pull-through', name: 'Pull-through à la poulie', region: 'bas', kind: 'base', loadType: 'poids',
-    aliases: ['cable pull through'], primaryMuscles: ['Fessiers', 'Ischio-jambiers'], secondaryMuscles: ['Lombaires'],
+    aliases: ['cable pull through'], primaryMuscles: ['fessiers', 'ischio-jambiers'], secondaryMuscles: ['lombaires'],
     equipment: 'Poulie basse + corde',
     technique: ['Dos à la poulie, corde entre les jambes.', 'Pousser les hanches en arrière, dos neutre.', 'Revenir en serrant les fessiers.'],
     mistakes: ['Tirer avec les bras.', 'Arrondir le dos.'],
@@ -858,7 +858,7 @@ const entries: Entry[] = [
   },
   {
     id: 'marche-laterale-elastique', name: 'Marche latérale à l’élastique', region: 'bas', kind: 'isolation', loadType: 'poids-du-corps',
-    aliases: ['monster walk', 'lateral band walk'], primaryMuscles: ['Fessiers (moyen fessier)'], secondaryMuscles: ['Quadriceps'],
+    aliases: ['monster walk', 'lateral band walk'], primaryMuscles: ['fessiers'], secondaryMuscles: ['quadriceps'], muscleFocus: 'moyen fessier',
     equipment: 'Mini-bande élastique',
     technique: ['Élastique au-dessus des genoux, demi-squat.', 'Pas latéraux sans relâcher la tension.', 'Genoux vers l’extérieur.'],
     mistakes: ['Se redresser.', 'Pieds qui se touchent.'],
@@ -867,7 +867,7 @@ const entries: Entry[] = [
   },
   {
     id: 'kettlebell-swing', name: 'Kettlebell swing', region: 'bas', kind: 'base', loadType: 'poids',
-    aliases: ['kb swing'], primaryMuscles: ['Fessiers', 'Ischio-jambiers'], secondaryMuscles: ['Lombaires', 'Épaules', 'Système cardiovasculaire'],
+    aliases: ['kb swing'], primaryMuscles: ['fessiers', 'ischio-jambiers'], secondaryMuscles: ['lombaires', 'deltoides-anterieurs', 'cardio'],
     equipment: 'Kettlebell',
     technique: ['Charnière de hanche, dos neutre.', 'Projeter le kettlebell avec un coup de hanches.', 'Bras relâchés, kettlebell à hauteur de poitrine.'],
     mistakes: ['Squatter au lieu de pousser les hanches.', 'Lever avec les bras.'],
@@ -876,7 +876,7 @@ const entries: Entry[] = [
   },
   {
     id: 'mollets-smith', name: 'Mollets debout au Smith', region: 'bas', kind: 'isolation', loadType: 'poids',
-    aliases: ['smith calf raise'], primaryMuscles: ['Mollets (gastrocnémiens)'], secondaryMuscles: ['Soléaire'],
+    aliases: ['smith calf raise'], primaryMuscles: ['mollets'], secondaryMuscles: [], muscleFocus: 'gastrocnémiens',
     equipment: 'Smith machine + marche',
     technique: ['Avant du pied sur la marche, barre sur les trapèzes.', 'Étirement complet en bas.', 'Monter au maximum, pause en haut.'],
     mistakes: ['Rebondir.', 'Amplitude partielle.'],
@@ -885,7 +885,7 @@ const entries: Entry[] = [
   },
   {
     id: 'mollets-unilateral', name: 'Mollets unilatéral haltère', region: 'bas', kind: 'isolation', loadType: 'poids',
-    aliases: ['single leg calf raise'], primaryMuscles: ['Mollets (gastrocnémiens)'], secondaryMuscles: ['Soléaire'],
+    aliases: ['single leg calf raise'], primaryMuscles: ['mollets'], secondaryMuscles: [], muscleFocus: 'gastrocnémiens',
     equipment: 'Haltère + marche',
     technique: ['Sur une jambe, avant du pied sur la marche.', 'Descendre talon bas, monter au maximum.', 'Main libre en appui.'],
     mistakes: ['Rebondir.', 'Plier le genou.'],
@@ -896,7 +896,7 @@ const entries: Entry[] = [
   // ───────────────────────── Abdos et tronc ─────────────────────────
   {
     id: 'crunch', name: 'Crunch au sol', region: 'tronc', kind: 'gainage', loadType: 'poids-du-corps',
-    aliases: ['crunch'], primaryMuscles: ['Abdominaux'], secondaryMuscles: ['Obliques'],
+    aliases: ['crunch'], primaryMuscles: ['abdominaux'], secondaryMuscles: ['obliques'],
     equipment: 'Tapis',
     technique: ['Genoux fléchis, mains près des tempes.', 'Enrouler le haut du dos, bas du dos au sol.', 'Redescendre lentement.'],
     mistakes: ['Tirer sur la nuque.', 'Se relever complètement.'],
@@ -905,7 +905,7 @@ const entries: Entry[] = [
   },
   {
     id: 'crunch-oblique', name: 'Crunch oblique', region: 'tronc', kind: 'gainage', loadType: 'poids-du-corps',
-    aliases: ['oblique crunch'], primaryMuscles: ['Obliques'], secondaryMuscles: ['Abdominaux'],
+    aliases: ['oblique crunch'], primaryMuscles: ['obliques'], secondaryMuscles: ['abdominaux'],
     equipment: 'Tapis',
     technique: ['Sur le côté ou genoux tombés d’un côté.', 'Enrouler le buste vers le bassin.', 'Redescendre lentement.'],
     mistakes: ['Tirer sur la nuque.', 'Aller trop vite.'],
@@ -914,7 +914,7 @@ const entries: Entry[] = [
   },
   {
     id: 'crunch-bicyclette', name: 'Crunch bicyclette', region: 'tronc', kind: 'gainage', loadType: 'poids-du-corps',
-    aliases: ['bicycle crunch'], primaryMuscles: ['Obliques', 'Abdominaux'], secondaryMuscles: ['Fléchisseurs de hanche'],
+    aliases: ['bicycle crunch'], primaryMuscles: ['obliques', 'abdominaux'], secondaryMuscles: ['flechisseurs-hanche'],
     equipment: 'Tapis',
     technique: ['Bas du dos au sol, jambes levées.', 'Coude vers le genou opposé en pédalant.', 'Rythme lent et contrôlé.'],
     mistakes: ['Tirer sur la nuque.', 'Aller trop vite.'],
@@ -923,7 +923,7 @@ const entries: Entry[] = [
   },
   {
     id: 'crunch-decline', name: 'Crunch sur banc décliné', region: 'tronc', kind: 'gainage', loadType: 'poids-du-corps',
-    aliases: ['decline crunch', 'decline sit-up'], primaryMuscles: ['Abdominaux'], secondaryMuscles: ['Obliques'],
+    aliases: ['decline crunch', 'decline sit-up'], primaryMuscles: ['abdominaux'], secondaryMuscles: ['obliques'],
     equipment: 'Banc décliné (abdos)',
     technique: ['Pieds calés, bras croisés.', 'Enrouler le buste sans tirer sur la nuque.', 'Redescendre lentement.'],
     mistakes: ['Se jeter en arrière.', 'Élan.'],
@@ -932,7 +932,7 @@ const entries: Entry[] = [
   },
   {
     id: 'sit-up', name: 'Sit-up (relevé de buste)', region: 'tronc', kind: 'gainage', loadType: 'poids-du-corps',
-    aliases: ['sit-up'], primaryMuscles: ['Abdominaux'], secondaryMuscles: ['Fléchisseurs de hanche'],
+    aliases: ['sit-up'], primaryMuscles: ['abdominaux'], secondaryMuscles: ['flechisseurs-hanche'],
     equipment: 'Tapis',
     technique: ['Genoux fléchis, pieds au sol.', 'Se redresser en enroulant le dos.', 'Redescendre vertèbre par vertèbre.'],
     mistakes: ['Tirer sur la nuque.', 'Élan.'],
@@ -941,7 +941,7 @@ const entries: Entry[] = [
   },
   {
     id: 'releve-jambes-suspendu', name: 'Relevés de jambes suspendu', region: 'tronc', kind: 'gainage', loadType: 'poids-du-corps',
-    aliases: ['hanging leg raise'], primaryMuscles: ['Abdominaux (partie basse)', 'Fléchisseurs de hanche'], secondaryMuscles: ['Obliques', 'Avant-bras'],
+    aliases: ['hanging leg raise'], primaryMuscles: ['abdominaux', 'flechisseurs-hanche'], secondaryMuscles: ['obliques', 'avant-bras'], muscleFocus: 'bas des abdominaux',
     equipment: 'Barre de traction',
     technique: ['Suspendu, épaules engagées.', 'Monter les jambes en enroulant le bassin.', 'Descente lente sans balancer.'],
     mistakes: ['Se balancer.', 'Ne pas enrouler le bassin.'],
@@ -950,7 +950,7 @@ const entries: Entry[] = [
   },
   {
     id: 'releve-jambes-sol', name: 'Relevés de jambes allongé', region: 'tronc', kind: 'gainage', loadType: 'poids-du-corps',
-    aliases: ['lying leg raise'], primaryMuscles: ['Abdominaux (partie basse)'], secondaryMuscles: ['Fléchisseurs de hanche'],
+    aliases: ['lying leg raise'], primaryMuscles: ['abdominaux'], secondaryMuscles: ['flechisseurs-hanche'], muscleFocus: 'bas des abdominaux',
     equipment: 'Tapis ou banc plat',
     technique: ['Allongé, mains sous les fesses ou tenant le banc.', 'Monter les jambes jusqu’à la verticale.', 'Redescendre sans cambrer.'],
     mistakes: ['Bas du dos qui décolle.', 'Laisser tomber les jambes.'],
@@ -959,7 +959,7 @@ const entries: Entry[] = [
   },
   {
     id: 'roue-abdominale', name: 'Roue abdominale (ab wheel)', region: 'tronc', kind: 'gainage', loadType: 'poids-du-corps',
-    aliases: ['ab wheel', 'ab roller', 'rollout'], primaryMuscles: ['Abdominaux'], secondaryMuscles: ['Grand dorsal', 'Épaules'],
+    aliases: ['ab wheel', 'ab roller', 'rollout'], primaryMuscles: ['abdominaux'], secondaryMuscles: ['grand-dorsal', 'deltoides-anterieurs'],
     equipment: 'Roue abdominale (ou barre avec disques)',
     technique: ['À genoux, bassin rentré.', 'Rouler vers l’avant sans cambrer.', 'Revenir en contractant les abdos.'],
     mistakes: ['Cambrer le bas du dos.', 'Aller trop loin trop tôt.'],
@@ -968,7 +968,7 @@ const entries: Entry[] = [
   },
   {
     id: 'russian-twist', name: 'Russian twist', region: 'tronc', kind: 'gainage', loadType: 'poids-du-corps',
-    aliases: ['russian twist'], primaryMuscles: ['Obliques'], secondaryMuscles: ['Abdominaux'],
+    aliases: ['russian twist'], primaryMuscles: ['obliques'], secondaryMuscles: ['abdominaux'],
     equipment: 'Tapis (disque ou médecine-ball en option)',
     technique: ['Assis, buste incliné en arrière, dos droit.', 'Tourner les épaules d’un côté à l’autre.', 'Mouvement contrôlé.'],
     mistakes: ['Arrondir le dos.', 'Bouger seulement les bras.'],
@@ -977,7 +977,7 @@ const entries: Entry[] = [
   },
   {
     id: 'bucheron-poulie', name: 'Bûcheron à la poulie (wood chop)', region: 'tronc', kind: 'gainage', loadType: 'poids',
-    aliases: ['wood chop', 'cable woodchopper'], primaryMuscles: ['Obliques'], secondaryMuscles: ['Abdominaux', 'Épaules'],
+    aliases: ['wood chop', 'cable woodchopper'], primaryMuscles: ['obliques'], secondaryMuscles: ['abdominaux', 'deltoides-anterieurs'],
     equipment: 'Poulie haute ou basse',
     technique: ['De profil, bras tendus.', 'Tirer en diagonale en tournant le buste.', 'Pieds ancrés, retour lent.'],
     mistakes: ['Tirer avec les bras.', 'Charge trop lourde.'],
@@ -986,7 +986,7 @@ const entries: Entry[] = [
   },
   {
     id: 'flexion-laterale-haltere', name: 'Flexion latérale haltère', region: 'tronc', kind: 'gainage', loadType: 'poids',
-    aliases: ['side bend'], primaryMuscles: ['Obliques'], secondaryMuscles: ['Lombaires'],
+    aliases: ['side bend'], primaryMuscles: ['obliques'], secondaryMuscles: ['lombaires'],
     equipment: 'Haltère',
     technique: ['Debout, haltère d’un côté.', 'Pencher le buste sur le côté puis remonter.', 'Sans tourner le buste.'],
     mistakes: ['Pencher vers l’avant.', 'Charge trop lourde.'],
@@ -995,7 +995,7 @@ const entries: Entry[] = [
   },
   {
     id: 'mountain-climbers', name: 'Mountain climbers', region: 'tronc', kind: 'gainage', loadType: 'duree', defaultTarget: SEC(20, 40),
-    aliases: ['mountain climber'], primaryMuscles: ['Abdominaux'], secondaryMuscles: ['Fléchisseurs de hanche', 'Épaules', 'Système cardiovasculaire'],
+    aliases: ['mountain climber'], primaryMuscles: ['abdominaux'], secondaryMuscles: ['flechisseurs-hanche', 'deltoides-anterieurs', 'cardio'],
     equipment: 'Aucun',
     technique: ['Position de pompe, corps gainé.', 'Ramener alternativement les genoux vers la poitrine.', 'Bassin stable.'],
     mistakes: ['Fesses trop hautes.', 'Épaules en arrière des mains.'],
@@ -1004,7 +1004,7 @@ const entries: Entry[] = [
   },
   {
     id: 'battements-jambes', name: 'Battements de jambes (ciseaux)', region: 'tronc', kind: 'gainage', loadType: 'duree',
-    aliases: ['flutter kicks', 'scissor kicks'], primaryMuscles: ['Abdominaux (partie basse)'], secondaryMuscles: ['Fléchisseurs de hanche'],
+    aliases: ['flutter kicks', 'scissor kicks'], primaryMuscles: ['abdominaux'], secondaryMuscles: ['flechisseurs-hanche'], muscleFocus: 'bas des abdominaux',
     equipment: 'Tapis',
     technique: ['Bas du dos plaqué au sol.', 'Jambes tendues, petits battements alternés.', 'Respirer régulièrement.'],
     mistakes: ['Bas du dos qui décolle.', 'Jambes trop basses.'],
@@ -1013,7 +1013,7 @@ const entries: Entry[] = [
   },
   {
     id: 'rotation-buste-machine', name: 'Rotation du buste (machine)', region: 'tronc', kind: 'gainage', loadType: 'poids',
-    aliases: ['torso rotation', 'rotary torso'], primaryMuscles: ['Obliques'], secondaryMuscles: ['Abdominaux'],
+    aliases: ['torso rotation', 'rotary torso'], primaryMuscles: ['obliques'], secondaryMuscles: ['abdominaux'],
     equipment: 'Machine rotation du buste',
     technique: ['Bassin calé, buste droit.', 'Tourner le buste lentement de chaque côté.', 'Sans à-coup.'],
     mistakes: ['Charge trop lourde.', 'Élan.'],
@@ -1022,7 +1022,7 @@ const entries: Entry[] = [
   },
   {
     id: 'planche-sur-les-mains', name: 'Planche bras tendus', region: 'tronc', kind: 'gainage', loadType: 'duree',
-    aliases: ['high plank'], primaryMuscles: ['Abdominaux'], secondaryMuscles: ['Épaules', 'Fessiers'],
+    aliases: ['high plank'], primaryMuscles: ['abdominaux'], secondaryMuscles: ['deltoides-anterieurs', 'fessiers'],
     equipment: 'Aucun',
     technique: ['Mains sous les épaules, bras tendus.', 'Corps aligné, fessiers serrés.', 'Respirer calmement.'],
     mistakes: ['Bassin qui s’affaisse.', 'Fesses trop hautes.'],
@@ -1033,7 +1033,7 @@ const entries: Entry[] = [
   // ───────────────────────── Polyarticulaire et athlétique ─────────────────────────
   {
     id: 'thruster', name: 'Thruster (squat + développé)', region: 'global', kind: 'base', loadType: 'poids',
-    aliases: ['thruster'], primaryMuscles: ['Quadriceps', 'Épaules'], secondaryMuscles: ['Fessiers', 'Triceps', 'Système cardiovasculaire'],
+    aliases: ['thruster'], primaryMuscles: ['quadriceps', 'deltoides-anterieurs'], secondaryMuscles: ['fessiers', 'triceps', 'cardio'],
     equipment: 'Haltères, kettlebells ou barre',
     technique: ['Charges sur les épaules, squat complet.', 'Remonter et enchaîner le développé au-dessus de la tête.', 'Redescendre les charges aux épaules.'],
     mistakes: ['Cambrer en poussant.', 'Squat partiel.'],
@@ -1042,7 +1042,7 @@ const entries: Entry[] = [
   },
   {
     id: 'burpees', name: 'Burpees', region: 'global', kind: 'base', loadType: 'poids-du-corps', defaultTarget: REPS(8, 15),
-    aliases: ['burpee'], primaryMuscles: ['Système cardiovasculaire'], secondaryMuscles: ['Quadriceps', 'Pectoraux', 'Épaules'],
+    aliases: ['burpee'], primaryMuscles: ['cardio'], secondaryMuscles: ['quadriceps', 'pectoraux', 'deltoides-anterieurs'],
     equipment: 'Aucun',
     technique: ['Squat, mains au sol, pieds en arrière.', 'Revenir en squat puis se relever (saut optionnel).', 'Rythme régulier.'],
     mistakes: ['Bassin qui s’affaisse en planche.', 'Réception jambes tendues.'],
@@ -1051,7 +1051,7 @@ const entries: Entry[] = [
   },
   {
     id: 'jumping-jacks', name: 'Jumping jacks', region: 'global', kind: 'gainage', loadType: 'duree', defaultTarget: SEC(30, 60),
-    aliases: ['jumping jack'], primaryMuscles: ['Système cardiovasculaire'], secondaryMuscles: ['Mollets', 'Épaules'],
+    aliases: ['jumping jack'], primaryMuscles: ['cardio'], secondaryMuscles: ['mollets', 'deltoides-anterieurs'],
     equipment: 'Aucun',
     technique: ['Sauter en écartant bras et jambes.', 'Revenir pieds joints, bras le long du corps.', 'Réception souple.'],
     mistakes: ['Réception sur les talons.', 'Rythme trop rapide d’emblée.'],
@@ -1060,7 +1060,7 @@ const entries: Entry[] = [
   },
   {
     id: 'box-jump', name: 'Box jump (saut sur box)', region: 'bas', kind: 'base', loadType: 'poids-du-corps',
-    aliases: ['box jump'], primaryMuscles: ['Quadriceps', 'Fessiers'], secondaryMuscles: ['Mollets', 'Ischio-jambiers'],
+    aliases: ['box jump'], primaryMuscles: ['quadriceps', 'fessiers'], secondaryMuscles: ['mollets', 'ischio-jambiers'],
     equipment: 'Box ou banc stable',
     technique: ['Demi-squat, élan des bras.', 'Sauter et atterrir pieds à plat sur la box.', 'Redescendre en marchant.'],
     mistakes: ['Redescendre en sautant.', 'Box trop haute.'],
@@ -1069,7 +1069,7 @@ const entries: Entry[] = [
   },
   {
     id: 'slam-ball', name: 'Slam ball (médecine-ball au sol)', region: 'global', kind: 'base', loadType: 'poids',
-    aliases: ['ball slam', 'medicine ball slam'], primaryMuscles: ['Grand dorsal', 'Abdominaux'], secondaryMuscles: ['Épaules', 'Système cardiovasculaire'],
+    aliases: ['ball slam', 'medicine ball slam'], primaryMuscles: ['grand-dorsal', 'abdominaux'], secondaryMuscles: ['deltoides-anterieurs', 'cardio'],
     equipment: 'Slam ball / médecine-ball',
     technique: ['Ballon au-dessus de la tête, bras tendus.', 'Le lancer au sol avec tout le corps.', 'Le rattraper en squat.'],
     mistakes: ['Dos rond en ramassant.', 'Lancer seulement avec les bras.'],
@@ -1078,7 +1078,7 @@ const entries: Entry[] = [
   },
   {
     id: 'battle-rope', name: 'Battle rope (cordes ondulatoires)', region: 'global', kind: 'gainage', loadType: 'duree', defaultTarget: SEC(20, 40),
-    aliases: ['battle ropes', 'battling ropes'], primaryMuscles: ['Système cardiovasculaire', 'Épaules'], secondaryMuscles: ['Abdominaux', 'Avant-bras'],
+    aliases: ['battle ropes', 'battling ropes'], primaryMuscles: ['cardio', 'deltoides-anterieurs'], secondaryMuscles: ['abdominaux', 'avant-bras'],
     equipment: 'Cordes ondulatoires',
     technique: ['Demi-squat, buste gainé.', 'Ondulations alternées ou simultanées.', 'Respirer régulièrement.'],
     mistakes: ['Se redresser.', 'Bouger seulement les mains.'],
@@ -1087,7 +1087,7 @@ const entries: Entry[] = [
   },
   {
     id: 'pousse-traineau', name: 'Poussée de traîneau (sled)', region: 'global', kind: 'base', loadType: 'poids', defaultTarget: SEC(20, 40),
-    aliases: ['sled push'], primaryMuscles: ['Quadriceps', 'Fessiers'], secondaryMuscles: ['Mollets', 'Système cardiovasculaire'],
+    aliases: ['sled push'], primaryMuscles: ['quadriceps', 'fessiers'], secondaryMuscles: ['mollets', 'cardio'],
     equipment: 'Traîneau (sled) ou piste',
     technique: ['Bras tendus sur les poignées, buste penché.', 'Pousser à petits pas puissants.', 'Dos neutre.'],
     mistakes: ['Dos rond.', 'Grands pas qui glissent.'],
@@ -1096,7 +1096,7 @@ const entries: Entry[] = [
   },
   {
     id: 'power-clean', name: 'Épaulé (power clean)', region: 'global', kind: 'base', loadType: 'poids', noFailure: true,
-    aliases: ['power clean', 'clean'], primaryMuscles: ['Ischio-jambiers', 'Fessiers', 'Trapèzes'], secondaryMuscles: ['Quadriceps', 'Épaules'],
+    aliases: ['power clean', 'clean'], primaryMuscles: ['ischio-jambiers', 'fessiers', 'trapezes'], secondaryMuscles: ['quadriceps', 'deltoides-anterieurs'],
     equipment: 'Barre + disques',
     technique: ['Départ comme un soulevé de terre.', 'Extension explosive des hanches, barre près du corps.', 'Réception sur l’avant des épaules en demi-squat.'],
     mistakes: ['Tirer avec les bras.', 'Barre qui s’éloigne.'],
@@ -1107,7 +1107,7 @@ const entries: Entry[] = [
   // ───────────────────────── Cardio ─────────────────────────
   {
     id: 'tapis-marche-inclinee', name: 'Tapis : marche inclinée', region: 'global', kind: 'cardio', loadType: 'poids-du-corps',
-    aliases: ['treadmill', 'incline walk'], primaryMuscles: ['Système cardiovasculaire'], secondaryMuscles: ['Mollets', 'Fessiers'],
+    aliases: ['treadmill', 'incline walk'], primaryMuscles: ['cardio'], secondaryMuscles: ['mollets', 'fessiers'],
     equipment: 'Tapis de course',
     technique: ['Inclinaison 5-12 %, vitesse où l’on peut parler.', 'Ne pas se tenir aux barres.', 'Buste droit.'],
     mistakes: ['Se tenir aux poignées.', 'Inclinaison trop forte d’emblée.'],
@@ -1116,7 +1116,7 @@ const entries: Entry[] = [
   },
   {
     id: 'tapis-course', name: 'Tapis : course', region: 'global', kind: 'cardio', loadType: 'poids-du-corps',
-    aliases: ['treadmill run', 'running', 'jogging'], primaryMuscles: ['Système cardiovasculaire'], secondaryMuscles: ['Quadriceps', 'Mollets'],
+    aliases: ['treadmill run', 'running', 'jogging'], primaryMuscles: ['cardio'], secondaryMuscles: ['quadriceps', 'mollets'],
     equipment: 'Tapis de course',
     technique: ['Foulée courte, attaque médio-pied.', 'Allure régulière.', 'Respirer calmement.'],
     mistakes: ['Foulée trop longue (talon devant).', 'Partir trop vite.'],
@@ -1125,7 +1125,7 @@ const entries: Entry[] = [
   },
   {
     id: 'course-exterieur', name: 'Course à pied (dehors)', region: 'global', kind: 'cardio', loadType: 'poids-du-corps',
-    aliases: ['running', 'footing', 'jogging'], primaryMuscles: ['Système cardiovasculaire'], secondaryMuscles: ['Quadriceps', 'Mollets'],
+    aliases: ['running', 'footing', 'jogging'], primaryMuscles: ['cardio'], secondaryMuscles: ['quadriceps', 'mollets'],
     equipment: 'Chaussures de course',
     technique: ['Allure où l’on peut parler (sauf fractionné).', 'Foulée courte et légère.', 'Terrain souple si possible.'],
     mistakes: ['Partir trop vite.', 'Augmenter le volume trop vite.'],
@@ -1134,7 +1134,7 @@ const entries: Entry[] = [
   },
   {
     id: 'velo-appartement', name: 'Vélo d’appartement (droit)', region: 'global', kind: 'cardio', loadType: 'poids-du-corps',
-    aliases: ['stationary bike', 'bike', 'spinning'], primaryMuscles: ['Système cardiovasculaire'], secondaryMuscles: ['Quadriceps', 'Mollets'],
+    aliases: ['stationary bike', 'bike', 'spinning'], primaryMuscles: ['cardio'], secondaryMuscles: ['quadriceps', 'mollets'],
     equipment: 'Vélo droit',
     technique: ['Selle à hauteur de hanche, jambe presque tendue en bas.', 'Cadence régulière (70-90 tours/min).', 'Buste détendu.'],
     mistakes: ['Selle trop basse (genoux).', 'Résistance trop dure.'],
@@ -1143,7 +1143,7 @@ const entries: Entry[] = [
   },
   {
     id: 'velo-semi-allonge', name: 'Vélo semi-allongé', region: 'global', kind: 'cardio', loadType: 'poids-du-corps',
-    aliases: ['recumbent bike'], primaryMuscles: ['Système cardiovasculaire'], secondaryMuscles: ['Quadriceps', 'Fessiers'],
+    aliases: ['recumbent bike'], primaryMuscles: ['cardio'], secondaryMuscles: ['quadriceps', 'fessiers'],
     equipment: 'Vélo semi-allongé',
     technique: ['Dos calé contre le dossier.', 'Jambe presque tendue en extension.', 'Cadence régulière.'],
     mistakes: ['Siège trop proche (genoux).', 'Résistance trop dure.'],
@@ -1152,7 +1152,7 @@ const entries: Entry[] = [
   },
   {
     id: 'velo-exterieur', name: 'Vélo (dehors)', region: 'global', kind: 'cardio', loadType: 'poids-du-corps',
-    aliases: ['cycling', 'bike'], primaryMuscles: ['Système cardiovasculaire'], secondaryMuscles: ['Quadriceps', 'Mollets'],
+    aliases: ['cycling', 'bike'], primaryMuscles: ['cardio'], secondaryMuscles: ['quadriceps', 'mollets'],
     equipment: 'Vélo',
     technique: ['Selle bien réglée.', 'Rythme où l’on peut parler.', 'Casque.'],
     mistakes: ['Selle trop basse.', 'Développement trop dur.'],
@@ -1161,7 +1161,7 @@ const entries: Entry[] = [
   },
   {
     id: 'elliptique', name: 'Vélo elliptique', region: 'global', kind: 'cardio', loadType: 'poids-du-corps',
-    aliases: ['elliptical', 'cross trainer'], primaryMuscles: ['Système cardiovasculaire'], secondaryMuscles: ['Quadriceps', 'Fessiers', 'Épaules'],
+    aliases: ['elliptical', 'cross trainer'], primaryMuscles: ['cardio'], secondaryMuscles: ['quadriceps', 'fessiers', 'deltoides-anterieurs'],
     equipment: 'Elliptique',
     technique: ['Buste droit, pieds à plat sur les pédales.', 'Pousser et tirer les poignées.', 'Rythme régulier.'],
     mistakes: ['Se pencher sur les poignées.', 'Talons qui décollent.'],
@@ -1170,7 +1170,7 @@ const entries: Entry[] = [
   },
   {
     id: 'rameur', name: 'Rameur', region: 'global', kind: 'cardio', loadType: 'poids-du-corps',
-    aliases: ['rowing machine', 'rower', 'concept2'], primaryMuscles: ['Système cardiovasculaire', 'Grand dorsal'], secondaryMuscles: ['Quadriceps', 'Biceps'],
+    aliases: ['rowing machine', 'rower', 'concept2'], primaryMuscles: ['cardio', 'grand-dorsal'], secondaryMuscles: ['quadriceps', 'biceps'],
     equipment: 'Rameur',
     technique: ['Ordre : jambes, buste, bras ; retour dans l’ordre inverse.', 'Dos neutre.', 'Cadence 20-28 coups/min.'],
     mistakes: ['Tirer avec les bras d’abord.', 'Arrondir le dos.'],
@@ -1179,7 +1179,7 @@ const entries: Entry[] = [
   },
   {
     id: 'stepper', name: 'Stepper / escalier', region: 'global', kind: 'cardio', loadType: 'poids-du-corps',
-    aliases: ['stairmaster', 'stair climber', 'stepmill'], primaryMuscles: ['Système cardiovasculaire'], secondaryMuscles: ['Fessiers', 'Quadriceps', 'Mollets'],
+    aliases: ['stairmaster', 'stair climber', 'stepmill'], primaryMuscles: ['cardio'], secondaryMuscles: ['fessiers', 'quadriceps', 'mollets'],
     equipment: 'Stepper ou machine escalier',
     technique: ['Buste droit, pied entier sur la marche.', 'Rythme régulier.', 'Ne pas s’appuyer sur les barres.'],
     mistakes: ['S’affaler sur les poignées.', 'Vitesse trop élevée.'],
@@ -1188,7 +1188,7 @@ const entries: Entry[] = [
   },
   {
     id: 'corde-a-sauter', name: 'Corde à sauter', region: 'global', kind: 'cardio', loadType: 'poids-du-corps',
-    aliases: ['jump rope', 'skipping'], primaryMuscles: ['Système cardiovasculaire'], secondaryMuscles: ['Mollets', 'Épaules'],
+    aliases: ['jump rope', 'skipping'], primaryMuscles: ['cardio'], secondaryMuscles: ['mollets', 'deltoides-anterieurs'],
     equipment: 'Corde à sauter',
     technique: ['Petits sauts sur l’avant du pied.', 'Rotation par les poignets.', 'Coudes près du corps.'],
     mistakes: ['Sauter trop haut.', 'Atterrir sur les talons.'],
@@ -1197,7 +1197,7 @@ const entries: Entry[] = [
   },
   {
     id: 'natation', name: 'Natation', region: 'global', kind: 'cardio', loadType: 'poids-du-corps',
-    aliases: ['swimming', 'piscine'], primaryMuscles: ['Système cardiovasculaire'], secondaryMuscles: ['Grand dorsal', 'Épaules'],
+    aliases: ['swimming', 'piscine'], primaryMuscles: ['cardio'], secondaryMuscles: ['grand-dorsal', 'deltoides-anterieurs'],
     equipment: 'Piscine',
     technique: ['Nage au choix, rythme régulier.', 'Respiration régulière.', 'Pauses courtes si besoin.'],
     mistakes: ['Tête trop haute (crawl).', 'Vouloir aller trop vite.'],
@@ -1206,7 +1206,7 @@ const entries: Entry[] = [
   },
   {
     id: 'randonnee', name: 'Randonnée / marche longue', region: 'global', kind: 'cardio', loadType: 'poids-du-corps',
-    aliases: ['hiking', 'marche'], primaryMuscles: ['Système cardiovasculaire'], secondaryMuscles: ['Jambes'],
+    aliases: ['hiking', 'marche'], primaryMuscles: ['cardio'], secondaryMuscles: ['quadriceps', 'fessiers', 'mollets'],
     equipment: 'Bonnes chaussures',
     technique: ['Rythme régulier où l’on peut parler.', 'Bâtons en descente si besoin.', 'S’hydrater.'],
     mistakes: ['Partir trop vite.', 'Chaussures inadaptées.'],
@@ -1215,7 +1215,7 @@ const entries: Entry[] = [
   },
   {
     id: 'sport-collectif', name: 'Sport (foot, basket, raquette…)', region: 'global', kind: 'cardio', loadType: 'poids-du-corps',
-    aliases: ['football', 'basket', 'tennis', 'padel', 'badminton', 'squash'], primaryMuscles: ['Système cardiovasculaire'], secondaryMuscles: ['Jambes'],
+    aliases: ['football', 'basket', 'tennis', 'padel', 'badminton', 'squash'], primaryMuscles: ['cardio'], secondaryMuscles: ['quadriceps', 'fessiers', 'mollets'],
     equipment: 'Selon le sport',
     technique: ['S’échauffer 10 min avant.', 'Rester à une intensité raisonnable au début.', 'S’hydrater.'],
     mistakes: ['Pas d’échauffement.', 'Changements de direction brusques à froid.'],
@@ -1224,7 +1224,7 @@ const entries: Entry[] = [
   },
   {
     id: 'sac-de-frappe', name: 'Boxe / sac de frappe', region: 'global', kind: 'cardio', loadType: 'poids-du-corps',
-    aliases: ['boxing', 'punching bag'], primaryMuscles: ['Système cardiovasculaire', 'Épaules'], secondaryMuscles: ['Abdominaux'],
+    aliases: ['boxing', 'punching bag'], primaryMuscles: ['cardio', 'deltoides-anterieurs'], secondaryMuscles: ['abdominaux'],
     equipment: 'Sac de frappe, gants',
     technique: ['Garde haute, appuis mobiles.', 'Frapper en tournant les hanches.', 'Rounds de 2-3 min avec pause.'],
     mistakes: ['Frapper sans gants ni bandes.', 'Bloquer la respiration.'],
@@ -1235,7 +1235,7 @@ const entries: Entry[] = [
   // ───────────────────────── Mobilité et étirements ─────────────────────────
   {
     id: 'etirement-quadriceps', name: 'Étirement des quadriceps (debout)', region: 'bas', kind: 'mobilite', loadType: 'duree',
-    aliases: ['quad stretch'], primaryMuscles: ['Quadriceps'], secondaryMuscles: ['Fléchisseurs de hanche'],
+    aliases: ['quad stretch'], primaryMuscles: ['quadriceps'], secondaryMuscles: ['flechisseurs-hanche'],
     equipment: 'Aucun (appui sur un mur)',
     technique: ['Attraper la cheville, talon vers la fesse.', 'Genoux serrés, bassin rentré.', 'Respirer, sans douleur.'],
     mistakes: ['Cambrer le dos.', 'Tirer trop fort.'],
@@ -1244,7 +1244,7 @@ const entries: Entry[] = [
   },
   {
     id: 'etirement-mollets', name: 'Étirement des mollets (contre un mur)', region: 'bas', kind: 'mobilite', loadType: 'duree',
-    aliases: ['calf stretch'], primaryMuscles: ['Mollets'], secondaryMuscles: [],
+    aliases: ['calf stretch'], primaryMuscles: ['mollets'], secondaryMuscles: [],
     equipment: 'Un mur',
     technique: ['Mains au mur, une jambe tendue derrière.', 'Talon arrière au sol.', 'Pousser doucement vers le mur.'],
     mistakes: ['Talon qui décolle.', 'Rebondir.'],
@@ -1253,7 +1253,7 @@ const entries: Entry[] = [
   },
   {
     id: 'etirement-fessiers', name: 'Étirement des fessiers (allongé)', region: 'bas', kind: 'mobilite', loadType: 'duree',
-    aliases: ['glute stretch', 'figure four', 'pigeon'], primaryMuscles: ['Fessiers'], secondaryMuscles: ['Hanches'],
+    aliases: ['glute stretch', 'figure four', 'pigeon'], primaryMuscles: ['fessiers'], secondaryMuscles: ['flechisseurs-hanche'],
     equipment: 'Tapis',
     technique: ['Allongé, cheville posée sur le genou opposé.', 'Ramener la jambe vers la poitrine.', 'Respirer, relâcher.'],
     mistakes: ['Forcer sur le genou.', 'Décoller la tête.'],
@@ -1262,7 +1262,7 @@ const entries: Entry[] = [
   },
   {
     id: 'etirement-adducteurs', name: 'Étirement des adducteurs (papillon)', region: 'bas', kind: 'mobilite', loadType: 'duree',
-    aliases: ['butterfly stretch', 'groin stretch'], primaryMuscles: ['Adducteurs'], secondaryMuscles: ['Hanches'],
+    aliases: ['butterfly stretch', 'groin stretch'], primaryMuscles: ['adducteurs'], secondaryMuscles: ['flechisseurs-hanche'],
     equipment: 'Tapis',
     technique: ['Assis, plantes de pieds collées.', 'Dos droit, genoux vers le sol.', 'Pencher légèrement le buste.'],
     mistakes: ['Arrondir le dos.', 'Appuyer fort sur les genoux.'],
@@ -1271,7 +1271,7 @@ const entries: Entry[] = [
   },
   {
     id: 'posture-enfant', name: 'Posture de l’enfant', region: 'tronc', kind: 'mobilite', loadType: 'duree',
-    aliases: ['child pose', 'childs pose'], primaryMuscles: ['Lombaires', 'Grand dorsal'], secondaryMuscles: ['Épaules', 'Hanches'],
+    aliases: ['child pose', 'childs pose'], primaryMuscles: ['lombaires', 'grand-dorsal'], secondaryMuscles: ['deltoides-anterieurs', 'flechisseurs-hanche'],
     equipment: 'Tapis',
     technique: ['À genoux, fesses vers les talons.', 'Bras allongés devant.', 'Respirer profondément.'],
     mistakes: ['Forcer sur les genoux.', 'Bloquer la respiration.'],
@@ -1280,7 +1280,7 @@ const entries: Entry[] = [
   },
   {
     id: 'genoux-poitrine', name: 'Genoux à la poitrine (lombaires)', region: 'tronc', kind: 'mobilite', loadType: 'duree',
-    aliases: ['knees to chest'], primaryMuscles: ['Lombaires'], secondaryMuscles: ['Fessiers'],
+    aliases: ['knees to chest'], primaryMuscles: ['lombaires'], secondaryMuscles: ['fessiers'],
     equipment: 'Tapis',
     technique: ['Allongé sur le dos.', 'Ramener les genoux vers la poitrine.', 'Bercer doucement.'],
     mistakes: ['Décoller la tête.', 'Tirer trop fort.'],
@@ -1289,7 +1289,7 @@ const entries: Entry[] = [
   },
   {
     id: 'etirement-triceps', name: 'Étirement des triceps', region: 'haut', kind: 'mobilite', loadType: 'duree',
-    aliases: ['triceps stretch'], primaryMuscles: ['Triceps'], secondaryMuscles: ['Grand dorsal'],
+    aliases: ['triceps stretch'], primaryMuscles: ['triceps'], secondaryMuscles: ['grand-dorsal'],
     equipment: 'Aucun',
     technique: ['Main derrière la tête, coude vers le plafond.', 'L’autre main pousse doucement le coude.', 'Respirer.'],
     mistakes: ['Pencher la tête.', 'Forcer.'],
@@ -1298,7 +1298,7 @@ const entries: Entry[] = [
   },
   {
     id: 'etirement-epaules', name: 'Étirement des épaules (bras croisé)', region: 'haut', kind: 'mobilite', loadType: 'duree',
-    aliases: ['shoulder stretch', 'cross body stretch'], primaryMuscles: ['Deltoïdes postérieurs'], secondaryMuscles: ['Dos (rhomboïdes, trapèzes moyens)'],
+    aliases: ['shoulder stretch', 'cross body stretch'], primaryMuscles: ['deltoides-posterieurs'], secondaryMuscles: ['haut-du-dos'],
     equipment: 'Aucun',
     technique: ['Bras tendu croisé devant la poitrine.', 'L’autre bras le ramène doucement.', 'Épaule basse.'],
     mistakes: ['Hausser l’épaule.', 'Tourner le buste.'],
@@ -1307,7 +1307,7 @@ const entries: Entry[] = [
   },
   {
     id: 'etirement-lateral', name: 'Étirement latéral debout', region: 'tronc', kind: 'mobilite', loadType: 'duree',
-    aliases: ['side stretch'], primaryMuscles: ['Obliques', 'Grand dorsal'], secondaryMuscles: [],
+    aliases: ['side stretch'], primaryMuscles: ['obliques', 'grand-dorsal'], secondaryMuscles: [],
     equipment: 'Aucun',
     technique: ['Bras au-dessus de la tête.', 'Pencher le buste sur le côté.', 'Respirer, puis changer de côté.'],
     mistakes: ['Pencher vers l’avant.', 'Bloquer la respiration.'],
@@ -1316,7 +1316,7 @@ const entries: Entry[] = [
   },
   {
     id: 'grand-etirement', name: 'Fente avec rotation (world’s greatest stretch)', region: 'global', kind: 'mobilite', loadType: 'poids-du-corps',
-    aliases: ['worlds greatest stretch', 'spiderman stretch'], primaryMuscles: ['Hanches', 'Ischio-jambiers'], secondaryMuscles: ['Dos (rhomboïdes, trapèzes moyens)', 'Fléchisseurs de hanche'],
+    aliases: ['worlds greatest stretch', 'spiderman stretch'], primaryMuscles: ['flechisseurs-hanche', 'ischio-jambiers'], secondaryMuscles: ['haut-du-dos'],
     equipment: 'Tapis',
     technique: ['Grande fente, main au sol à l’intérieur du pied avant.', 'Ouvrir le bras vers le plafond en tournant le buste.', 'Alterner les côtés lentement.'],
     mistakes: ['Aller trop vite.', 'Genou avant qui rentre.'],
@@ -1325,7 +1325,7 @@ const entries: Entry[] = [
   },
   {
     id: 'inchworm', name: 'Marche des mains (inchworm)', region: 'global', kind: 'mobilite', loadType: 'poids-du-corps',
-    aliases: ['inchworm'], primaryMuscles: ['Ischio-jambiers', 'Abdominaux'], secondaryMuscles: ['Épaules'],
+    aliases: ['inchworm'], primaryMuscles: ['ischio-jambiers', 'abdominaux'], secondaryMuscles: ['deltoides-anterieurs'],
     equipment: 'Aucun',
     technique: ['Debout, mains au sol en pliant un peu les genoux.', 'Avancer les mains jusqu’à la planche.', 'Revenir en marchant les pieds vers les mains.'],
     mistakes: ['Bassin qui s’affaisse en planche.', 'Aller trop vite.'],
@@ -1334,7 +1334,7 @@ const entries: Entry[] = [
   },
   {
     id: 'cercles-bras', name: 'Cercles de bras (échauffement)', region: 'haut', kind: 'mobilite', loadType: 'duree',
-    aliases: ['arm circles'], primaryMuscles: ['Épaules'], secondaryMuscles: [],
+    aliases: ['arm circles'], primaryMuscles: ['deltoides-anterieurs'], secondaryMuscles: [],
     equipment: 'Aucun',
     technique: ['Bras tendus sur les côtés.', 'Petits puis grands cercles.', 'Dans les deux sens.'],
     mistakes: ['Hausser les épaules.', 'Aller trop vite.'],
@@ -1343,7 +1343,7 @@ const entries: Entry[] = [
   },
   {
     id: 'rouleau-massage', name: 'Auto-massage au rouleau (foam roller)', region: 'global', kind: 'mobilite', loadType: 'duree',
-    aliases: ['foam roller', 'foam rolling', 'smr'], primaryMuscles: ['Quadriceps', 'Ischio-jambiers', 'Mollets'], secondaryMuscles: ['Grand dorsal'],
+    aliases: ['foam roller', 'foam rolling', 'smr'], primaryMuscles: ['quadriceps', 'ischio-jambiers', 'mollets'], secondaryMuscles: ['grand-dorsal'],
     equipment: 'Rouleau de massage',
     technique: ['Rouler lentement sur le muscle.', 'Pause de quelques secondes sur les zones tendues.', 'Respirer, rester supportable.'],
     mistakes: ['Rouler sur les articulations ou les lombaires.', 'Aller trop vite.'],
@@ -1352,7 +1352,7 @@ const entries: Entry[] = [
   },
   {
     id: 'yoga', name: 'Yoga / pilates', region: 'global', kind: 'mobilite', loadType: 'poids-du-corps',
-    aliases: ['yoga', 'pilates', 'stretching'], primaryMuscles: ['Hanches', 'Abdominaux'], secondaryMuscles: ['Épaules', 'Ischio-jambiers'],
+    aliases: ['yoga', 'pilates', 'stretching'], primaryMuscles: ['flechisseurs-hanche', 'abdominaux'], secondaryMuscles: ['deltoides-anterieurs', 'ischio-jambiers'],
     equipment: 'Tapis',
     technique: ['Séance guidée ou enchaînement libre.', 'Respiration lente.', 'Sans douleur.'],
     mistakes: ['Forcer les amplitudes.', 'Bloquer la respiration.'],

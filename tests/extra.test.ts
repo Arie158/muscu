@@ -14,8 +14,7 @@ describe('catalogue complet', () => {
 
   it('est vraiment large : plus de 200 fiches, chaque partie du corps couverte par au moins 3 exercices', () => {
     expect(exercises.length).toBeGreaterThan(200)
-    // « Jambes » est un libellé générique, seulement en secondaire (cardio, marche).
-    for (const part of BODY_PARTS.filter((p) => p !== 'Jambes')) {
+    for (const part of BODY_PARTS) {
       const n = exercises.filter((e) => exerciseBodyParts(e).primary.some((p) => p.label === part)).length
       expect(n, part).toBeGreaterThanOrEqual(3)
     }

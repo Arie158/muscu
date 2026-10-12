@@ -40,7 +40,7 @@ function onBackdrop(e: MouseEvent) {
 }
 
 const alphabetical = [...exercises].sort((a, b) => a.name.localeCompare(b.name, 'fr'))
-const targets = new Map(exercises.map((e) => [e.id, new Set(exerciseBodyParts(e).primary.map((p) => p.label))]))
+const targets = new Map(exercises.map((e) => [e.id, new Set<string>(exerciseBodyParts(e).primary.map((p) => p.label))]))
 const parts = BODY_PARTS.filter((label) => exercises.some((e) => targets.get(e.id)!.has(label)))
 const subtitle = (e: Exercise) => [exerciseBodyParts(e).primary.map((p) => p.label).join(', '), e.equipment].filter(Boolean).join(' · ')
 

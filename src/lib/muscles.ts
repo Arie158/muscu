@@ -1,48 +1,29 @@
-// Parties du corps travaillées : ramène les muscles détaillés des fiches
-// (« Dos (rhomboïdes, trapèzes moyens) », « Mollets (soléaire) »…) à une liste
-// courte et stable, affichable en étiquettes sur chaque exercice et chaque séance.
+// Parties du corps travaillées : chaque muscle des fiches (liste fixe, data/muscles.ts)
+// appartient à une partie du corps, affichable en étiquettes sur chaque exercice et chaque séance.
 import type { Exercise, Session } from '@/data/types'
 import { exercisesById } from '@/data/exercises'
+import { MUSCLES, type BodyPartLabel, type BodyZone, type MuscleId } from '@/data/muscles'
 
-export type BodyZone = 'haut' | 'tronc' | 'bas' | 'global'
+export type { BodyZone }
 
 export interface BodyPart {
-  label: string
+  label: BodyPartLabel
   zone: BodyZone
 }
 
-// Ordre important : le premier motif trouvé l'emporte (« Dos (… trapèzes moyens) » → Dos).
-const RULES: [RegExp, BodyPart][] = [
-  [/pectoraux/, { label: 'Pectoraux', zone: 'haut' }],
-  [/dos|dorsal|rhombo|trapèzes moyens|colonne/, { label: 'Dos', zone: 'haut' }],
-  [/trapèzes/, { label: 'Trapèzes', zone: 'haut' }],
-  [/deltoïdes|épaule|rotateurs/, { label: 'Épaules', zone: 'haut' }],
-  [/biceps|brachial/, { label: 'Biceps', zone: 'haut' }],
-  [/triceps/, { label: 'Triceps', zone: 'haut' }],
-  [/avant-bras/, { label: 'Avant-bras', zone: 'haut' }],
-  [/abdominaux|obliques|transverse/, { label: 'Abdos', zone: 'tronc' }],
-  [/lombaires/, { label: 'Lombaires', zone: 'tronc' }],
-  [/fléchisseurs de hanche|hanches/, { label: 'Hanches', zone: 'bas' }],
-  [/quadriceps/, { label: 'Quadriceps', zone: 'bas' }],
-  [/ischio/, { label: 'Ischio-jambiers', zone: 'bas' }],
-  [/fessiers/, { label: 'Fessiers', zone: 'bas' }],
-  [/adducteurs/, { label: 'Adducteurs', zone: 'bas' }],
-  [/mollets|soléaire|gastrocnémiens/, { label: 'Mollets', zone: 'bas' }],
-  [/jambes/, { label: 'Jambes', zone: 'bas' }],
-  [/cardio/, { label: 'Cardio', zone: 'global' }],
-]
+/** Toutes les parties du corps, dans l'ordre de la liste des muscles. */
+export const BODY_PARTS: BodyPartLabel[] = [...new Set(Object.values(MUSCLES).map((m) => m.part))]
 
-/** Toutes les parties du corps reconnues. */
-export const BODY_PARTS: string[] = [...new Set(RULES.map(([, part]) => part.label))]
-
-/** Partie du corps correspondant à un libellé de muscle (le libellé brut si inconnu). */
-export function bodyPartOf(muscle: string): BodyPart {
-  const m = muscle.toLowerCase()
-  for (const [re, part] of RULES) if (re.test(m)) return part
-  return { label: muscle, zone: 'global' }
+/** Partie du corps d'un muscle. */
+export function bodyPartOf(id: MuscleId): BodyPart {
+  const m = MUSCLES[id]
+  return { label: m.part, zone: m.zone }
 }
 
-function uniqueParts(muscles: string[], exclude: Set<string> = new Set()): BodyPart[] {
+/** Libellés des muscles (fiche exercice, liste). */
+export const muscleLabels = (ids: MuscleId[]): string => ids.map((id) => MUSCLES[id].label).join(', ')
+
+function uniqueParts(muscles: MuscleId[], exclude: Set<string> = new Set()): BodyPart[] {
   const seen = new Set(exclude)
   const out: BodyPart[] = []
   for (const muscle of muscles) {

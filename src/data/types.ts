@@ -3,6 +3,8 @@
 // Important : pas d'`enum` (le script scripts/fetch-images.ts importe ces fichiers
 // avec `node --experimental-strip-types`, qui ne supporte que la syntaxe effaçable).
 
+import type { MuscleId } from './muscles'
+
 /** Zone du corps, utilisée pour l'incrément de charge et l'icône de substitution. */
 export type BodyRegion = 'haut' | 'bas' | 'tronc' | 'global'
 
@@ -78,8 +80,10 @@ export interface Exercise {
   region: BodyRegion
   kind: ExerciseKind
   loadType: LoadType
-  primaryMuscles: string[]
-  secondaryMuscles: string[]
+  primaryMuscles: MuscleId[]
+  secondaryMuscles: MuscleId[]
+  /** Précision sur la zone travaillée (« haut des pectoraux », « moyen fessier »…). */
+  muscleFocus?: string
   equipment: string
   /** Consignes techniques détaillées (la consigne clé de la séance s'y ajoute). */
   technique: string[]

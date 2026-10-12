@@ -8,7 +8,7 @@ import { catalogExercises } from '@/data/catalog'
 import type { Exercise } from '@/data/types'
 import PageHeader from '@/components/PageHeader.vue'
 import { exerciseImage } from '@/lib/images'
-import { BODY_PARTS, exerciseBodyParts } from '@/lib/muscles'
+import { BODY_PARTS, exerciseBodyParts, muscleLabels } from '@/lib/muscles'
 import { searchExercises } from '@/lib/search'
 import AppIcon from '@/components/AppIcon.vue'
 
@@ -37,7 +37,7 @@ const groups: { id: string; title: string; list: Exercise[] }[] = [
   { id: 'autres-mobilite', title: 'Autres exercices · mobilité et étirements', list: catalog((e) => e.kind === 'mobilite') },
 ]
 
-const targets = new Map(exercises.map((e) => [e.id, new Set(exerciseBodyParts(e).primary.map((p) => p.label))]))
+const targets = new Map(exercises.map((e) => [e.id, new Set<string>(exerciseBodyParts(e).primary.map((p) => p.label))]))
 const partCounts = BODY_PARTS.map((label) => ({ label, count: exercises.filter((e) => targets.get(e.id)!.has(label)).length })).filter(
   (p) => p.count > 0,
 )
@@ -108,7 +108,7 @@ const shownCount = computed(() => shown.value.reduce((n, g) => n + g.list.length
             <span v-else class="noimg" aria-hidden="true" />
             <span>
               <strong>{{ e.name }}</strong>
-              <span class="small muted d-block">{{ e.primaryMuscles.join(', ') }}</span>
+              <span class="small muted d-block">{{ muscleLabels(e.primaryMuscles) }}</span>
               <span v-if="e.variants" class="small muted d-block">{{ Object.keys(e.variants).length }} variantes de matériel</span>
             </span>
           </RouterLink>

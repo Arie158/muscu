@@ -8,7 +8,7 @@ export const gymAlternatives: Exercise[] = [
   // ── Pectoraux ──
   {
     id: 'chest-press-machine', name: 'Chest press machine', region: 'haut', kind: 'base', loadType: 'poids',
-    primaryMuscles: ['Pectoraux'], secondaryMuscles: ['Triceps', 'Deltoïdes antérieurs'],
+    primaryMuscles: ['pectoraux'], secondaryMuscles: ['triceps', 'deltoides-anterieurs'],
     equipment: 'Machine chest press (convergente ou classique)',
     technique: ['Poignées à hauteur du milieu des pectoraux.', 'Omoplates serrées contre le dossier.', 'Pousser sans verrouiller, retour contrôlé en 2 s.'],
     mistakes: ['Siège trop haut ou trop bas.', 'Épaules qui avancent en fin de poussée.'],
@@ -19,7 +19,7 @@ export const gymAlternatives: Exercise[] = [
   {
     id: 'developpe-couche-barre', name: 'Développé couché barre', region: 'haut', kind: 'base', loadType: 'poids',
     mainLift: true, noFailure: true,
-    primaryMuscles: ['Pectoraux'], secondaryMuscles: ['Triceps', 'Deltoïdes antérieurs'],
+    primaryMuscles: ['pectoraux'], secondaryMuscles: ['triceps', 'deltoides-anterieurs'],
     equipment: 'Banc plat + barre (ou Smith)',
     technique: ['Omoplates serrées, pieds ancrés.', 'Barre vers le bas des pectoraux, coudes ~45°.', 'Pousser en ligne légèrement oblique vers les épaules.'],
     mistakes: ['Rebond sur la poitrine.', 'Fesses qui décollent.'],
@@ -29,7 +29,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'developpe-decline', name: 'Développé décliné (haltères ou Smith)', region: 'haut', kind: 'base', loadType: 'poids',
-    primaryMuscles: ['Pectoraux (bas)', 'Triceps'], secondaryMuscles: ['Deltoïdes antérieurs'],
+    primaryMuscles: ['pectoraux', 'triceps'], secondaryMuscles: ['deltoides-anterieurs'], muscleFocus: 'bas des pectoraux',
     equipment: 'Banc décliné + haltères, ou Smith',
     technique: ['Jambes bien calées sous les boudins.', 'Descendre vers le bas des pectoraux.', 'Pousser sans verrouiller.'],
     mistakes: ['Amplitude raccourcie.', 'Descente non contrôlée.'],
@@ -39,7 +39,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'ecarte-poulie', name: 'Écarté poulie vis-à-vis', region: 'haut', kind: 'isolation', loadType: 'poids',
-    primaryMuscles: ['Pectoraux'], secondaryMuscles: ['Deltoïdes antérieurs'],
+    primaryMuscles: ['pectoraux'], secondaryMuscles: ['deltoides-anterieurs'],
     equipment: 'Deux poulies hautes (vis-à-vis)',
     technique: ['Un pas en avant, buste légèrement penché.', 'Coudes légèrement fléchis et fixes.', 'Rapprocher les mains devant la poitrine, serrer 1 s.'],
     mistakes: ['Plier les coudes (ça devient un développé).', 'Charge trop lourde.'],
@@ -49,7 +49,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'ecarte-halteres', name: 'Écarté couché haltères', region: 'haut', kind: 'isolation', loadType: 'poids',
-    primaryMuscles: ['Pectoraux'], secondaryMuscles: ['Deltoïdes antérieurs'],
+    primaryMuscles: ['pectoraux'], secondaryMuscles: ['deltoides-anterieurs'],
     equipment: 'Haltères + banc plat',
     technique: ['Coudes légèrement fléchis.', 'Descendre en arc jusqu’à un étirement confortable.', 'Remonter en serrant les pectoraux.'],
     mistakes: ['Descendre trop bas (épaules).', 'Coudes qui se plient.'],
@@ -61,7 +61,7 @@ export const gymAlternatives: Exercise[] = [
   // ── Dos ──
   {
     id: 'tractions-assistees', name: 'Tractions assistées', region: 'haut', kind: 'base', loadType: 'assistance',
-    primaryMuscles: ['Grand dorsal'], secondaryMuscles: ['Biceps', 'Rhomboïdes'],
+    primaryMuscles: ['grand-dorsal'], secondaryMuscles: ['biceps', 'haut-du-dos'],
     equipment: 'Machine de tractions assistées',
     technique: ['Genoux sur le plateau, prise un peu plus large que les épaules.', 'Tirer la poitrine vers la barre, coudes vers les hanches.', 'Redescendre bras tendus.'],
     mistakes: ['Amplitude partielle.', 'Se balancer.'],
@@ -71,7 +71,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'tirage-un-bras', name: 'Tirage vertical un bras (poulie)', region: 'haut', kind: 'base', loadType: 'poids',
-    primaryMuscles: ['Grand dorsal'], secondaryMuscles: ['Biceps'],
+    primaryMuscles: ['grand-dorsal'], secondaryMuscles: ['biceps'],
     equipment: 'Poulie haute + poignée simple',
     technique: ['Bras tendu en haut, épaule basse.', 'Tirer le coude vers la hanche.', 'Retour lent jusqu’à l’étirement.'],
     mistakes: ['Pivoter le buste.', 'Tirer avec la main plutôt qu’avec le coude.'],
@@ -81,7 +81,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'rowing-poulie-basse', name: 'Rowing poulie basse', region: 'haut', kind: 'base', loadType: 'poids',
-    primaryMuscles: ['Dos (rhomboïdes, trapèzes moyens)', 'Grand dorsal'], secondaryMuscles: ['Biceps'],
+    primaryMuscles: ['haut-du-dos', 'grand-dorsal'], secondaryMuscles: ['biceps'],
     equipment: 'Poulie basse + poignée triangle',
     technique: ['Dos neutre, genoux légèrement fléchis.', 'Tirer la poignée vers le nombril.', 'Serrer les omoplates 1 s.'],
     mistakes: ['Se pencher en arrière pour tirer.', 'Arrondir le dos en avant.'],
@@ -91,7 +91,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'oiseau-machine', name: 'Oiseau au pec deck inversé', region: 'haut', kind: 'isolation', loadType: 'poids',
-    primaryMuscles: ['Deltoïdes postérieurs'], secondaryMuscles: ['Trapèzes moyens', 'Rhomboïdes'],
+    primaryMuscles: ['deltoides-posterieurs'], secondaryMuscles: ['haut-du-dos'],
     equipment: 'Pec deck réglé en position inversée',
     technique: ['Poitrine contre le dossier.', 'Ouvrir les bras à l’horizontale, coudes légèrement fléchis.', 'Pause 1 s, retour lent.'],
     mistakes: ['Hausser les épaules.', 'Charge trop lourde.'],
@@ -101,7 +101,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'oiseau-halteres', name: 'Oiseau haltères', region: 'haut', kind: 'isolation', loadType: 'poids',
-    primaryMuscles: ['Deltoïdes postérieurs'], secondaryMuscles: ['Trapèzes moyens'],
+    primaryMuscles: ['deltoides-posterieurs'], secondaryMuscles: ['haut-du-dos'],
     equipment: 'Haltères légers (buste penché ou poitrine sur banc incliné)',
     technique: ['Buste penché, dos plat.', 'Ouvrir les bras sur les côtés, coudes légèrement fléchis.', 'Serrer les omoplates en haut.'],
     mistakes: ['Lancer les haltères.', 'Dos arrondi.'],
@@ -113,7 +113,7 @@ export const gymAlternatives: Exercise[] = [
   // ── Épaules et bras ──
   {
     id: 'developpe-epaules-halteres', name: 'Développé épaules haltères assis', region: 'haut', kind: 'base', loadType: 'poids',
-    primaryMuscles: ['Deltoïdes antérieurs et latéraux'], secondaryMuscles: ['Triceps'],
+    primaryMuscles: ['deltoides-anterieurs', 'deltoides-lateraux'], secondaryMuscles: ['triceps'],
     equipment: 'Haltères + banc à dossier vertical',
     technique: ['Dos collé au dossier.', 'Haltères à hauteur des oreilles au départ.', 'Pousser sans verrouiller, sans cambrer.'],
     mistakes: ['Cambrer.', 'Haltères qui s’entrechoquent en haut.'],
@@ -123,7 +123,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'developpe-epaules-smith', name: 'Développé épaules au Smith', region: 'haut', kind: 'base', loadType: 'poids',
-    primaryMuscles: ['Deltoïdes antérieurs'], secondaryMuscles: ['Triceps', 'Deltoïdes latéraux'],
+    primaryMuscles: ['deltoides-anterieurs'], secondaryMuscles: ['triceps', 'deltoides-lateraux'],
     equipment: 'Smith machine + banc vertical',
     technique: ['Banc placé pour que la barre descende devant le visage.', 'Barre jusqu’au menton.', 'Pousser sans cambrer.'],
     mistakes: ['Barre derrière la nuque.', 'Cambrure.'],
@@ -133,7 +133,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'elevations-laterales-poulie', name: 'Élévations latérales poulie basse (un bras)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    primaryMuscles: ['Deltoïdes latéraux'], secondaryMuscles: ['Trapèzes supérieurs'],
+    primaryMuscles: ['deltoides-lateraux'], secondaryMuscles: ['trapezes'],
     equipment: 'Poulie basse + poignée simple',
     technique: ['De profil, poignée tenue par la main la plus éloignée.', 'Monter jusqu’à l’horizontale.', 'Descente lente.'],
     mistakes: ['Pencher le buste pour aider.', 'Hausser l’épaule.'],
@@ -143,7 +143,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'barre-front-halteres', name: 'Extension triceps couché haltères', region: 'haut', kind: 'isolation', loadType: 'poids',
-    primaryMuscles: ['Triceps'], secondaryMuscles: [],
+    primaryMuscles: ['triceps'], secondaryMuscles: [],
     equipment: 'Haltères + banc plat',
     technique: ['Bras verticaux, coudes fixes.', 'Descendre les haltères de chaque côté de la tête.', 'Tendre sans bouger les coudes.'],
     mistakes: ['Coudes qui s’écartent.', 'Charge trop lourde.'],
@@ -153,7 +153,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'curl-halteres', name: 'Curl haltères', region: 'haut', kind: 'isolation', loadType: 'poids',
-    primaryMuscles: ['Biceps'], secondaryMuscles: ['Avant-bras'],
+    primaryMuscles: ['biceps'], secondaryMuscles: ['avant-bras'],
     equipment: 'Haltères',
     technique: ['Coudes le long du corps.', 'Monter en tournant la paume vers le haut.', 'Descente contrôlée.'],
     mistakes: ['Balancer le buste.', 'Coudes qui avancent.'],
@@ -163,7 +163,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'curl-machine', name: 'Curl machine (arm curl)', region: 'haut', kind: 'isolation', loadType: 'poids',
-    primaryMuscles: ['Biceps'], secondaryMuscles: ['Avant-bras'],
+    primaryMuscles: ['biceps'], secondaryMuscles: ['avant-bras'],
     equipment: 'Machine arm curl',
     technique: ['Coudes alignés avec l’axe de la machine.', 'Monter sans élan, serrer en haut.', 'Retour lent.'],
     mistakes: ['Siège mal réglé.', 'Laisser retomber la charge.'],
@@ -174,7 +174,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'dips-machine', name: 'Dips machine assise', region: 'haut', kind: 'base', loadType: 'poids',
-    primaryMuscles: ['Triceps'], secondaryMuscles: ['Pectoraux (bas)', 'Deltoïdes antérieurs'],
+    primaryMuscles: ['triceps'], secondaryMuscles: ['pectoraux', 'deltoides-anterieurs'],
     equipment: 'Machine dips assise',
     technique: ['Dos contre le dossier.', 'Pousser les poignées vers le bas jusqu’à l’extension.', 'Remonter jusqu’à coudes ~90°.'],
     mistakes: ['Épaules qui remontent.', 'Amplitude partielle.'],
@@ -186,7 +186,7 @@ export const gymAlternatives: Exercise[] = [
   // ── Jambes ──
   {
     id: 'hack-squat', name: 'Hack squat', region: 'bas', kind: 'base', loadType: 'poids',
-    primaryMuscles: ['Quadriceps', 'Fessiers'], secondaryMuscles: ['Adducteurs'],
+    primaryMuscles: ['quadriceps', 'fessiers'], secondaryMuscles: ['adducteurs'],
     equipment: 'Machine hack squat',
     technique: ['Dos et bassin collés au dossier.', 'Descendre au moins à la parallèle.', 'Genoux dans l’axe des pieds.'],
     mistakes: ['Bassin qui décolle en bas.', 'Talons qui décollent.'],
@@ -196,7 +196,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'goblet-squat', name: 'Goblet squat (haltère)', region: 'bas', kind: 'base', loadType: 'poids',
-    primaryMuscles: ['Quadriceps', 'Fessiers'], secondaryMuscles: ['Adducteurs', 'Abdominaux'],
+    primaryMuscles: ['quadriceps', 'fessiers'], secondaryMuscles: ['adducteurs', 'abdominaux'],
     equipment: 'Un haltère tenu contre la poitrine',
     technique: ['Haltère vertical contre le sternum.', 'Descendre entre les jambes, buste droit.', 'Talons au sol.'],
     mistakes: ['Dos qui s’arrondit.', 'Genoux qui rentrent.'],
@@ -206,7 +206,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'split-squat-smith', name: 'Split squat au Smith', region: 'bas', kind: 'base', loadType: 'poids',
-    primaryMuscles: ['Quadriceps', 'Fessiers'], secondaryMuscles: ['Ischio-jambiers'],
+    primaryMuscles: ['quadriceps', 'fessiers'], secondaryMuscles: ['ischio-jambiers'],
     equipment: 'Smith machine',
     technique: ['Grand pas, pied avant sous la barre légèrement en avant.', 'Descendre verticalement.', 'Pousser par le talon avant.'],
     mistakes: ['Pas trop court.', 'Genou avant qui rentre.'],
@@ -216,7 +216,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'sissy-squat', name: 'Sissy squat assisté', region: 'bas', kind: 'isolation', loadType: 'poids-du-corps',
-    primaryMuscles: ['Quadriceps'], secondaryMuscles: [],
+    primaryMuscles: ['quadriceps'], secondaryMuscles: [],
     equipment: 'Un support pour se tenir (ou machine sissy squat)',
     technique: ['Tenir un support d’une main.', 'Genoux vers l’avant en basculant le buste en arrière.', 'Remonter en contractant les quadriceps.'],
     mistakes: ['Plier aux hanches (ça devient un squat).', 'Amplitude excessive au début.'],
@@ -226,7 +226,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'mollets-presse', name: 'Mollets à la presse', region: 'bas', kind: 'isolation', loadType: 'poids',
-    primaryMuscles: ['Mollets'], secondaryMuscles: [],
+    primaryMuscles: ['mollets'], secondaryMuscles: [],
     equipment: 'Presse à cuisses',
     technique: ['Avant des pieds en bas de la plateforme.', 'Jambes tendues sans verrouiller.', 'Étirement complet puis pousser au maximum.'],
     mistakes: ['Rebondir.', 'Plier les genoux.'],
@@ -237,7 +237,7 @@ export const gymAlternatives: Exercise[] = [
   {
     id: 'sdt-roumain-halteres', name: 'Soulevé de terre roumain haltères', region: 'bas', kind: 'base', loadType: 'poids',
     mainLift: true, noFailure: true,
-    primaryMuscles: ['Ischio-jambiers', 'Fessiers'], secondaryMuscles: ['Lombaires'],
+    primaryMuscles: ['ischio-jambiers', 'fessiers'], secondaryMuscles: ['lombaires'],
     equipment: 'Haltères',
     technique: ['Dos neutre, hanches vers l’arrière.', 'Haltères qui glissent le long des cuisses.', 'Remonter en poussant les hanches vers l’avant.'],
     mistakes: ['Dos qui s’arrondit.', 'Haltères loin des jambes.'],
@@ -248,7 +248,7 @@ export const gymAlternatives: Exercise[] = [
   {
     id: 'sdt-roumain-smith', name: 'Soulevé de terre roumain au Smith', region: 'bas', kind: 'base', loadType: 'poids',
     mainLift: true, noFailure: true,
-    primaryMuscles: ['Ischio-jambiers', 'Fessiers'], secondaryMuscles: ['Lombaires'],
+    primaryMuscles: ['ischio-jambiers', 'fessiers'], secondaryMuscles: ['lombaires'],
     equipment: 'Smith machine',
     technique: ['Pieds légèrement en arrière de la barre.', 'Hanches vers l’arrière, dos neutre.', 'Barre collée aux cuisses.'],
     mistakes: ['Dos arrondi.', 'Plier les genoux comme un squat.'],
@@ -258,7 +258,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'hip-thrust-barre', name: 'Hip thrust à la barre (ou au Smith)', region: 'bas', kind: 'base', loadType: 'poids',
-    primaryMuscles: ['Fessiers'], secondaryMuscles: ['Ischio-jambiers'],
+    primaryMuscles: ['fessiers'], secondaryMuscles: ['ischio-jambiers'],
     equipment: 'Banc + barre avec mousse (ou Smith)',
     technique: ['Haut du dos sur le banc, barre sur les hanches.', 'Menton rentré, pousser par les talons.', 'Rétroversion en haut, pause 1 s.'],
     mistakes: ['Cambrer en haut.', 'Pousser par les pointes.'],
@@ -268,7 +268,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'adduction-poulie', name: 'Adduction à la poulie basse', region: 'bas', kind: 'isolation', loadType: 'poids',
-    primaryMuscles: ['Adducteurs'], secondaryMuscles: [],
+    primaryMuscles: ['adducteurs'], secondaryMuscles: [],
     equipment: 'Poulie basse + sangle de cheville',
     technique: ['De profil, sangle à la cheville la plus proche.', 'Ramener la jambe devant l’autre.', 'Retour contrôlé.'],
     mistakes: ['Pencher le buste.', 'Mouvement rapide.'],
@@ -280,7 +280,7 @@ export const gymAlternatives: Exercise[] = [
   // ── Tronc ──
   {
     id: 'crunch-machine', name: 'Crunch machine', region: 'tronc', kind: 'gainage', loadType: 'poids',
-    primaryMuscles: ['Abdominaux'], secondaryMuscles: [],
+    primaryMuscles: ['abdominaux'], secondaryMuscles: [],
     equipment: 'Machine abdominaux',
     technique: ['Enrouler le dos, pas tirer avec les bras.', 'Expirer en contractant.', 'Retour lent.'],
     mistakes: ['Tirer avec les bras.', 'Charge trop lourde.'],
@@ -290,7 +290,7 @@ export const gymAlternatives: Exercise[] = [
   },
   {
     id: 'reverse-crunch', name: 'Crunch inversé au sol', region: 'tronc', kind: 'gainage', loadType: 'poids-du-corps',
-    primaryMuscles: ['Abdominaux (partie basse)'], secondaryMuscles: ['Obliques'],
+    primaryMuscles: ['abdominaux'], secondaryMuscles: ['obliques'], muscleFocus: 'bas des abdominaux',
     equipment: 'Tapis',
     technique: ['Sur le dos, genoux fléchis.', 'Enrouler le bassin pour ramener les genoux vers la poitrine.', 'Descente lente.'],
     mistakes: ['Balancer les jambes.', 'Décoller les épaules.'],

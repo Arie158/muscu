@@ -2,6 +2,7 @@
 // Cherche dans le nom, les autres noms (anglais, jargon), les muscles et le matériel ;
 // tous les mots tapés doivent être trouvés. Les résultats dont le nom correspond passent en premier.
 import type { Exercise } from '@/data/types'
+import { MUSCLES } from '@/data/muscles'
 
 /** « Développé couché » → « developpe couche » (minuscules, sans accents ni ponctuation). */
 export function normalize(text: string): string {
@@ -25,11 +26,12 @@ const cache = new WeakMap<Exercise, Indexed>()
 function indexed(exercise: Exercise): Indexed {
   let entry = cache.get(exercise)
   if (!entry) {
+    const muscles = [...exercise.primaryMuscles, ...exercise.secondaryMuscles]
     entry = {
       exercise,
       name: ` ${normalize(exercise.name)}`,
       aliases: ` ${normalize((exercise.aliases ?? []).join(' | '))}`,
-      rest: ` ${normalize([...exercise.primaryMuscles, ...exercise.secondaryMuscles, exercise.equipment].join(' | '))}`,
+      rest: ` ${normalize([...muscles.map((id) => `${MUSCLES[id].label} ${MUSCLES[id].part}`), exercise.muscleFocus ?? '', exercise.equipment].join(' | '))}`,
     }
     cache.set(exercise, entry)
   }

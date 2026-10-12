@@ -56,11 +56,7 @@ const NEUTRAL: Record<View, string[]> = {
   ],
 }
 
-// « Jambes » = toute la jambe.
-const EXPAND: Record<string, string[]> = {
-  Jambes: ['Quadriceps', 'Ischio-jambiers', 'Fessiers', 'Adducteurs', 'Mollets'],
-}
-const expand = (labels: string[]) => new Set(labels.flatMap((l) => EXPAND[l] ?? [l]))
+const expand = (labels: string[]) => new Set(labels)
 
 const primarySet = computed(() => expand(props.primary))
 const secondarySet = computed(() => expand(props.secondary))

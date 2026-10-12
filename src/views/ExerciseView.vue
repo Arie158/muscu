@@ -15,7 +15,7 @@ import { pickVariant } from '@/lib/home'
 import { useSettingsStore } from '@/stores/settings'
 import AppIcon from '@/components/AppIcon.vue'
 import BodyMap from '@/components/BodyMap.vue'
-import { exerciseBodyParts } from '@/lib/muscles'
+import { exerciseBodyParts, muscleLabels } from '@/lib/muscles'
 
 const props = defineProps<{ id: string }>()
 const exercise = computed(() => exercisesById[props.id])
@@ -81,8 +81,9 @@ const setsSummary = (sets: { load: number | null; reps: number | null; rir: numb
     <section class="card">
       <BodyMap :primary="parts.primary.map((p) => p.label)" :secondary="parts.secondary.map((p) => p.label)" class="map" />
       <dl class="facts">
-        <div><dt>Muscles principaux</dt><dd>{{ exercise.primaryMuscles.join(', ') }}</dd></div>
-        <div v-if="exercise.secondaryMuscles.length"><dt>Muscles secondaires</dt><dd>{{ exercise.secondaryMuscles.join(', ') }}</dd></div>
+        <div><dt>Muscles principaux</dt><dd>{{ muscleLabels(exercise.primaryMuscles) }}</dd></div>
+        <div v-if="exercise.muscleFocus"><dt>Accent</dt><dd>{{ exercise.muscleFocus }}</dd></div>
+        <div v-if="exercise.secondaryMuscles.length"><dt>Muscles secondaires</dt><dd>{{ muscleLabels(exercise.secondaryMuscles) }}</dd></div>
         <div><dt>Matériel</dt><dd>{{ exercise.equipment }}</dd></div>
       </dl>
       <p v-if="exercise.noFailure" class="badge warn" style="margin-top: 0.5rem">

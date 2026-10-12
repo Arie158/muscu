@@ -1,23 +1,23 @@
 import { describe, expect, it } from 'vitest'
 import { exercisesById } from '@/data/exercises'
+import { MUSCLES } from '@/data/muscles'
 import { sessionsById } from '@/data/sessions'
 import { BODY_PARTS, bodyPartOf, exerciseBodyParts, sessionBodyParts } from '@/lib/muscles'
 
 describe('parties du corps', () => {
-  it('ramène les libellés détaillés à une partie du corps', () => {
-    expect(bodyPartOf('Dos (rhomboïdes, trapèzes moyens)').label).toBe('Dos')
-    expect(bodyPartOf('Trapèzes supérieurs').label).toBe('Trapèzes')
-    expect(bodyPartOf('Mollets (soléaire)').label).toBe('Mollets')
-    expect(bodyPartOf('Rotateurs externes de l’épaule').label).toBe('Épaules')
-    expect(bodyPartOf('Fléchisseurs de hanche (psoas)').label).toBe('Hanches')
+  it('rattache chaque muscle à sa partie du corps', () => {
+    expect(bodyPartOf('haut-du-dos').label).toBe('Dos')
+    expect(bodyPartOf('deltoides-posterieurs').label).toBe('Épaules')
+    expect(bodyPartOf('coiffe-rotateurs').label).toBe('Épaules')
+    expect(bodyPartOf('obliques').label).toBe('Abdos')
+    expect(bodyPartOf('flechisseurs-hanche').label).toBe('Hanches')
   })
 
-  it('reconnaît tous les muscles de toutes les fiches', () => {
+  it('n’utilise que des muscles de la liste fixe, avec au moins un muscle principal', () => {
     for (const e of Object.values(exercisesById)) {
-      for (const m of [...e.primaryMuscles, ...e.secondaryMuscles]) {
-        expect(BODY_PARTS, `${e.id} : ${m}`).toContain(bodyPartOf(m).label)
-      }
-      expect(exerciseBodyParts(e).primary.length, e.id).toBeGreaterThan(0)
+      for (const m of [...e.primaryMuscles, ...e.secondaryMuscles]) expect(MUSCLES, `${e.id} : ${m}`).toHaveProperty(m)
+      expect(e.primaryMuscles.length, e.id).toBeGreaterThan(0)
+      expect(BODY_PARTS).toContain(exerciseBodyParts(e).primary[0]!.label)
     }
   })
 
