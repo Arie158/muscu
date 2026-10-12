@@ -17,7 +17,7 @@ Type : 🐞 bug · ✨ fonctionnalité · 🎨 ergonomie
 
 | Id | Type | Sujet | Livré le | Commit |
 |---|---|---|---|---|
-| S-003 | ✨ | Muscles : liste fixe de 21 muscles (épaule avant / côté / arrière), séries par muscle et par semaine (prévu, semaine en cours, moyenne 4 semaines) avec repères, alertes d'équilibre (pousser/tirer, épaules avant/arrière, quadriceps/ischios) dans Progression | 2026-10-13 | 59e22f9 + suivant |
+| S-003 | ✨ | Muscles : liste fixe de 21 muscles (épaule avant / côté / arrière), séries par muscle et par semaine (prévu, semaine en cours, moyenne 4 semaines) avec repères, alertes d'équilibre (pousser/tirer, épaules avant/arrière, quadriceps/ischios) dans Progression | 2026-10-13 | 59e22f9, 955d236 |
 | S-001 | 🐞 | Fiche exercice : « Retour » ramène à la page d'origine (séance, carnet, liste filtrée) ; vers la liste des exercices seulement si la fiche est ouverte directement | 2026-10-13 | 8fa14e8 |
 | S-002 | 🎨 | Ajout d'un exercice non prévu : bouton après le dernier exercice de la séance (plus dans « Options » de chaque bloc) et au bilan ; dans le carnet, juste sous la liste des exercices | 2026-10-13 | b860792 |
 | — | ✨ | Modification des séries d'un exercice enregistré dans le carnet | 2026-10-08 | 55fe223 |
