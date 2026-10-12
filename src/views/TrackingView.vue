@@ -430,9 +430,9 @@ const setsText = (sets: { load: number | null; reps: number | null; rir: number 
                 </li>
               </template>
             </ul>
+            <button type="button" class="btn block add-extra" @click="startCorrection(l.id)"><AppIcon name="plus" :size="18" /> Ajouter un exercice</button>
             <p v-if="l.notes" class="small"><em>{{ l.notes }}</em></p>
             <div class="row">
-              <button type="button" class="btn ghost" @click="startCorrection(l.id)"><AppIcon name="plus" :size="18" /> Ajouter un exercice</button>
               <button type="button" class="btn ghost danger-text" @click="removeLog(l.id)"><AppIcon name="trash" :size="18" /> Supprimer</button>
             </div>
           </details>
@@ -490,4 +490,5 @@ h2 { font-size: 1.05rem; margin-bottom: 0.5rem; }
 .log { margin-top: 0.25rem; }
 .row-action { min-height: 32px; width: 32px; padding: 0; vertical-align: middle; color: var(--muted); }
 .danger-text { color: var(--danger); }
+.add-extra { border-style: dashed; color: var(--muted); margin: 0.25rem 0 0.5rem; }
 </style>

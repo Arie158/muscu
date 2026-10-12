@@ -129,16 +129,25 @@ test('exercice non prévu : recherche, ajout en cours de séance et au bilan, en
   await page.getByRole('button', { name: 'Commencer' }).click()
   await expect(heading(page)).toHaveText('Développé couché haltères ou Smith')
 
-  // Depuis les options du bloc : recherche par nom anglais, ajout juste après le bloc affiché
+  // Le bouton n'apparaît qu'après le dernier exercice (pas dans les options de chaque bloc)
+  const add = page.getByRole('button', { name: 'Ajouter un exercice non prévu' })
+  await expect(add).toHaveCount(0)
   await page.getByText('Options').click()
-  await page.getByRole('button', { name: 'Exercice non prévu' }).click()
+  await expect(page.getByRole('button', { name: /non prévu/ })).toHaveCount(0)
+  for (let i = 0; i < 12 && !(await add.isVisible()); i++) {
+    await page.locator('.workout-bar .btn.primary').click()
+  }
+  await expect(page.locator('main .eyebrow').first()).toContainText('7 / 7')
+
+  // Recherche par nom anglais, ajout en fin de séance
+  await add.click()
   const dialog = page.getByRole('dialog', { name: 'Ajouter un exercice' })
   await dialog.getByRole('searchbox', { name: 'Rechercher un exercice' }).fill('hammer curl')
   await expect(dialog.locator('.opt').first()).toContainText('Curl marteau')
   await dialog.locator('.opt').first().click()
   await expect(dialog).toBeHidden()
   await expect(heading(page)).toHaveText('Curl marteau')
-  await expect(page.locator('main .eyebrow').first()).toContainText('2 / 8 · Ajouté hors programme')
+  await expect(page.locator('main .eyebrow').first()).toContainText('8 / 8 · Ajouté hors programme')
   await page.getByRole('button', { name: 'Valider la série' }).click()
 
   // Depuis le bilan : ajout puis retrait d'un exercice ajouté par erreur
@@ -146,7 +155,7 @@ test('exercice non prévu : recherche, ajout en cours de séance et au bilan, en
     await page.locator('.workout-bar .btn.primary').click()
   }
   await expect(page.locator('.summary-item', { hasText: 'Curl marteau' })).toContainText('ajouté hors programme')
-  await page.getByRole('button', { name: 'Ajouter un exercice non prévu' }).click()
+  await add.click()
   await dialog.getByRole('searchbox').fill('rameur')
   await dialog.locator('.opt').first().click()
   await expect(heading(page)).toHaveText('Rameur')

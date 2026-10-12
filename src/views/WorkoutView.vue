@@ -190,7 +190,12 @@ function finish() {
 
         <SetList :item="item" :item-idx="itemIdx" :format="sessionItem.format" @finished="onItemFinished" />
 
-        <details class="options">
+        <!-- Après le dernier exercice : l'ajout se place en fin de séance, avant le bilan. -->
+        <button v-if="step === itemCount" type="button" class="btn block add-extra" @click="adding = true">
+          <AppIcon name="plus" /> Ajouter un exercice non prévu
+        </button>
+
+        <details v-if="sessionItem.format !== 'activite' || sessionItem.rest.max > 0 || isExtra" class="options">
           <summary>Options</summary>
           <div class="row">
             <template v-if="sessionItem.format !== 'activite'">
@@ -200,7 +205,6 @@ function finish() {
             <button v-if="sessionItem.rest.max > 0" type="button" class="btn" @click="store.startRest(defaultRest(sessionItem))">
               <AppIcon name="timer" /> Repos
             </button>
-            <button type="button" class="btn" @click="adding = true"><AppIcon name="plus" /> Exercice non prévu</button>
             <button v-if="isExtra" type="button" class="btn danger-text" @click="removeExtra"><AppIcon name="trash" /> Retirer cet exercice</button>
           </div>
         </details>
@@ -252,6 +256,7 @@ header p { margin: 0; }
 .exercises { display: flex; flex-direction: column; gap: 0.9rem; }
 .exercises > * + * { padding-top: 0.9rem; border-top: 1px solid var(--border); }
 .danger-text { color: var(--danger); }
+.add-extra { border-style: dashed; color: var(--muted); }
 .options > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; color: var(--muted); font-weight: 600; }
 .workout-bar {
   position: fixed;
