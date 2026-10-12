@@ -163,6 +163,26 @@ test('exercice non prévu : recherche, ajout en cours de séance et au bilan, en
   await expect(page.locator('.log li', { hasText: 'Curl marteau' })).toContainText('(ajouté)')
 })
 
+test('fiche exercice : « Retour » ramène à la page d’origine', async ({ page }) => {
+  // Depuis une séance
+  await open(page, '/seances/bas-a')
+  await page.locator('a.ex').first().click()
+  await expect(page).toHaveURL(/#\/exercices\/[^?]+$/)
+  await page.getByRole('button', { name: 'Séance' }).click()
+  await expect(page).toHaveURL(/#\/seances\/bas-a$/)
+
+  // Depuis la liste filtrée : le filtre est conservé
+  await open(page, '/exercices?partie=Mollets')
+  await page.locator('a.ex').first().click()
+  await page.getByRole('button', { name: 'Exercices' }).click()
+  await expect(page).toHaveURL(/partie=Mollets/)
+
+  // Fiche ouverte directement : retour vers la liste des exercices
+  await open(page, '/exercices/leg-extension')
+  await page.getByRole('link', { name: 'Exercices' }).first().click()
+  await expect(page).toHaveURL(/#\/exercices$/)
+})
+
 test('exercices : recherche dans tout le catalogue, gardée dans l’URL', async ({ page }) => {
   await open(page, '/exercices')
   await page.getByRole('searchbox', { name: 'Rechercher un exercice' }).fill('elliptique')

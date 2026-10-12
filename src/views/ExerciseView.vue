@@ -74,7 +74,7 @@ const setsSummary = (sets: { load: number | null; reps: number | null; rir: numb
 
 <template>
   <div v-if="exercise" class="stack">
-    <PageHeader :title="exercise.name" back="/exercices" back-label="Exercices" />
+    <PageHeader :title="exercise.name" back="/exercices" back-label="Exercices" back-to-previous />
 
     <ExerciseIllustration :exercise="exercise" />
 

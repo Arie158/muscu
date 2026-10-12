@@ -1,0 +1,30 @@
+# Suivi du projet
+
+Liste des demandes, corrections et idées en attente, et de ce qui a été livré.
+Chaque entrée a un identifiant (`S-001`…) pour pouvoir en parler et la citer dans les messages de commit.
+
+Statuts : 🆕 à faire · 🔍 à préciser · 🚧 en cours · ✅ fait
+
+Type : 🐞 bug · ✨ fonctionnalité · 🎨 ergonomie
+
+## En cours et à faire
+
+| Id | Type | Sujet | Statut | Notes |
+|---|---|---|---|---|
+| S-003 | ✨ | Mieux gérer les muscles dans l'app | 🔍 | Proposition du 2026-10-13, à valider : (1) liste de muscles fixe à la place du texte libre (48 libellés aujourd'hui, rapprochés par des règles fragiles : « Jambes », « Épaules » sans distinguer avant/côté/arrière, « Cardio » compté comme une partie du corps) ; (2) nombre de séries par muscle et par semaine (prévu et réalisé), comparé à une fourchette conseillée ; (3) alerte de déséquilibre (ex. pousser/tirer, avant/arrière de l'épaule). |
+
+## Fait
+
+| Id | Type | Sujet | Livré le | Commit |
+|---|---|---|---|---|
+| S-001 | 🐞 | Fiche exercice : « Retour » ramène à la page d'origine (séance, carnet, liste filtrée) ; vers la liste des exercices seulement si la fiche est ouverte directement | 2026-10-13 | à enregistrer |
+| S-002 | 🎨 | Ajout d'un exercice non prévu : bouton après le dernier exercice de la séance (plus dans « Options » de chaque bloc) et au bilan ; dans le carnet, juste sous la liste des exercices | 2026-10-13 | à enregistrer |
+| — | ✨ | Modification des séries d'un exercice enregistré dans le carnet | 2026-10-08 | 55fe223 |
+| — | ✨ | Ajout après coup d'un exercice oublié dans le carnet | 2026-10-08 | 3d1f8cc |
+| — | ✨ | Ajout d'un exercice non prévu en séance, catalogue de 225 fiches | 2026-10-08 | 184bf24 |
+
+## Mode d'emploi
+
+- Nouvelle demande : ajouter une ligne en bas de « En cours et à faire » avec l'identifiant suivant.
+- Quand c'est livré : déplacer la ligne dans « Fait » avec la date et le commit, et citer l'identifiant dans le message de commit (ex. `Fiche exercice : retour vers la page d'origine (S-001)`).
+- Les illustrations à corriger ont leur propre liste, générée automatiquement : [images-a-verifier.md](images-a-verifier.md).
