@@ -3,7 +3,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import type { Exercise, Illustration } from '@/data/types'
 import { usePrefersReducedMotion } from '@/composables/usePrefersReducedMotion'
 import AppIcon from './AppIcon.vue'
-import { exerciseImage } from '@/lib/images'
+import { exerciseImage, illustrationFrames } from '@/lib/images'
 
 // `illustration` / `videoQuery` : surcharges propres à une variante de matériel (exercices maison).
 const props = withDefaults(
@@ -21,6 +21,8 @@ let timer: number | undefined
 const dbId = computed(() => illus.value.dbId)
 const hasImage = computed(() => !!dbId.value && illus.value.confidence !== 'aucune' && !failed.value)
 const src = (i: number) => exerciseImage(dbId.value!, i)
+const frames = computed(() => illustrationFrames(illus.value))
+const animated = computed(() => frames.value.length > 1)
 const videoUrl = computed(
   () => `https://www.youtube.com/results?search_query=${encodeURIComponent(props.videoQuery ?? props.exercise.videoQuery)}`,
 )
@@ -31,10 +33,10 @@ function tick() {
   frame.value = frame.value === 0 ? 1 : 0
 }
 watch(
-  playing,
-  (p) => {
+  [playing, animated],
+  ([p, anim]) => {
     window.clearInterval(timer)
-    if (p) timer = window.setInterval(tick, 1300)
+    if (p && anim) timer = window.setInterval(tick, 1300)
   },
   { immediate: true },
 )
@@ -52,10 +54,10 @@ onBeforeUnmount(() => window.clearInterval(timer))
   <figure class="illus" :class="{ compact }">
     <div v-if="hasImage" class="frame">
       <img
-        v-for="i in [0, 1]"
+        v-for="i in frames"
         :key="i"
         :src="src(i)"
-        :alt="`${exercise.name} — ${i === 0 ? 'position de départ' : 'position finale'}`"
+        :alt="animated ? `${exercise.name} — ${i === 0 ? 'position de départ' : 'position finale'}` : exercise.name"
         :class="{ visible: frame === i }"
         :aria-hidden="frame !== i"
         width="850"
@@ -64,7 +66,7 @@ onBeforeUnmount(() => window.clearInterval(timer))
         decoding="async"
         @error="failed = true"
       />
-      <div class="controls">
+      <div v-if="animated" class="controls">
         <span class="badge">{{ frame === 0 ? 'Départ' : 'Fin' }}</span>
         <button
           type="button"
@@ -89,6 +91,11 @@ onBeforeUnmount(() => window.clearInterval(timer))
         Illustration d’un exercice similaire
       </span>
       <span v-if="illus.note" class="muted">{{ illus.note }}</span>
+      <span v-if="hasImage && illus.external" class="muted credit">
+        Image : {{ illus.external.author }} ·
+        <a :href="illus.external.page" target="_blank" rel="noopener noreferrer">wger.de</a> ·
+        <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr" target="_blank" rel="noopener noreferrer">{{ illus.external.license }}</a>
+      </span>
       <a :href="videoUrl" target="_blank" rel="noopener noreferrer" class="video-link">
         <AppIcon name="video" :size="18" /> Voir une démonstration vidéo
         <span class="sr-only">(YouTube, nouvel onglet)</span>
@@ -99,6 +106,7 @@ onBeforeUnmount(() => window.clearInterval(timer))
 
 <style scoped>
 .illus { margin: 0; }
+.credit a { color: inherit; }
 .frame, .placeholder {
   position: relative;
   aspect-ratio: 850 / 567;

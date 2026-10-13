@@ -1,20 +1,21 @@
-import type { Exercise } from './types'
+import type { Exercise, Illustration } from './types'
+import { WGER } from './externalImages.ts'
 
 // Catalogue complet : exercices hors programme, pour noter un exercice non prévu fait pendant une séance
 // (« Ajouter un exercice » dans le mode séance) et pour consulter les fiches.
 // Couvre les machines d'une salle type Basic-Fit, les poulies, la barre, les haltères, le kettlebell,
 // le poids du corps, le cardio et les étirements. Les exercices du programme, leurs alternatives
 // et les exercices maison restent dans exercises.ts, gymAlternatives.ts et homeExercises.ts.
-// `img` = identifiant dans yuhonas/free-exercise-db ; `approx` = illustration approchante (avec la précision affichée).
+// `img` = identifiant dans yuhonas/free-exercise-db, ou image wger.de (externalImages.ts) ; `approx` = illustration approchante (avec la précision affichée).
 // `aliases` = autres noms pour la recherche (anglais, jargon de salle).
 
-type Entry = Omit<Exercise, 'illustration' | 'videoQuery'> & { img: string | null; approx?: string; videoQuery?: string }
+type Entry = Omit<Exercise, 'illustration' | 'videoQuery'> & { img: string | Pick<Illustration, 'dbId' | 'external'> | null; approx?: string; videoQuery?: string }
 
 function entry({ img, approx, videoQuery, ...e }: Entry): Exercise {
   return {
     ...e,
     illustration: img
-      ? { dbId: img, confidence: approx ? 'approximatif' : 'exact', ...(approx ? { note: approx } : {}) }
+      ? { ...(typeof img === 'string' ? { dbId: img } : img), confidence: approx ? 'approximatif' : 'exact', ...(approx ? { note: approx } : {}) }
       : { dbId: null, confidence: 'aucune' },
     videoQuery: videoQuery ?? `${e.name.replace(/\s*\(.*\)/, '')} technique`,
   }
@@ -744,7 +745,7 @@ const entries: Entry[] = [
     technique: ['Dos collé au mur, cuisses parallèles au sol.', 'Genoux au-dessus des chevilles.', 'Respirer calmement.'],
     mistakes: ['Genoux qui dépassent les pieds.', 'Mains sur les cuisses.'],
     easier: 'Descendre moins bas.', harder: 'Plus longtemps ou disque sur les cuisses.',
-    img: null,
+    img: WGER.chaiseMurale,
   },
   {
     id: 'presse-unilaterale', name: 'Presse à cuisses unilatérale', region: 'bas', kind: 'base', loadType: 'poids',
@@ -753,7 +754,7 @@ const entries: Entry[] = [
     technique: ['Un pied au centre du plateau.', 'Descendre jusqu’à ~90° au genou.', 'Pousser sans verrouiller.'],
     mistakes: ['Bassin qui décolle.', 'Genou qui rentre.'],
     easier: 'Charge réduite.', harder: 'Tempo 3 s en descente.',
-    img: 'Leg_Press', approx: 'Version à deux jambes illustrée.',
+    img: WGER.presseUnilaterale,
   },
   {
     id: 'leg-extension-unilaterale', name: 'Leg extension unilatéral', region: 'bas', kind: 'isolation', loadType: 'poids',
@@ -836,7 +837,7 @@ const entries: Entry[] = [
     technique: ['Buste calé, dos neutre.', 'Pousser la plateforme vers l’arrière avec le talon.', 'Retour lent.'],
     mistakes: ['Cambrer.', 'Amplitude partielle.'],
     easier: 'Charge réduite.', harder: 'Pause d’1 s en extension.',
-    img: 'Glute_Kickback', approx: 'Version au sol illustrée : même geste sur la machine.',
+    img: 'One-Legged_Cable_Kickback', approx: 'Version à la poulie illustrée : même geste debout, sur la machine.',
   },
   {
     id: 'pont-fessier-unilateral', name: 'Pont fessier sur une jambe', region: 'bas', kind: 'isolation', loadType: 'poids-du-corps',
@@ -872,7 +873,7 @@ const entries: Entry[] = [
     technique: ['Charnière de hanche, dos neutre.', 'Projeter le kettlebell avec un coup de hanches.', 'Bras relâchés, kettlebell à hauteur de poitrine.'],
     mistakes: ['Squatter au lieu de pousser les hanches.', 'Lever avec les bras.'],
     easier: 'Kettlebell plus léger.', harder: 'Kettlebell plus lourd ou à une main.',
-    img: 'One-Arm_Kettlebell_Swings', approx: 'Version à une main illustrée.',
+    img: WGER.kettlebellSwing,
   },
   {
     id: 'mollets-smith', name: 'Mollets debout au Smith', region: 'bas', kind: 'isolation', loadType: 'poids',
@@ -1027,7 +1028,7 @@ const entries: Entry[] = [
     technique: ['Mains sous les épaules, bras tendus.', 'Corps aligné, fessiers serrés.', 'Respirer calmement.'],
     mistakes: ['Bassin qui s’affaisse.', 'Fesses trop hautes.'],
     easier: 'Sur les genoux.', harder: 'Lever un pied ou une main.',
-    img: 'Plank', approx: 'Planche sur les avant-bras illustrée.',
+    img: WGER.planche,
   },
 
   // ───────────────────────── Polyarticulaire et athlétique ─────────────────────────

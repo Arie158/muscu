@@ -25,9 +25,28 @@
   poulie, extension triceps couché, curl haltères et machine, dips machine, hack squat, goblet squat, split
   squat Smith, sissy squat, mollets à la presse, SDT roumain haltères et Smith, hip thrust barre, adduction
   poulie, crunch machine, crunch inversé. Le détail est dans `docs/images-a-verifier.md`.
-- Sans image dans la base (icône de substitution + lien vers une recherche YouTube) : 90/90 hanches,
-  bird dog, Y-T-W au sol, curl serviette.
-- Aucune image n'a été copiée d'une autre source ni générée.
+- Y-T-W au sol : position de départ illustrée par `Superman` (exercice similaire). Glute machine : `One-Legged_Cable_Kickback`.
+- Sans image (icône de substitution + lien vers une recherche YouTube) : 90/90 hanches, curl serviette,
+  rotation du buste (machine), burpees, natation, sport collectif, boxe, yoga / pilates.
+
+### Images wger.de
+
+Images absentes de free-exercise-db, prises sur [wger.de](https://wger.de) sous licence
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.fr). Une seule image par exercice,
+convertie en WebP (`public/exercises/wger-<n>/`) ; l'auteur est crédité sous l'image et sur la page Crédits.
+Déclarées dans `src/data/externalImages.ts`.
+
+| Exercice | Auteur | Page |
+|---|---|---|
+| Bird dog | utkb | [wger 957](https://wger.de/fr/exercise/957/view-base) |
+| Planche bras tendus | clafal | [wger 1091](https://wger.de/fr/exercise/1091/view-base) |
+| Chaise contre un mur | Tierrasverdes | [wger 1733](https://wger.de/fr/exercise/1733/view-base) |
+| Presse à cuisses unilatérale | Tierrasverdes | [wger 1735](https://wger.de/fr/exercise/1735/view-base) |
+| Kettlebell swing | contributeurs wger.de | [wger 960](https://wger.de/fr/exercise/960/view-base) |
+
+Écartées volontairement : les images de wger qui ressemblent à des rendus d'éditeurs commerciaux
+(licence douteuse), les photos avec filigrane ou logo, et les images signalées comme générées par IA sur wger.
+Aucune image n'a été générée pour le projet.
 
 ## Icônes
 

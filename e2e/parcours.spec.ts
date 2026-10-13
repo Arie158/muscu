@@ -276,3 +276,13 @@ test('progression : séries par muscle et par semaine, équilibre', async ({ pag
   await expect(table.getByRole('rowheader', { name: /Système cardiovasculaire/ })).toHaveCount(0)
   await expect(page.getByText('Équilibré')).toBeVisible()
 })
+
+test('illustration wger : image unique, sans animation, auteur crédité', async ({ page }) => {
+  await open(page, '/exercices/bird-dog')
+  const figure = page.locator('figure.illus')
+  await expect(figure.locator('img')).toHaveCount(1)
+  await expect(figure.locator('img')).toHaveJSProperty('complete', true)
+  await expect(figure.getByRole('button', { name: /animation/ })).toHaveCount(0)
+  await expect(figure.getByText(/Image : utkb/)).toBeVisible()
+  if (process.env.SHOT) await page.screenshot({ path: process.env.SHOT })
+})

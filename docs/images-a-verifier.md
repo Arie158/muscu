@@ -4,9 +4,11 @@ Fichier généré par `npm run fetch-images` (scripts/fetch-images.ts). Ne pas �
 modifier le champ `illustration` dans `src/data/exercises.ts` (salle) ou `src/data/homeExercises.ts`
 (maison, y compris `variants.<matériel>.illustration`) puis relancer le script.
 
-Source : [yuhonas/free-exercise-db](https://github.com/yuhonas/free-exercise-db) — licence Unlicense (domaine public).
+Sources : [yuhonas/free-exercise-db](https://github.com/yuhonas/free-exercise-db) — licence Unlicense (domaine public) ;
+quelques images de [wger.de](https://wger.de) (`wger-<n>`, une seule image, licence CC BY-SA 4.0, auteur crédité sur la fiche),
+déclarées dans `src/data/externalImages.ts`.
 
-Résumé (248 illustrations, variantes de matériel comprises) : **182** exactes · **55** approximatives · **11** sans image.
+Résumé (248 illustrations, variantes de matériel comprises) : **187** exactes · **53** approximatives · **8** sans image.
 
 - ✅ **exact** : l'image montre le même mouvement (parfois une variante d'équipement, précisée en note).
 - ⚠️ **approximatif** : exercice similaire (machine Basic-Fit spécifique, haltère au lieu de bouteille, poulie au lieu d'élastique…) — la fiche affiche « illustration d'un exercice similaire ».
@@ -154,8 +156,8 @@ Résumé (248 illustrations, variantes de matériel comprises) : **182** exactes
 | Fentes latérales |  | `Barbell_Side_Split_Squat` (Barbell Side Split Squat) | [0](../public/exercises/Barbell_Side_Split_Squat/0.webp) · [1](../public/exercises/Barbell_Side_Split_Squat/1.webp) | ⚠️ approximatif | Version barre illustrée. |
 | Montées sur banc (step-up) |  | `Dumbbell_Step_Ups` (Dumbbell Step Ups) | [0](../public/exercises/Dumbbell_Step_Ups/0.webp) · [1](../public/exercises/Dumbbell_Step_Ups/1.webp) | ✅ exact |  |
 | Squat sumo haltère |  | `Plie_Dumbbell_Squat` (Plie Dumbbell Squat) | [0](../public/exercises/Plie_Dumbbell_Squat/0.webp) · [1](../public/exercises/Plie_Dumbbell_Squat/1.webp) | ✅ exact |  |
-| Chaise contre un mur |  | — (—) | — | ❌ aucune |  |
-| Presse à cuisses unilatérale |  | `Leg_Press` (Leg Press) | [0](../public/exercises/Leg_Press/0.webp) · [1](../public/exercises/Leg_Press/1.webp) | ⚠️ approximatif | Version à deux jambes illustrée. |
+| Chaise contre un mur |  | `wger-601` ([wger.de](https://wger.de/fr/exercise/1733/view-base), Tierrasverdes, CC BY-SA 4.0) | [0](../public/exercises/wger-601/0.webp) | ✅ exact |  |
+| Presse à cuisses unilatérale |  | `wger-603` ([wger.de](https://wger.de/fr/exercise/1735/view-base), Tierrasverdes, CC BY-SA 4.0) | [0](../public/exercises/wger-603/0.webp) | ✅ exact |  |
 | Leg extension unilatéral |  | `Single-Leg_Leg_Extension` (Single-Leg Leg Extension) | [0](../public/exercises/Single-Leg_Leg_Extension/0.webp) · [1](../public/exercises/Single-Leg_Leg_Extension/1.webp) | ✅ exact |  |
 | Leg curl debout (unilatéral) |  | `Standing_Leg_Curl` (Standing Leg Curl) | [0](../public/exercises/Standing_Leg_Curl/0.webp) · [1](../public/exercises/Standing_Leg_Curl/1.webp) | ✅ exact |  |
 | Leg curl au ballon |  | `Ball_Leg_Curl` (Ball Leg Curl) | [0](../public/exercises/Ball_Leg_Curl/0.webp) · [1](../public/exercises/Ball_Leg_Curl/1.webp) | ✅ exact |  |
@@ -164,11 +166,11 @@ Résumé (248 illustrations, variantes de matériel comprises) : **182** exactes
 | Good morning |  | `Good_Morning` (Good Morning) | [0](../public/exercises/Good_Morning/0.webp) · [1](../public/exercises/Good_Morning/1.webp) | ✅ exact |  |
 | Abducteurs (machine) |  | `Thigh_Abductor` (Thigh Abductor) | [0](../public/exercises/Thigh_Abductor/0.webp) · [1](../public/exercises/Thigh_Abductor/1.webp) | ✅ exact |  |
 | Kickback fessier à la poulie |  | `One-Legged_Cable_Kickback` (One-Legged Cable Kickback) | [0](../public/exercises/One-Legged_Cable_Kickback/0.webp) · [1](../public/exercises/One-Legged_Cable_Kickback/1.webp) | ✅ exact |  |
-| Glute machine (kickback) |  | `Glute_Kickback` (Glute Kickback) | [0](../public/exercises/Glute_Kickback/0.webp) · [1](../public/exercises/Glute_Kickback/1.webp) | ⚠️ approximatif | Version au sol illustrée : même geste sur la machine. |
+| Glute machine (kickback) |  | `One-Legged_Cable_Kickback` (One-Legged Cable Kickback) | [0](../public/exercises/One-Legged_Cable_Kickback/0.webp) · [1](../public/exercises/One-Legged_Cable_Kickback/1.webp) | ⚠️ approximatif | Version à la poulie illustrée : même geste debout, sur la machine. |
 | Pont fessier sur une jambe |  | `Single_Leg_Glute_Bridge` (Single Leg Glute Bridge) | [0](../public/exercises/Single_Leg_Glute_Bridge/0.webp) · [1](../public/exercises/Single_Leg_Glute_Bridge/1.webp) | ✅ exact |  |
 | Pull-through à la poulie |  | `Pull_Through` (Pull Through) | [0](../public/exercises/Pull_Through/0.webp) · [1](../public/exercises/Pull_Through/1.webp) | ✅ exact |  |
 | Marche latérale à l’élastique |  | `Monster_Walk` (Monster Walk) | [0](../public/exercises/Monster_Walk/0.webp) · [1](../public/exercises/Monster_Walk/1.webp) | ✅ exact |  |
-| Kettlebell swing |  | `One-Arm_Kettlebell_Swings` (One-Arm Kettlebell Swings) | [0](../public/exercises/One-Arm_Kettlebell_Swings/0.webp) · [1](../public/exercises/One-Arm_Kettlebell_Swings/1.webp) | ⚠️ approximatif | Version à une main illustrée. |
+| Kettlebell swing |  | `wger-669` ([wger.de](https://wger.de/fr/exercise/960/view-base), contributeurs wger.de, CC BY-SA 4.0) | [0](../public/exercises/wger-669/0.webp) | ✅ exact |  |
 | Mollets debout au Smith |  | `Smith_Machine_Calf_Raise` (Smith Machine Calf Raise) | [0](../public/exercises/Smith_Machine_Calf_Raise/0.webp) · [1](../public/exercises/Smith_Machine_Calf_Raise/1.webp) | ✅ exact |  |
 | Mollets unilatéral haltère |  | `Standing_Dumbbell_Calf_Raise` (Standing Dumbbell Calf Raise) | [0](../public/exercises/Standing_Dumbbell_Calf_Raise/0.webp) · [1](../public/exercises/Standing_Dumbbell_Calf_Raise/1.webp) | ✅ exact |  |
 | Crunch au sol |  | `Crunches` (Crunches) | [0](../public/exercises/Crunches/0.webp) · [1](../public/exercises/Crunches/1.webp) | ✅ exact |  |
@@ -185,7 +187,7 @@ Résumé (248 illustrations, variantes de matériel comprises) : **182** exactes
 | Mountain climbers |  | `Mountain_Climbers` (Mountain Climbers) | [0](../public/exercises/Mountain_Climbers/0.webp) · [1](../public/exercises/Mountain_Climbers/1.webp) | ✅ exact |  |
 | Battements de jambes (ciseaux) |  | `Scissor_Kick` (Scissor Kick) | [0](../public/exercises/Scissor_Kick/0.webp) · [1](../public/exercises/Scissor_Kick/1.webp) | ⚠️ approximatif | Illustration approchante. |
 | Rotation du buste (machine) |  | — (—) | — | ❌ aucune |  |
-| Planche bras tendus |  | `Plank` (Plank) | [0](../public/exercises/Plank/0.webp) · [1](../public/exercises/Plank/1.webp) | ⚠️ approximatif | Planche sur les avant-bras illustrée. |
+| Planche bras tendus |  | `wger-334` ([wger.de](https://wger.de/fr/exercise/1091/view-base), clafal, CC BY-SA 4.0) | [0](../public/exercises/wger-334/0.webp) | ✅ exact |  |
 | Thruster (squat + développé) |  | `Kettlebell_Thruster` (Kettlebell Thruster) | [0](../public/exercises/Kettlebell_Thruster/0.webp) · [1](../public/exercises/Kettlebell_Thruster/1.webp) | ⚠️ approximatif | Version kettlebell illustrée. |
 | Burpees |  | — (—) | — | ❌ aucune |  |
 | Jumping jacks |  | `Star_Jump` (Star Jump) | [0](../public/exercises/Star_Jump/0.webp) · [1](../public/exercises/Star_Jump/1.webp) | ⚠️ approximatif | Saut en étoile illustré. |
@@ -238,11 +240,11 @@ Les lignes « ↳ » sont les illustrations propres à une variante de matériel
 | 90/90 hanches | Maison 1 | — (—) | — | ❌ aucune |  |
 | Étirement des pectoraux au mur | Maison 1 | `Chair_Upper_Body_Stretch` (Chair Upper Body Stretch) | [0](../public/exercises/Chair_Upper_Body_Stretch/0.webp) · [1](../public/exercises/Chair_Upper_Body_Stretch/1.webp) | ⚠️ approximatif | Illustration d’un étirement similaire (pectoraux sur chaise). |
 | Dead bug | Maison 1 | `Dead_Bug` (Dead Bug) | [0](../public/exercises/Dead_Bug/0.webp) · [1](../public/exercises/Dead_Bug/1.webp) | ✅ exact |  |
-| Bird dog | Maison 1 | — (—) | — | ❌ aucune |  |
+| Bird dog | Maison 1 | `wger-271` ([wger.de](https://wger.de/fr/exercise/957/view-base), utkb, CC BY-SA 4.0) | [0](../public/exercises/wger-271/0.webp) | ✅ exact |  |
 | Planche latérale | Maison 1 · alternative à : Pallof press | `Side_Bridge` (Side Bridge) | [0](../public/exercises/Side_Bridge/0.webp) · [1](../public/exercises/Side_Bridge/1.webp) | ✅ exact |  |
 | Face pull à l’élastique (ou Y-T-W au sol) | Maison 1 | `Face_Pull` (Face Pull) | [0](../public/exercises/Face_Pull/0.webp) · [1](../public/exercises/Face_Pull/1.webp) | ⚠️ approximatif | Version poulie illustrée. |
 | ↳ élastique : Face pull à l’élastique |  | `Face_Pull` (Face Pull) | [0](../public/exercises/Face_Pull/0.webp) · [1](../public/exercises/Face_Pull/1.webp) | ⚠️ approximatif | Version poulie illustrée : même geste à l’élastique. |
-| ↳ sans matériel : Y-T-W au sol |  | — (—) | — | ❌ aucune |  |
+| ↳ sans matériel : Y-T-W au sol |  | `Superman` (Superman) | [0](../public/exercises/Superman/0.webp) · [1](../public/exercises/Superman/1.webp) | ⚠️ approximatif | Même position allongée sur le ventre ; pour le Y-T-W, seuls les bras se lèvent (jambes au sol). |
 | Pompes | Maison 2 | `Pushups` (Pushups) | [0](../public/exercises/Pushups/0.webp) · [1](../public/exercises/Pushups/1.webp) | ✅ exact |  |
 | ↳ élastique : Élastique passé dans le dos pour durcir |  | `Pushups` (Pushups) | [0](../public/exercises/Pushups/0.webp) · [1](../public/exercises/Pushups/1.webp) | ⚠️ approximatif | Pompes classiques illustrées (sans élastique). |
 | ↳ charge improvisée : Sac à dos lesté sur le dos |  | `Pushups` (Pushups) | [0](../public/exercises/Pushups/0.webp) · [1](../public/exercises/Pushups/1.webp) | ⚠️ approximatif | Pompes classiques illustrées (sans sac). |

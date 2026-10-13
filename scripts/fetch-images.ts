@@ -7,6 +7,8 @@
  * Usage : npm run fetch-images            (ne retraite pas les images déjà converties)
  *         npm run fetch-images -- --force (retélécharge et reconvertit tout)
  *
+ * Quelques images viennent de wger.de (CC BY-SA 4.0), déclarées dans src/data/externalImages.ts.
+ *
  * Le mapping exercice → image vit dans src/data/exercises.ts et src/data/homeExercises.ts
  * (champ `illustration`, et `variants.<matériel>.illustration` pour les variantes maison).
  */
@@ -78,7 +80,16 @@ async function main(): Promise<void> {
       return v?.illustration ? [{ exercise: e, label: `↳ ${variantLabels[k]} : ${v.label}`, illustration: v.illustration }] : []
     }),
   ])
-  const dbIds = [...new Set(entries.map((x) => x.illustration.dbId).filter((id): id is string => !!id))]
+  // Images d'une autre source (wger.de) : une seule image, téléchargée depuis son URL.
+  const externals = new Map(entries.flatMap((x) => (x.illustration.external && x.illustration.dbId ? [[x.illustration.dbId, x.illustration.external]] : [])))
+  for (const [dbId, ext] of externals) {
+    const base = join(OUT_DIR, dbId, '0')
+    if (!force && (await exists(`${base}.webp`)) && (await exists(`${base}-thumb.webp`))) continue
+    await toWebp(await download(ext.url), base)
+    console.log(`  ✓ ${dbId}/0.webp (wger.de, ${ext.author})`)
+  }
+
+  const dbIds = [...new Set(entries.map((x) => x.illustration.dbId).filter((id): id is string => !!id && !externals.has(id)))]
 
   for (const dbId of dbIds) {
     const entry = byId.get(dbId)
@@ -112,9 +123,9 @@ async function main(): Promise<void> {
 
   const badge = { exact: '✅ exact', approximatif: '⚠️ approximatif', aucune: '❌ aucune' } as const
   const row = (x: (typeof entries)[number]) => {
-    const { dbId, confidence, note } = x.illustration
-    const dbName = dbId ? (byId.get(dbId)?.name ?? '— introuvable —') : '—'
-    const imgs = dbId ? `[0](../public/exercises/${dbId}/0.webp) · [1](../public/exercises/${dbId}/1.webp)` : '—'
+    const { dbId, confidence, note, external } = x.illustration
+    const dbName = external ? `[wger.de](${external.page}), ${external.author}, ${external.license}` : dbId ? (byId.get(dbId)?.name ?? '— introuvable —') : '—'
+    const imgs = !dbId ? '—' : external ? `[0](../public/exercises/${dbId}/0.webp)` : `[0](../public/exercises/${dbId}/0.webp) · [1](../public/exercises/${dbId}/1.webp)`
     const used = x.label.startsWith('↳') ? '' : usedIn(x.exercise.id)
     return `| ${x.label} | ${used} | ${dbId ? `\`${dbId}\`` : '—'} (${dbName}) | ${imgs} | ${badge[confidence]} | ${note ?? ''} |`
   }
@@ -134,7 +145,9 @@ Fichier généré par \`npm run fetch-images\` (scripts/fetch-images.ts). Ne pas
 modifier le champ \`illustration\` dans \`src/data/exercises.ts\` (salle) ou \`src/data/homeExercises.ts\`
 (maison, y compris \`variants.<matériel>.illustration\`) puis relancer le script.
 
-Source : [yuhonas/free-exercise-db](https://github.com/yuhonas/free-exercise-db) — licence Unlicense (domaine public).
+Sources : [yuhonas/free-exercise-db](https://github.com/yuhonas/free-exercise-db) — licence Unlicense (domaine public) ;
+quelques images de [wger.de](https://wger.de) (\`wger-<n>\`, une seule image, licence CC BY-SA 4.0, auteur crédité sur la fiche),
+déclarées dans \`src/data/externalImages.ts\`.
 
 Résumé (${entries.length} illustrations, variantes de matériel comprises) : **${counts.exact}** exactes · **${counts.approximatif}** approximatives · **${counts.aucune}** sans image.
 
@@ -165,7 +178,7 @@ ${problems.length ? `\n## Problèmes détectés\n\n${problems.map((p) => `- ${p}
 
   await mkdir(join(ROOT, 'docs'), { recursive: true })
   await writeFile(join(ROOT, 'docs', 'images-a-verifier.md'), md)
-  console.log(`\n${dbIds.length} illustrations traitées. docs/images-a-verifier.md mis à jour.`)
+  console.log(`\n${dbIds.length + externals.size} illustrations traitées. docs/images-a-verifier.md mis à jour.`)
   if (problems.length) {
     console.error(problems.join('\n'))
     process.exitCode = 1

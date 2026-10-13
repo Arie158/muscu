@@ -33,11 +33,25 @@ export type HomeEquipment = 'band' | 'improvised' | 'none'
 export type ImageConfidence = 'exact' | 'approximatif' | 'aucune'
 
 export interface Illustration {
-  /** Identifiant dans yuhonas/free-exercise-db (dossier `exercises/<id>/`). */
+  /**
+   * Identifiant dans yuhonas/free-exercise-db (dossier `exercises/<id>/`), ou `wger-<n>` pour une
+   * image d'une autre source (`external`). Les WebP sont dans public/exercises/<dbId>/.
+   */
   dbId: string | null
   confidence: ImageConfidence
   /** Précision affichée sous l'image (ex. « machine différente »). */
   note?: string
+  /** Image d'une source sous licence libre autre que free-exercise-db : une seule image, crédit affiché. */
+  external?: ExternalImage
+}
+
+export interface ExternalImage {
+  /** Image d'origine (téléchargée et convertie par scripts/fetch-images.ts). */
+  url: string
+  author: string
+  license: 'CC BY-SA 4.0'
+  /** Page de l'exercice sur le site source. */
+  page: string
 }
 
 export interface StartingReference {

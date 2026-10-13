@@ -1,4 +1,5 @@
 import type { Exercise } from './types'
+import { WGER } from './externalImages.ts'
 
 // Exercices des séances maison (Maison 1, 2 et 3).
 // Chaque exercice de renforcement a jusqu'à 3 variantes de matériel :
@@ -236,7 +237,7 @@ export const homeExercises: Exercise[] = [
     mistakes: ['Cambrer en levant la jambe.', 'Bassin qui bascule sur le côté.'],
     easier: 'Lever seulement la jambe, ou seulement le bras.',
     harder: 'Pause de 3 s en extension.',
-    illustration: { dbId: null, confidence: 'aucune' },
+    illustration: { ...WGER.birdDog, confidence: 'exact' },
     videoQuery: 'bird dog exercice gainage',
   },
   {
@@ -301,7 +302,11 @@ export const homeExercises: Exercise[] = [
         current: 'Y-T-W complets.',
         harder: 'Pause de 3 s ou petites bouteilles dans les mains.',
         load: 'aucune',
-        illustration: { dbId: null, confidence: 'aucune' },
+        illustration: {
+          dbId: 'Superman',
+          confidence: 'approximatif',
+          note: 'Même position allongée sur le ventre ; pour le Y-T-W, seuls les bras se lèvent (jambes au sol).',
+        },
         videoQuery: 'Y T W au sol exercice épaules',
       },
     },

@@ -4,7 +4,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import type { Exercise, Illustration } from '@/data/types'
 import { usePrefersReducedMotion } from '@/composables/usePrefersReducedMotion'
 import AppIcon from './AppIcon.vue'
-import { exerciseImage } from '@/lib/images'
+import { exerciseImage, illustrationFrames } from '@/lib/images'
 
 const props = withDefaults(
   defineProps<{ exercise: Exercise; illustration?: Illustration; size?: 'sm' | 'md'; animate?: boolean; label?: string; interactive?: boolean }>(),
@@ -17,14 +17,15 @@ const illus = computed(() => props.illustration ?? props.exercise.illustration)
 const failed = ref(false)
 const hasImage = computed(() => !!illus.value.dbId && illus.value.confidence !== 'aucune' && !failed.value)
 const frame = ref(0)
+const frames = computed(() => illustrationFrames(illus.value))
 let timer: number | undefined
 
 watch(
-  [() => props.animate, reduced, hasImage],
-  ([anim, red, img]) => {
+  [() => props.animate, reduced, hasImage, () => frames.value.length],
+  ([anim, red, img, count]) => {
     window.clearInterval(timer)
     frame.value = 0
-    if (anim && !red && img) timer = window.setInterval(() => (frame.value = frame.value ? 0 : 1), 1600)
+    if (anim && !red && img && count > 1) timer = window.setInterval(() => (frame.value = frame.value ? 0 : 1), 1600)
   },
   { immediate: true },
 )
@@ -45,7 +46,7 @@ const icon = computed(() => ({ haut: 'upper', bas: 'lower', tronc: 'core', globa
   >
     <template v-if="hasImage">
       <img
-        v-for="i in [0, 1]"
+        v-for="i in frames"
         v-show="frame === i"
         :key="i"
         :src="exerciseImage(illus.dbId!, i, 'thumb')"
