@@ -8,7 +8,7 @@ Sources : [yuhonas/free-exercise-db](https://github.com/yuhonas/free-exercise-db
 quelques images de [wger.de](https://wger.de) (`wger-<n>`, une seule image, licence CC BY-SA 4.0, auteur crédité sur la fiche),
 déclarées dans `src/data/externalImages.ts`.
 
-Résumé (248 illustrations, variantes de matériel comprises) : **187** exactes · **53** approximatives · **8** sans image.
+Résumé (248 illustrations, variantes de matériel comprises) : **185** exactes · **54** approximatives · **9** sans image.
 
 - ✅ **exact** : l'image montre le même mouvement (parfois une variante d'équipement, précisée en note).
 - ⚠️ **approximatif** : exercice similaire (machine Basic-Fit spécifique, haltère au lieu de bouteille, poulie au lieu d'élastique…) — la fiche affiche « illustration d'un exercice similaire ».
@@ -156,8 +156,8 @@ Résumé (248 illustrations, variantes de matériel comprises) : **187** exactes
 | Fentes latérales |  | `Barbell_Side_Split_Squat` (Barbell Side Split Squat) | [0](../public/exercises/Barbell_Side_Split_Squat/0.webp) · [1](../public/exercises/Barbell_Side_Split_Squat/1.webp) | ⚠️ approximatif | Version barre illustrée. |
 | Montées sur banc (step-up) |  | `Dumbbell_Step_Ups` (Dumbbell Step Ups) | [0](../public/exercises/Dumbbell_Step_Ups/0.webp) · [1](../public/exercises/Dumbbell_Step_Ups/1.webp) | ✅ exact |  |
 | Squat sumo haltère |  | `Plie_Dumbbell_Squat` (Plie Dumbbell Squat) | [0](../public/exercises/Plie_Dumbbell_Squat/0.webp) · [1](../public/exercises/Plie_Dumbbell_Squat/1.webp) | ✅ exact |  |
-| Chaise contre un mur |  | `wger-601` ([wger.de](https://wger.de/fr/exercise/1733/view-base), Tierrasverdes, CC BY-SA 4.0) | [0](../public/exercises/wger-601/0.webp) | ✅ exact |  |
-| Presse à cuisses unilatérale |  | `wger-603` ([wger.de](https://wger.de/fr/exercise/1735/view-base), Tierrasverdes, CC BY-SA 4.0) | [0](../public/exercises/wger-603/0.webp) | ✅ exact |  |
+| Chaise contre un mur |  | — (—) | — | ❌ aucune |  |
+| Presse à cuisses unilatérale |  | `Leg_Press` (Leg Press) | [0](../public/exercises/Leg_Press/0.webp) · [1](../public/exercises/Leg_Press/1.webp) | ⚠️ approximatif | Version à deux jambes illustrée. |
 | Leg extension unilatéral |  | `Single-Leg_Leg_Extension` (Single-Leg Leg Extension) | [0](../public/exercises/Single-Leg_Leg_Extension/0.webp) · [1](../public/exercises/Single-Leg_Leg_Extension/1.webp) | ✅ exact |  |
 | Leg curl debout (unilatéral) |  | `Standing_Leg_Curl` (Standing Leg Curl) | [0](../public/exercises/Standing_Leg_Curl/0.webp) · [1](../public/exercises/Standing_Leg_Curl/1.webp) | ✅ exact |  |
 | Leg curl au ballon |  | `Ball_Leg_Curl` (Ball Leg Curl) | [0](../public/exercises/Ball_Leg_Curl/0.webp) · [1](../public/exercises/Ball_Leg_Curl/1.webp) | ✅ exact |  |

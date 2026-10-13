@@ -27,7 +27,7 @@
   poulie, crunch machine, crunch inversé. Le détail est dans `docs/images-a-verifier.md`.
 - Y-T-W au sol : position de départ illustrée par `Superman` (exercice similaire). Glute machine : `One-Legged_Cable_Kickback`.
 - Sans image (icône de substitution + lien vers une recherche YouTube) : 90/90 hanches, curl serviette,
-  rotation du buste (machine), burpees, natation, sport collectif, boxe, yoga / pilates.
+  chaise contre un mur, rotation du buste (machine), burpees, natation, sport collectif, boxe, yoga / pilates.
 
 ### Images wger.de
 
@@ -40,12 +40,10 @@ Déclarées dans `src/data/externalImages.ts`.
 |---|---|---|
 | Bird dog | utkb | [wger 957](https://wger.de/fr/exercise/957/view-base) |
 | Planche bras tendus | clafal | [wger 1091](https://wger.de/fr/exercise/1091/view-base) |
-| Chaise contre un mur | Tierrasverdes | [wger 1733](https://wger.de/fr/exercise/1733/view-base) |
-| Presse à cuisses unilatérale | Tierrasverdes | [wger 1735](https://wger.de/fr/exercise/1735/view-base) |
 | Kettlebell swing | contributeurs wger.de | [wger 960](https://wger.de/fr/exercise/960/view-base) |
 
 Écartées volontairement : les images de wger qui ressemblent à des rendus d'éditeurs commerciaux
-(licence douteuse), les photos avec filigrane ou logo, et les images signalées comme générées par IA sur wger.
+(licence douteuse), les photos avec filigrane ou logo, et les images générées par IA (signalées comme telles sur wger ou qui en ont l'apparence).
 Aucune image n'a été générée pour le projet.
 
 ## Icônes

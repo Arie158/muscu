@@ -745,7 +745,7 @@ const entries: Entry[] = [
     technique: ['Dos collé au mur, cuisses parallèles au sol.', 'Genoux au-dessus des chevilles.', 'Respirer calmement.'],
     mistakes: ['Genoux qui dépassent les pieds.', 'Mains sur les cuisses.'],
     easier: 'Descendre moins bas.', harder: 'Plus longtemps ou disque sur les cuisses.',
-    img: WGER.chaiseMurale,
+    img: null,
   },
   {
     id: 'presse-unilaterale', name: 'Presse à cuisses unilatérale', region: 'bas', kind: 'base', loadType: 'poids',
@@ -754,7 +754,7 @@ const entries: Entry[] = [
     technique: ['Un pied au centre du plateau.', 'Descendre jusqu’à ~90° au genou.', 'Pousser sans verrouiller.'],
     mistakes: ['Bassin qui décolle.', 'Genou qui rentre.'],
     easier: 'Charge réduite.', harder: 'Tempo 3 s en descente.',
-    img: WGER.presseUnilaterale,
+    img: 'Leg_Press', approx: 'Version à deux jambes illustrée.',
   },
   {
     id: 'leg-extension-unilaterale', name: 'Leg extension unilatéral', region: 'bas', kind: 'isolation', loadType: 'poids',
