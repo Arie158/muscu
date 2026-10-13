@@ -17,7 +17,7 @@ Type : 🐞 bug · ✨ fonctionnalité · 🎨 ergonomie
 
 | Id | Type | Sujet | Livré le | Commit |
 |---|---|---|---|---|
-| S-004 | 🎨 | Illustrations : 5 nouvelles images (wger.de, CC BY-SA 4.0, auteur crédité) pour bird dog, planche bras tendus, kettlebell swing (2 images au style IA retirées ensuite) ; meilleures images pour glute machine et Y-T-W. Restent 9 sans image et 54 approximatives (voir images-a-verifier.md) | 2026-10-13 | 0af39e6 |
+| S-004 | 🎨 | Illustrations : 3 nouvelles images (wger.de, CC BY-SA 4.0, auteur crédité) pour bird dog, planche bras tendus, kettlebell swing (2 autres, au style IA, retirées) ; meilleures images pour glute machine et Y-T-W. Restent 9 sans image et 54 approximatives (voir images-a-verifier.md) | 2026-10-13 | 0af39e6, 906af6c |
 | S-003 | ✨ | Muscles : liste fixe de 21 muscles (épaule avant / côté / arrière), séries par muscle et par semaine (prévu, semaine en cours, moyenne 4 semaines) avec repères, alertes d'équilibre (pousser/tirer, épaules avant/arrière, quadriceps/ischios) dans Progression | 2026-10-13 | 59e22f9, 955d236 |
 | S-001 | 🐞 | Fiche exercice : « Retour » ramène à la page d'origine (séance, carnet, liste filtrée) ; vers la liste des exercices seulement si la fiche est ouverte directement | 2026-10-13 | 8fa14e8 |
 | S-002 | 🎨 | Ajout d'un exercice non prévu : bouton après le dernier exercice de la séance (plus dans « Options » de chaque bloc) et au bilan ; dans le carnet, juste sous la liste des exercices | 2026-10-13 | b860792 |
